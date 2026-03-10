@@ -66,9 +66,9 @@ window.selectOption = (id, value, type) => {
     renderStep();
 };
 
-// Supabase Configuration (Replace with your keys)
-const SUPABASE_URL = 'https://SUA_URL_DO_SUPABASE.supabase.co';
-const SUPABASE_KEY = 'SUA_ANON_KEY_DO_SUPABASE';
+// Supabase Configuration
+const SUPABASE_URL = 'https://pzewkvmaewnijwhxkqaj.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZXdrdm1hZXduaWp3aHhrcWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjk0ODQsImV4cCI6MjA4ODc0NTQ4NH0.a42vFvm5vUcZ3euBUoNW_QuWM9MKPW2W7ZvcCyl_P4Y';
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 async function saveLead(data) {
