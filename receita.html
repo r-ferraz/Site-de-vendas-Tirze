@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maori | Enviar Receita</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: var(--bg-offwhite);
+        }
+
+        .upload-container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 60px rgba(0, 71, 171, 0.08);
+            text-align: center;
+        }
+
+        .upload-box {
+            border: 2px dashed #CBD5E0;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .upload-box:hover {
+            border-color: var(--primary-blue);
+            background: #F8FBFF;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-blue);
+        }
+
+        .preview-container {
+            display: none;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        #camera-view {
+            width: 100%;
+            border-radius: 20px;
+            display: none;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header
+        style="height: 80px; background: white; border-bottom: 1px solid #edf2f7; display: flex; align-items: center; justify-content: center;">
+        <div class="container" style="display: flex; justify-content: center;">
+            <a href="index.html" class="logo">
+                <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 40px; width: auto;">
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="upload-container">
+            <h1 style="font-size: 2rem; margin-bottom: 10px;">Enviar sua Receita</h1>
+            <p style="color: #718096;">Faça o upload do seu PDF ou tire uma foto legível da sua receita médica para
+                começarmos a transcrição.</p>
+
+            <video id="camera-view" autoplay playsinline></video>
+
+            <div class="upload-box" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                <div class="upload-icon">📄</div>
+                <div style="font-weight: 500;">Clique para escolher um arquivo ou tire uma foto</div>
+                <div style="font-size: 0.9rem; color: #718096;">PDF, JPG ou PNG (Máx 10MB)</div>
+                <input type="file" id="file-input" style="display: none;" accept="image/*,application/pdf">
+            </div>
+
+            <div class="preview-container" id="preview-box">
+                <p style="font-weight: 500; margin-bottom: 10px;">Arquivo selecionado:</p>
+                <img id="image-preview" class="preview-image">
+                <div id="pdf-preview" style="padding: 20px; background: #F7FAFC; border-radius: 12px; display: none;">
+                    📄 Arquivo PDF Selecionado
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-outline" style="border: 2px solid #E2E8F0;" onclick="startCamera()">Usar
+                    Câmera</button>
+                <button class="btn btn-primary" id="send-btn" disabled>Enviar Receita</button>
+            </div>
+
+            <div
+                style="margin-top: 30px; display: flex; align-items: center; justify-content: center; gap: 8px; color: #48BB78; font-size: 0.9rem;">
+                🔒 Seus dados estão seguros e criptografados
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+        const previewBox = document.getElementById('preview-box');
+        const imagePreview = document.getElementById('image-preview');
+        const pdfPreview = document.getElementById('pdf-preview');
+        const sendBtn = document.getElementById('send-btn');
+        const video = document.getElementById('camera-view');
+
+        fileInput.addEventListener('change', function (e) {
+            handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file) return;
+
+            previewBox.style.display = 'block';
+            video.style.display = 'none';
+            sendBtn.disabled = false;
+
+            if (file.type === 'application/pdf') {
+                imagePreview.style.display = 'none';
+                pdfPreview.style.display = 'block';
+            } else if (file.type.startsWith('image/')) {
+                pdfPreview.style.display = 'none';
+                imagePreview.style.display = 'block';
+                const reader = new FileReader();
+                reader.onload = funct ion(e) {
+                    imagePreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                video.srcObject = stream;
+                video.style.display = 'block';
+                previewBox.style.display = 'none';
+                dropZone.style.display = 'none';
+            } catch (err) {
+                alert('Não foi possível acessar a câmera. Verifique as permissões.');
+            }
+        }
+
+        sendBtn.addEventListener('click', func tion() {
+            alert('Receita enviada com sucesso! Nossa equipe iniciará a transcrição imediata.');
+            window.location.href = 'index.html';
+        });
+
+        // Drag and Drop
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = '#0047AB'; });
+        dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = '#CBD5E0'; });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#CBD5E0';
+            handleFile(e.dataTransfer.files[0]);
+
+    </script>
+</body>
+
+</html>

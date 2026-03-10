@@ -7,19 +7,24 @@
 
 :root {
     /* Colors */
-    --primary-blue: #0056b3;
-    /* Strong Blue */
-    --primary-dark: #003366;
-    /* Dark Navy */
-    --accent-blue: #e3f2fd;
+    --primary-blue: #a44716;
+    /* Maori Primary Orange/Rust */
+    --primary-teal: #a44716;
+    --primary-dark: #7d350f;
+    /* Maori Dark Rust */
+    --accent-blue: #f8f1eb;
+    /* Maori Secondary Beige */
+    --bg-teal-light: #fff7f1;
+    /* Maori Background Beige */
     /* Very Light Blue */
     --bg-white: #FFFFFF;
     --bg-offwhite: #F8FBFF;
     /* Very Pale Blue Tinted White */
-    --text-dark: #0D1B2A;
-    /* Deep Navy Charcoal */
-    --text-muted: #536B7A;
-    --border-color: #E2E8F0;
+    --text-dark: #6b4f43;
+    /* Maori Dark Brown */
+    --text-muted: #8c7369;
+    --border-color: #d8bba8;
+    /* Maori Beige Border */
 
     /* Typography */
     --font-serif: 'Lora', serif;
@@ -98,6 +103,8 @@ img {
 .btn-primary {
     background-color: var(--primary-blue);
     color: white;
+    border-radius: 50px;
+    /* Pill shape for Maori */
 }
 
 .btn-primary:hover {
@@ -275,5 +282,285 @@ footer {
 
     .benefit-item {
         justify-content: center;
+    }
+}
+
+/* Full MeuBeme Section Replication */
+
+/* Hero Section (MeuBeme style) */
+.mb-hero {
+    display: flex;
+    align-items: center;
+    padding: 120px 5%;
+    background-color: white;
+    min-height: 80vh;
+}
+
+.mb-hero-content {
+    flex: 1;
+    padding-right: 50px;
+}
+
+.mb-hero-visual {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.mb-hero h1 {
+    font-size: 4rem;
+    margin-bottom: 30px;
+    line-height: 1.1;
+}
+
+.mb-badge {
+    display: inline-block;
+    background: var(--bg-teal-light);
+    color: var(--text-dark);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* Feature List */
+.mb-feature-list {
+    margin-bottom: 40px;
+}
+
+.mb-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+/* Accordion */
+.mb-accordion {
+    margin-top: 40px;
+}
+
+.mb-acc-item {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.mb-acc-header {
+    padding: 25px 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    background: var(--primary-teal);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+.mb-acc-content {
+    padding: 0 30px 30px;
+    display: none;
+    background: var(--bg-offwhite);
+    border-radius: 0 0 12px 12px;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+.mb-acc-item.active .mb-acc-content {
+    display: block;
+}
+
+/* Icon Bar */
+.mb-icon-bar {
+    display: flex;
+    justify-content: space-around;
+    padding: 60px 5%;
+    background: white;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.mb-icon-item {
+    flex: 1;
+    padding: 0 20px;
+}
+
+.mb-icon-item i {
+    font-size: 2rem;
+    color: var(--primary-teal);
+    margin-bottom: 15px;
+    display: block;
+}
+
+.mb-icon-item p {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* Medication Grid */
+.mb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 50px;
+}
+
+.mb-card {
+    background: var(--bg-teal-light);
+    padding: 40px;
+    border-radius: 24px;
+    text-align: center;
+}
+
+.mb-card h3 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .mb-hero {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 100px;
+    }
+
+    .mb-hero-content {
+        padding-right: 0;
+        margin-bottom: 50px;
+    }
+
+    .mb-hero h1 {
+        font-size: 2.8rem;
+    }
+
+    .mb-icon-bar {
+        flex-direction: column;
+        gap: 40px;
+    }
+}
+
+/* New Sections - MeuBeme Integration */
+.offering-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.offering-card {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 71, 171, 0.05);
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+}
+
+.offering-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 71, 171, 0.1);
+}
+
+.offering-img {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+}
+
+.offering-body {
+    padding: 30px;
+}
+
+.offering-body h3 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.offering-body p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* Scientific Data */
+.data-card {
+    background: var(--primary-dark);
+    color: white;
+    padding: 60px;
+    border-radius: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.data-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.stat-item h4 {
+    font-size: 2.5rem;
+    color: var(--accent-blue);
+    margin-bottom: 5px;
+}
+
+.stat-item p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* FAQ */
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: white;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.faq-question {
+    padding: 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+}
+
+.faq-answer {
+    padding: 0 24px 24px;
+    color: var(--text-muted);
+    display: none;
+}
+
+.faq-item.active .faq-answer {
+    display: block;
+}
+
+.faq-item.active .faq-question {
+    color: var(--primary-blue);
+}
+
+@media (max-width: 768px) {
+    .data-card {
+        grid-template-columns: 1fr;
+        padding: 40px 20px;
+        gap: 40px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.8rem;
     }
 }

@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akin | Emagreça com saúde e suporte médico online</title>
+    <title>Maori | Emagreça com saúde e suporte médico online</title>
     <meta name="description"
-        content="Plano 100% online com prescrição e suporte de saúde. Elimine até 22% do seu peso corporal com a Akin.">
+        content="Plano 100% online com prescrição e suporte de saúde. Elimine até 22% do seu peso corporal com a Maori.">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -15,14 +15,16 @@
     <!-- Header -->
     <header>
         <div class="container">
-            <a href="#" class="logo">Akin</a>
+            <a href="/" class="logo" style="display: flex; align-items: center; gap: 10px;">
+                <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 40px; width: auto;">
+            </a>
             <nav>
                 <ul>
                     <li><a href="#como-funciona">Como funciona</a></li>
+                    <li><a href="#oferecemos">O que oferecemos</a></li>
                     <li><a href="#tratamentos">Tratamentos</a></li>
-                    <li><a href="#especialistas">Especialistas</a></li>
                     <li><a href="#resultados">Resultados</a></li>
-                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#faq">FAQ</a></li>
                 </ul>
             </nav>
             <a href="#" class="btn btn-primary" style="padding: 10px 24px;">Entrar</a>
@@ -67,13 +69,19 @@
                         </div>
                     </div>
 
-                    <a href="questionario.html" class="btn btn-primary">Verificar minha elegibilidade</a>
+                    <div class="hero-cta" style="display: flex; gap: 16px; flex-wrap: wrap;">
+                        <a href="questionario.html" class="btn btn-primary"
+                            style="flex: 1; min-width: 200px; text-align: center;">Não tenho receita</a>
+                        <a href="receita.html" class="btn btn-outline"
+                            style="flex: 1; min-width: 200px; text-align: center; border: 2px solid var(--primary-blue); color: var(--primary-blue); background: transparent;">Tenho
+                            receita</a>
+                    </div>
                 </div>
 
                 <div class="hero-image">
                     <!-- Space for a professional medical health image -->
                     <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2000&auto=format&fit=crop"
-                        alt="Saúde e bem-estar Akin">
+                        alt="Saúde e bem-estar Maori">
                 </div>
             </div>
         </section>
@@ -143,11 +151,10 @@
         <section id="tratamentos" class="section" style="background: white;">
             <div class="container">
                 <div style="text-align: center; margin-bottom: 60px;">
-                    <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Faça uma avaliação médica e tenha o diagnóstico
-                        certo</h2>
-                    <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto;">Existem vários tratamentos
-                        seguros e registrados na ANVISA que funcionam como inibidores de apetite. É essencial que o
-                        médico entenda sua necessidade antes de qualquer prescrição.</p>
+                    <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Tratamentos modernos e seguros</h2>
+                    <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto;">Oferecemos acesso aos
+                        medicamentos mais avançados do mercado para o gerenciamento de peso, todos registrados na ANVISA
+                        e com procedência garantida.</p>
                 </div>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
@@ -176,44 +183,232 @@
             </div>
         </section>
 
-        <!-- Specialists Section -->
-        <section id="especialistas" class="section" style="background: var(--primary-blue); color: white;">
+        <!-- O que Oferecemos Section (MeuBeme style) -->
+        <section id="oferecemos" class="section" style="background: var(--bg-offwhite);">
             <div class="container">
-                <div style="text-align: center; margin-bottom: 60px;">
-                    <h2 style="font-size: 2.5rem; margin-bottom: 20px; color: white;">Equipe de especialistas à sua
-                        disposição</h2>
-                    <p style="color: var(--accent-blue); max-width: 800px; margin: 0 auto;">Médicos endocrinologistas e
-                        nutrólogos prontos para guiar sua jornada de forma segura e personalizada.</p>
-                </div>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
-                    <div
-                        style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1);">
-                        <div
-                            style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin-bottom: 20px;">
-                            <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=300&auto=format&fit=crop"
-                                alt="Dr. Ricardo Castro">
+                <h2 style="font-size: 2.5rem; margin-bottom: 60px;">O que oferecemos?</h2>
+                <div class="offering-grid">
+                    <div class="offering-card">
+                        <div class="offering-img"
+                            style="background-image: url('https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?q=80&w=800&auto=format&fit=crop');">
                         </div>
-                        <h3>Dr. Ricardo Castro</h3>
-                        <p style="color: var(--accent-blue); font-size: 0.9rem;">Endocrinologista - CRM 123456</p>
-                        <p style="margin-top: 12px; font-size: 0.95rem;">Especialista em metabolismo e perda de peso
-                            sustentável com mais de 10 anos de experiência.</p>
+                        <div class="offering-body">
+                            <h3>Medicações customizadas</h3>
+                            <p>Compra online, validação rápida e entrega domiciliar de medicamentos das melhores
+                                farmácias certificadas.</p>
+                        </div>
                     </div>
-                    <div
-                        style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1);">
-                        <div
-                            style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin-bottom: 20px;">
-                            <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=300&auto=format&fit=crop"
-                                alt="Dra. Mariana Silva">
+                    <div class="offering-card">
+                        <div class="offering-img"
+                            style="background-image: url('https://images.unsplash.com/photo-1576091160550-2173dad99901?q=80&w=800&auto=format&fit=crop');">
                         </div>
-                        <h3>Dra. Mariana Silva</h3>
-                        <p style="color: var(--accent-blue); font-size: 0.9rem;">Nutróloga - CRM 654321</p>
-                        <p style="margin-top: 12px; font-size: 0.95rem;">Focada em reeducação alimentar e otimização de
-                            performance através da nutrição clínica.</p>
+                        <div class="offering-body">
+                            <h3>Programas de saúde completos</h3>
+                            <p>Planos personalizados e acompanhamento multidisciplinar focado em resultados reais.</p>
+                        </div>
+                    </div>
+                    <div class="offering-card">
+                        <div class="offering-img"
+                            style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop');">
+                        </div>
+                        <div class="offering-body">
+                            <h3>Acompanhamento próximo</h3>
+                            <p>Suporte contínuo com profissionais de saúde para garantir sua adesão ao tratamento e
+                                melhores resultados.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- Scientific Data Section -->
+        <section class="section" style="background: white;">
+            <div class="container">
+                <div class="data-card">
+                    <div>
+                        <h2 style="font-size: 2.5rem; margin-bottom: 24px; color: white;">Dados Científicos</h2>
+                        <p style="margin-bottom: 40px; opacity: 0.9;">Estudos mostram que o acompanhamento
+                            multidisciplinar combinado com medicação moderna pode triplicar as chances de sucesso a
+                            longo prazo.</p>
+                        <div class="data-stats">
+                            <div class="stat-item">
+                                <h4>22%</h4>
+                                <p>Média de perda de peso em 1 ano com acompanhamento.</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>94%</h4>
+                                <p>Dos usuários Maori relatam melhora na qualidade de vida.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 24px; padding: 20px;">
+                        <!-- Placeholder for Chart Image -->
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop"
+                            alt="Gráfico de Evolução" style="border-radius: 12px; filter: grayscale(1) invert(1);">
+                        <p style="text-align: center; font-size: 0.8rem; margin-top: 15px; opacity: 0.6;">*Estudo Look
+                            AHEAD: Perda de peso ao longo do tempo</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="section" style="background: var(--bg-offwhite);">
+            <div class="container">
+                <h2 style="text-align: center; margin-bottom: 60px; font-size: 2.5rem;">Perguntas Frequentes</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">Preciso de receita médica para comprar? <span>+</span></div>
+                        <div class="faq-answer">Sim, todos os medicamentos que oferecemos exigem prescrição. Se você já
+                            tem a sua, pode fazer o upload na nossa plataforma. Se não tem, nosso sistema de triagem
+                            ajudará a identificar a melhor jornada para você.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Os medicamentos são originais? <span>+</span></div>
+                        <div class="faq-answer">Sim, trabalhamos apenas com distribuidoras e farmácias certificadas pela
+                            ANVISA, garantindo a procedência, o armazenamento correto (cadeia de frio) e a autenticidade
+                            de cada produto.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Como funciona a entrega? <span>+</span></div>
+                        <div class="faq-answer">A entrega é realizada de forma discreta e segura. Para medicamentos que
+                            precisam de refrigeração, usamos embalagens térmicas especiais que garantem a temperatura
+                            ideal até a sua porta.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr style="border: 0; height: 1px; background: #eee; margin: 100px 0;">
+
+        <!-- MEUBEME INTEGRATION START -->
+
+        <!-- MB Hero Section -->
+        <section class="mb-hero">
+            <div class="container" style="display: flex; align-items: center; gap: 60px;">
+                <div class="mb-hero-content">
+                    <div class="mb-badge">E o melhor de tudo: sem sair de casa.</div>
+                    <h1 style="font-family: var(--font-sans); font-weight: 800;">Inicie a sua jornada rumo ao
+                        gerenciamento de peso saudável</h1>
+
+                    <div class="mb-feature-list">
+                        <div class="mb-feature-item">
+                            <span style="color: var(--primary-teal); font-size: 1.5rem;">🌐</span> 100% on-line
+                        </div>
+                        <div class="mb-feature-item">
+                            <span style="color: var(--primary-teal); font-size: 1.5rem;">🩺</span> Acompanhamento
+                            Multidisciplinar
+                        </div>
+                        <div class="mb-feature-item">
+                            <span style="color: var(--primary-teal); font-size: 1.5rem;">✅</span> Dentro das normas da
+                            ANVISA
+                        </div>
+                    </div>
+
+                    <a href="#oferecemos" class="btn"
+                        style="background: var(--primary-teal); color: white; padding: 20px 40px; font-size: 1.1rem;">Saber
+                        Mais</a>
+                </div>
+                <div class="mb-hero-visual">
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1000&auto=format&fit=crop"
+                        alt="Bem-estar" style="border-radius: 40px; box-shadow: 0 40px 100px rgba(62, 178, 180, 0.2);">
+                </div>
+            </div>
+        </section>
+
+        <!-- MB "Por que escolher" Section -->
+        <section class="section" style="background: var(--bg-teal-light);">
+            <div class="container"
+                style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 80px; align-items: start;">
+                <div>
+                    <h2
+                        style="font-size: 3.5rem; color: var(--primary-dark); font-family: var(--font-sans); font-weight: 800; margin-bottom: 30px;">
+                        Por que escolher a Maori Care?</h2>
+                    <p style="font-size: 1.2rem; color: var(--text-muted);">A Maori nasceu para transformar o acesso aos
+                        melhores tratamentos para gerenciamento de peso no Brasil.</p>
+                </div>
+                <div class="mb-accordion">
+                    <div class="mb-acc-item active">
+                        <div class="mb-acc-header">Cuidado personalizado <span>−</span></div>
+                        <div class="mb-acc-content" style="display: block;">
+                            <p>Planos de tratamento que respeitam seu histórico, suas metas e seu estilo de vida.
+                                Atendimento humano e próximo em cada etapa da sua jornada de emagrecimento.</p>
+                        </div>
+                    </div>
+                    <div class="mb-acc-item">
+                        <div class="mb-acc-header">Preço justo <span>+</span></div>
+                        <div class="mb-acc-content">
+                            <p>Transparência total nos custos. Trabalhamos para eliminar intermediários e garantir que
+                                você pague o valor justo pela sua saúde.</p>
+                        </div>
+                    </div>
+                    <div class="mb-acc-item">
+                        <div class="mb-acc-header">Jornada integrada <span>+</span></div>
+                        <div class="mb-acc-content">
+                            <p>Tudo o que você precisa em um só lugar: tecnologia para monitoramento, suporte
+                                nutricional e acesso aos medicamentos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MB Medication Selection -->
+        <section id="medicações" class="section">
+            <div class="container" style="text-align: center;">
+                <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Tratamentos Disponíveis</h2>
+                <p style="color: var(--text-muted);">Trabalhamos com as medicações mais modernas e seguras.</p>
+
+                <div class="mb-grid">
+                    <div class="mb-card">
+                        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=300&auto=format&fit=crop"
+                            alt="Ozempic" style="width: 100px; margin-bottom: 20px; filter: grayscale(1);">
+                        <h3>Ozempic</h3>
+                    </div>
+                    <div class="mb-card">
+                        <img src="https://images.unsplash.com/photo-1588345921523-c2d6c5f10f21?q=80&w=300&auto=format&fit=crop"
+                            alt="Mounjaro" style="width: 100px; margin-bottom: 20px; filter: grayscale(1);">
+                        <h3>Mounjaro</h3>
+                    </div>
+                    <div class="mb-card">
+                        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=300&auto=format&fit=crop"
+                            alt="Wegovy" style="width: 100px; margin-bottom: 20px; filter: grayscale(1);">
+                        <h3>Wegovy</h3>
+                    </div>
+                    <div class="mb-card">
+                        <img src="https://images.unsplash.com/photo-1588345921523-c2d6c5f10f21?q=80&w=300&auto=format&fit=crop"
+                            alt="Saxenda" style="width: 100px; margin-bottom: 20px; filter: grayscale(1);">
+                        <h3>Saxenda</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MB Icon Bar -->
+        <div class="mb-icon-bar" style="border-top: 1px solid #eee; border-bottom: 100px solid white;">
+            <div class="mb-icon-item">
+                <span
+                    style="font-size: 2.5rem; color: var(--primary-teal); display: block; margin-bottom: 15px;">🩺</span>
+                <p>PROFISSIONAIS QUALIFICADOS E FARMÁCIAS REGULAMENTADAS</p>
+            </div>
+            <div class="mb-icon-item">
+                <span
+                    style="font-size: 2.5rem; color: var(--primary-teal); display: block; margin-bottom: 15px;">🛡️</span>
+                <p>PROTOCOLOS RIGOROSOS DE QUALIDADE E SEGURANÇA</p>
+            </div>
+            <div class="mb-icon-item">
+                <span
+                    style="font-size: 2.5rem; color: var(--primary-teal); display: block; margin-bottom: 15px;">❤️</span>
+                <p>ATENDIMENTO EMPÁTICO E LINGUAGEM ACESSÍVEL</p>
+            </div>
+            <div class="mb-icon-item">
+                <span
+                    style="font-size: 2.5rem; color: var(--primary-teal); display: block; margin-bottom: 15px;">📱</span>
+                <p>EXPERIÊNCIA DIGITAL FLUIDA, SEM BUROCRACIA</p>
+            </div>
+        </div>
+
+        <!-- MEUBEME INTEGRATION END -->
 
     </main>
 
@@ -222,7 +417,7 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col">
-                    <div class="logo footer-logo">Akin</div>
+                    <div class="logo footer-logo">Maori</div>
                     <p style="color: #A0B3A7; margin-bottom: 24px;">Transformando a saúde metabólica através da
                         tecnologia e cuidado médico especializado.</p>
                 </div>
@@ -254,7 +449,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Akin Saúde Metabólica. Todos os direitos reservados. Akin é uma plataforma de
+                <p>&copy; 2024 Maori Saúde Metabólica. Todos os direitos reservados. Maori é uma plataforma de
                     telemedicina.</p>
             </div>
         </div>
