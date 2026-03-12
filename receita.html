@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maori | Enviar Receita</title>
+    <title>Maori | Enviar Receita (v3.1)</title>
+    <!-- Version: 3.1.2 - Force update cache -->
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -298,6 +299,9 @@
                 reader.readAsDataURL(file);
             }
         }
+
+        // Diagnostic helper for current state
+        console.log('Receita Script Loaded v3.1.2');
 
         function resetFile() {
             selectedFile = null;
