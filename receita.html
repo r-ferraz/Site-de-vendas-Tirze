@@ -270,38 +270,56 @@
         let selectedFile = null;
 
         fileInput.addEventListener('change', function (e) {
-            handleFile(e.target.files[0]);
+            console.log('File Change Detected', e.target.files);
+            if (e.target.files && e.target.files[0]) {
+                handleFile(e.target.files[0]);
+            }
         });
 
         function handleFile(file) {
+            console.log('Handling File:', file.name, file.type);
             if (!file) return;
             selectedFile = file;
 
-            // Visual feedback
-            document.getElementById('file-name-label').textContent = file.name;
-            dropZone.style.display = 'none';
-            previewBox.style.display = 'block';
-            video.style.display = 'none';
-            sendBtn.disabled = false;
+            try {
+                // Visual feedback
+                const nameLabel = document.getElementById('file-name-label');
+                if (nameLabel) nameLabel.textContent = file.name;
 
-            if (file.type === 'application/pdf') {
-                imagePreview.style.display = 'none';
-                pdfPreview.style.display = 'block';
-                document.getElementById('file-icon').textContent = '📕';
-            } else if (file.type.startsWith('image/')) {
-                pdfPreview.style.display = 'none';
-                imagePreview.style.display = 'block';
-                document.getElementById('file-icon').textContent = '🖼️';
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    imagePreview.src = e.target.result;
+                dropZone.style.display = 'none';
+                previewBox.style.display = 'block';
+                video.style.display = 'none';
+                sendBtn.disabled = false;
+                sendBtn.style.opacity = '1';
+
+                if (file.type === 'application/pdf') {
+                    imagePreview.style.display = 'none';
+                    pdfPreview.style.display = 'block';
+                    document.getElementById('file-icon').textContent = '📕';
+                } else if (file.type.startsWith('image/')) {
+                    pdfPreview.style.display = 'none';
+                    imagePreview.style.display = 'block';
+                    document.getElementById('file-icon').textContent = '🖼️';
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imagePreview.src = e.target.result;
+                    }
+                    reader.onerror = function () {
+                        console.error('Error reading image file');
+                    }
+                    reader.readAsDataURL(file);
                 }
-                reader.readAsDataURL(file);
+                console.log('File handled successfully');
+            } catch (err) {
+                console.error('Error in handleFile:', err);
             }
         }
 
         // Diagnostic helper for current state
-        console.log('Receita Script Loaded v3.1.2');
+        console.log('Receita Script Loaded v3.2.0');
+        window.onload = function () {
+            console.log('Window Loaded - Script Ready');
+        };
 
         function resetFile() {
             selectedFile = null;
