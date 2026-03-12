@@ -171,6 +171,26 @@
             outline: none;
             border-color: var(--primary-blue);
         }
+
+        .status-msg {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .status-msg.error {
+            background: #fee2e2;
+            color: #991b1b;
+            display: block;
+        }
+
+        .status-msg.info {
+            background: #e0f2fe;
+            color: #075985;
+            display: block;
+        }
     </style>
 </head>
 
@@ -225,14 +245,17 @@
                 <input type="file" id="file-input" style="display: none;" accept="image/*,application/pdf">
             </div>
 
+            <div id="status-display" class="status-msg"></div>
+
             <div class="preview-container" id="preview-box">
                 <div class="file-info">
                     <span id="file-icon">📄</span>
                     <span id="file-name-label">nome-do-arquivo.pdf</span>
                 </div>
                 <img id="image-preview" class="preview-image" style="display: none;">
-                <div id="pdf-preview" style="padding: 20px; font-weight: 500; color: #4a5568; display: none;">
-                    Visualização não disponível para PDF
+                <div id="pdf-preview-container" style="display: none; margin-top: 15px;">
+                    <iframe id="pdf-frame"
+                        style="width: 100%; height: 400px; border: none; border-radius: 12px;"></iframe>
                 </div>
                 <button class="btn"
                     style="background: none; color: #e53e3e; font-size: 0.9rem; margin-top: 15px; padding: 0;"
@@ -269,6 +292,15 @@
 
         let selectedFile = null;
 
+        const statusDisplay = document.getElementById('status-display');
+        const pdfFrame = document.getElementById('pdf-frame');
+        const pdfPreviewContainer = document.getElementById('pdf-preview-container');
+
+        function showStatus(msg, type = 'info') {
+            statusDisplay.innerText = msg;
+            statusDisplay.className = 'status-msg ' + type;
+        }
+
         fileInput.addEventListener('change', function (e) {
             console.log('File Change Detected', e.target.files);
             if (e.target.files && e.target.files[0]) {
@@ -278,6 +310,7 @@
 
         function handleFile(file) {
             console.log('Handling File:', file.name, file.type);
+            showStatus('Arquivo selecionado: ' + file.name);
             if (!file) return;
             selectedFile = file;
 
@@ -294,10 +327,11 @@
 
                 if (file.type === 'application/pdf') {
                     imagePreview.style.display = 'none';
-                    pdfPreview.style.display = 'block';
+                    pdfPreviewContainer.style.display = 'block';
+                    pdfFrame.src = URL.createObjectURL(file);
                     document.getElementById('file-icon').textContent = '📕';
                 } else if (file.type.startsWith('image/')) {
-                    pdfPreview.style.display = 'none';
+                    pdfPreviewContainer.style.display = 'none';
                     imagePreview.style.display = 'block';
                     document.getElementById('file-icon').textContent = '🖼️';
                     const reader = new FileReader();
@@ -306,19 +340,22 @@
                     }
                     reader.onerror = function () {
                         console.error('Error reading image file');
+                        showStatus('Erro ao ler a imagem. Tente outro arquivo.', 'error');
                     }
                     reader.readAsDataURL(file);
                 }
                 console.log('File handled successfully');
             } catch (err) {
                 console.error('Error in handleFile:', err);
+                showStatus('Erro ao processar arquivo: ' + err.message, 'error');
             }
         }
 
         // Diagnostic helper for current state
-        console.log('Receita Script Loaded v3.2.0');
+        console.log('Receita Script Loaded v3.3.0');
         window.onload = function () {
             console.log('Window Loaded - Script Ready');
+            showStatus('Pronto para receber sua receita.', 'info');
         };
 
         function resetFile() {
@@ -327,6 +364,9 @@
             dropZone.style.display = 'flex';
             previewBox.style.display = 'none';
             sendBtn.disabled = true;
+            statusDisplay.style.display = 'none';
+            if (pdfFrame.src) URL.revokeObjectURL(pdfFrame.src);
+            pdfFrame.src = '';
         }
 
         async function startCamera() {
