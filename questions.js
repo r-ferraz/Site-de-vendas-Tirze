@@ -1,3 +1,4 @@
+// Versão 2.1 - Atualização de codificação
 window.akinQuestions = [
     {
         id: 'objetivos',
