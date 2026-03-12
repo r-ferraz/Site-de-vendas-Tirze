@@ -23,26 +23,39 @@
         }
 
         .upload-box {
-            border: 2px dashed #CBD5E0;
-            border-radius: 20px;
-            padding: 40px;
+            border: 2px dashed #48BB78;
+            background: #F0FFF4;
+            border-radius: 16px;
+            padding: 50px 20px;
             margin: 30px 0;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 15px;
         }
 
         .upload-box:hover {
-            border-color: var(--primary-blue);
-            background: #F8FBFF;
+            border-color: #38A169;
+            background: #E6FFFA;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.1);
         }
 
         .upload-icon {
-            font-size: 3rem;
-            color: var(--primary-blue);
+            font-size: 3.5rem;
+            color: #48BB78;
+            margin-bottom: -5px;
+            background: white;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
         .btn-group {
@@ -316,8 +329,10 @@
 
             <div class="upload-box" id="drop-zone" onclick="document.getElementById('file-input').click()">
                 <div class="upload-icon">📄</div>
-                <div style="font-weight: 500;">Clique para escolher um arquivo ou tire uma foto</div>
-                <div style="font-size: 0.9rem; color: #718096;">PDF, JPG ou PNG (Máx 10MB)</div>
+                <div style="font-weight: 700; color: var(--text-dark); font-size: 1.1rem;">Clique para escolher um
+                    arquivo ou tire uma foto</div>
+                <div style="font-size: 0.9rem; color: #718096; max-width: 80%; line-height: 1.4;">Você pode enviar uma
+                    foto legível ou um documento PDF da sua receita médica. (Máx 10MB)</div>
                 <input type="file" id="file-input" style="display: none;" accept="image/*,application/pdf">
             </div>
 
