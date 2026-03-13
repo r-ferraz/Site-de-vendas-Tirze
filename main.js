@@ -108,5 +108,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Hero Image Slider
+    const heroSlider = document.getElementById('hero-img-slider');
+    if (heroSlider) {
+        let currentImg = 1;
+        setInterval(() => {
+            heroSlider.style.opacity = '0';
+            setTimeout(() => {
+                currentImg = currentImg === 1 ? 2 : 1;
+                heroSlider.src = `assets/foto ${currentImg}.png`; // Alterado para .png conforme solicitado
+                heroSlider.style.opacity = '1';
+            }, 500); // tempo de transição
+        }, 3000);
+    }
+
     console.log('Maori site initialized successfully.');
 });

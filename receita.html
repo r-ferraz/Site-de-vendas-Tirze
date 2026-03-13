@@ -289,43 +289,7 @@
             <p style="color: #718096;">Faça o upload do seu PDF ou tire uma foto legível da sua receita médica para
                 começarmos a transcrição.</p>
 
-            <!-- Native Camera Scanner Input -->
-            <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
-
-            <!-- Lead Modal -->
-            <div id="lead-modal" class="modal">
-                <div class="modal-content">
-                    <span class="close-modal" onclick="closeModal()">&times;</span>
-                    <h3 class="modal-title">Quase lá!</h3>
-                    <p class="modal-phrase">Para que seja enviado sua receita informe seus dados</p>
-
-                    <div id="lead-form">
-                        <div class="input-group">
-                            <label style="display:block; margin-bottom:5px; font-weight:500;">Nome Completo</label>
-                            <input type="text" id="lead-name" class="q-input" placeholder="Seu nome completo">
-                        </div>
-                        <div class="input-group">
-                            <label style="display:block; margin-bottom:5px; font-weight:500;">E-mail</label>
-                            <input type="email" id="lead-email" class="q-input" placeholder="seu@email.com">
-                        </div>
-                        <div class="input-group">
-                            <label style="display:block; margin-bottom:5px; font-weight:500;">WhatsApp</label>
-                            <input type="tel" id="lead-whatsapp" class="q-input" placeholder="(00) 00000-0000">
-                        </div>
-                        <button class="btn btn-primary" id="final-send-btn"
-                            style="width: 100%; margin-top: 10px;">Confirmar Envio</button>
-                    </div>
-
-                    <div id="success-message" style="display: none; text-align: center; padding: 20px 0;">
-                        <div style="font-size: 4rem; color: #48BB78; margin-bottom: 20px;">✅</div>
-                        <h3 style="font-size: 1.5rem; color: var(--text-dark); margin-bottom: 15px;">Receita Enviada com
-                            Sucesso!</h3>
-                        <p style="color: var(--text-muted); margin-bottom: 25px;">Seu documento foi salvo com segurança
-                            em nosso sistema. Nossa equipe iniciará a análise imediatamente.</p>
-                        <p style="font-size: 0.9rem; color: var(--primary-blue);">Redirecionando...</p>
-                    </div>
-                </div>
-            </div>
+            <!-- Removed Main Action Buttons as requested -->
 
             <div class="upload-box" id="drop-zone" onclick="document.getElementById('file-input').click()">
                 <div class="upload-icon">📄</div>
@@ -338,6 +302,7 @@
 
             <div id="status-display" class="status-msg"></div>
 
+            <!-- Integrated Content Flow (Transcription -> Form -> Success) -->
             <div class="preview-container" id="preview-box">
                 <div class="file-info">
                     <span id="file-icon">✅</span>
@@ -359,33 +324,47 @@
                         <div class="med-name">💊 Amoxicilina 500mg</div>
                         <div class="med-desc">Tomar 1 cápsula a cada 8 horas, durante 7 dias.</div>
                     </div>
-                    <div class="med-item" style="border-left-color: #e53e3e;">
-                        <div class="med-name">💊 Dipirona Monoidratada 1g</div>
-                        <div class="med-desc">Tomar 1 comprimido a cada 6 horas se houver dor ou febre.</div>
+                </div>
+
+                <!-- Integrated Lead Form (Appears after Transcription) -->
+                <div id="lead-section" style="display: none; margin-top: 30px; text-align: left; border-top: 1px solid #edf2f7; padding-top: 30px;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 20px; color: var(--text-dark); text-align: center;">Quase lá! Informe seus dados para finalizar</h3>
+                    
+                    <div id="lead-form">
+                        <div class="input-group">
+                            <label style="display:block; margin-bottom:5px; font-weight:500;">Nome Completo</label>
+                            <input type="text" id="lead-name" class="q-input" placeholder="Seu nome completo">
+                        </div>
+                        <div class="input-group">
+                            <label style="display:block; margin-bottom:5px; font-weight:500;">E-mail</label>
+                            <input type="email" id="lead-email" class="q-input" placeholder="seu@email.com">
+                        </div>
+                        <div class="input-group">
+                            <label style="display:block; margin-bottom:5px; font-weight:500;">WhatsApp</label>
+                            <input type="tel" id="lead-whatsapp" class="q-input" placeholder="(00) 00000-0000">
+                        </div>
+                        <button class="btn btn-primary" id="final-send-btn"
+                            style="width: 100%; margin-top: 10px;">Enviar para o médico</button>
                     </div>
-                    <div class="med-item" style="border-left-color: #48BB78; margin-bottom: 0;">
-                        <div class="med-name">💊 Loratadina 10mg</div>
-                        <div class="med-desc">Tomar 1 comprimido uma vez ao dia, preferencialmente à noite.</div>
+
+                    <div id="success-message" style="display: none; text-align: center; padding: 20px 0;">
+                        <div style="font-size: 4rem; color: #48BB78; margin-bottom: 20px;">✅</div>
+                        <h3 style="font-size: 1.5rem; color: var(--text-dark); margin-bottom: 15px;">Receita Enviada com Sucesso!</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 25px;">Seu documento foi salvo com segurança em nosso sistema. Nossa equipe iniciará a análise imediatamente.</p>
+                        <p style="font-size: 0.9rem; color: var(--primary-blue);">Redirecionando...</p>
                     </div>
                 </div>
 
-                <!-- Old generic previews (hidden to give emphasis to Transcript) -->
+                <!-- Hidden Previews -->
                 <img id="image-preview" class="preview-image" style="display: none; margin-bottom: 20px;">
                 <div id="pdf-preview-container" style="display: none; margin-top: 15px; margin-bottom: 20px;">
                     <iframe id="pdf-frame"
                         style="width: 100%; height: 400px; border: none; border-radius: 12px;"></iframe>
                 </div>
 
-                <button class="btn"
+                <button class="btn" id="btn-reset-upload"
                     style="background: none; border: 1px solid #E2E8F0; border-radius: 50px; color: #4a5568; font-size: 0.9rem; margin-top: 25px; padding: 10px 20px;"
                     onclick="resetFile()">Remover e Enviar Outro</button>
-            </div>
-
-            <div class="btn-group" id="main-btn-group">
-                <label for="camera-input" class="btn btn-outline"
-                    style="border: 2px solid #E2E8F0; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 0;">Usar
-                    Câmera</label>
-                <button class="btn btn-primary" id="send-btn" disabled>Enviar Receita</button>
             </div>
 
             <div
@@ -403,18 +382,18 @@
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const fileInput = document.getElementById('file-input');
-        const cameraInput = document.getElementById('camera-input');
         const dropZone = document.getElementById('drop-zone');
         const previewBox = document.getElementById('preview-box');
         const imagePreview = document.getElementById('image-preview');
-        const pdfPreview = document.getElementById('pdf-preview');
-        const sendBtn = document.getElementById('send-btn');
-
-        let selectedFile = null;
-
         const statusDisplay = document.getElementById('status-display');
         const pdfFrame = document.getElementById('pdf-frame');
         const pdfPreviewContainer = document.getElementById('pdf-preview-container');
+        const leadSection = document.getElementById('lead-section');
+        const transcriptionResult = document.getElementById('transcription-result');
+        const processingBox = document.getElementById('processing-box');
+        const btnResetUpload = document.getElementById('btn-reset-upload');
+
+        let selectedFile = null;
 
         function showStatus(msg, type = 'info') {
             statusDisplay.innerText = msg;
@@ -422,120 +401,68 @@
         }
 
         fileInput.addEventListener('change', function (e) {
-            console.log('File Change Detected', e.target.files);
-            if (e.target.files && e.target.files[0]) {
-                handleFile(e.target.files[0]);
-            }
-        });
-
-        cameraInput.addEventListener('change', function (e) {
-            console.log('Camera File Change Detected', e.target.files);
             if (e.target.files && e.target.files[0]) {
                 handleFile(e.target.files[0]);
             }
         });
 
         function handleFile(file) {
-            console.log('Handling File:', file.name, file.type);
-            showStatus('Arquivo selecionado: ' + file.name);
             if (!file) return;
             selectedFile = file;
 
-            try {
-                // Configuração Visual Inicial
-                const nameLabel = document.getElementById('file-name-label');
-                if (nameLabel) nameLabel.textContent = file.name;
+            // Visual Setup
+            document.getElementById('file-name-label').textContent = file.name;
+            dropZone.style.display = 'none';
+            previewBox.style.display = 'block';
+            leadSection.style.display = 'none';
+            transcriptionResult.style.display = 'none';
+            processingBox.style.display = 'block';
+            btnResetUpload.style.display = 'none'; // Hide reset while processing
 
-                dropZone.style.display = 'none';
-                previewBox.style.display = 'block';
-                sendBtn.disabled = true;
-                sendBtn.style.opacity = '0.5';
-
-                document.getElementById('processing-box').style.display = 'block';
-                document.getElementById('transcription-result').style.display = 'none';
-
-                // Tratar preview baseado no tipo usando iframe ou img tags restaurados
-                if (file.type === 'application/pdf') {
-                    imagePreview.style.display = 'none';
-                    pdfPreviewContainer.style.display = 'block';
-                    pdfFrame.src = URL.createObjectURL(file);
-                    document.getElementById('file-icon').textContent = '📕';
-                } else if (file.type.startsWith('image/')) {
-                    pdfPreviewContainer.style.display = 'none';
-                    imagePreview.style.display = 'block';
-                    document.getElementById('file-icon').textContent = '🖼️';
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        imagePreview.src = e.target.result;
-                    }
-                    reader.onerror = function () {
-                        console.error('Error reading image file');
-                        showStatus('Erro ao ler a imagem. Tente outro arquivo.', 'error');
-                    }
-                    reader.readAsDataURL(file);
-                } else {
-                    // Outros tipos, esconde previes visuais
-                    imagePreview.style.display = 'none';
-                    pdfPreviewContainer.style.display = 'none';
-                }
-
-                // Simula o tempo da "transcrição" igual ao site modelo
-                setTimeout(() => {
-                    document.getElementById('processing-box').style.display = 'none';
-                    document.getElementById('transcription-result').style.display = 'block';
-                    sendBtn.disabled = false;
-                    sendBtn.style.opacity = '1';
-                    showStatus('Transcrição concluída com sucesso.', 'info');
-                }, 3000); // 3 seconds timeout
-
-                console.log('File handled successfully');
-            } catch (err) {
-                console.error('Error in handleFile:', err);
-                showStatus('Erro ao processar arquivo: ' + err.message, 'error');
+            // Type handling
+            if (file.type === 'application/pdf') {
+                imagePreview.style.display = 'none';
+                pdfPreviewContainer.style.display = 'block';
+                pdfFrame.src = URL.createObjectURL(file);
+                document.getElementById('file-icon').textContent = '📕';
+            } else if (file.type.startsWith('image/')) {
+                pdfPreviewContainer.style.display = 'none';
+                imagePreview.style.display = 'block';
+                document.getElementById('file-icon').textContent = '🖼️';
+                const reader = new FileReader();
+                reader.onload = (e) => { imagePreview.src = e.target.result; }
+                reader.readAsDataURL(file);
             }
-        }
 
-        // Diagnostic helper for current state
-        console.log('Receita Script Loaded v3.4.0');
-        window.onload = function () {
-            console.log('Window Loaded - Script Ready');
-            showStatus('Pronto para receber sua receita.', 'info');
-        };
+            // Automated Flow Trigger
+            setTimeout(() => {
+                processingBox.style.display = 'none';
+                transcriptionResult.style.display = 'block';
+                leadSection.style.display = 'block';
+                btnResetUpload.style.display = 'inline-block';
+                showStatus('Transcrição concluída. Por favor, preencha seus dados abaixo.', 'info');
+                
+                // Scroll to form automatically
+                leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 3000);
+        }
 
         function resetFile() {
             selectedFile = null;
             fileInput.value = '';
-            cameraInput.value = '';
             dropZone.style.display = 'flex';
             previewBox.style.display = 'none';
-            sendBtn.disabled = true;
             statusDisplay.style.display = 'none';
-            document.getElementById('transcription-result').style.display = 'none';
-            document.getElementById('processing-box').style.display = 'none';
+            leadSection.style.display = 'none';
+            transcriptionResult.style.display = 'none';
             if (pdfFrame.src) URL.revokeObjectURL(pdfFrame.src);
             pdfFrame.src = '';
+            document.getElementById('lead-form').style.display = 'block';
+            document.getElementById('success-message').style.display = 'none';
             showStatus('Pronto para receber sua receita.', 'info');
         }
 
-        // Modal Functions
-        function openModal() {
-            document.getElementById('lead-modal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('lead-modal').style.display = 'none';
-        }
-
-        // Initial Send Trigger (Opens Modal)
-        sendBtn.addEventListener('click', function () {
-            if (!selectedFile) {
-                alert('Por favor, selecione o arquivo da receita primeiro.');
-                return;
-            }
-            openModal();
-        });
-
-        // Final Confirm Send (Inside Modal)
+        // Final Confirm Send
         const finalSendBtn = document.getElementById('final-send-btn');
         finalSendBtn.addEventListener('click', async function () {
             const name = document.getElementById('lead-name').value;
@@ -562,42 +489,33 @@
 
                 if (uploadError) throw uploadError;
 
-                // Get public URL
-                const { data: urlData } = supabase.storage
-                    .from('prescriptions')
-                    .getPublicUrl(filePath);
-
+                const { data: urlData } = supabase.storage.from('prescriptions').getPublicUrl(filePath);
                 const fileUrl = urlData.publicUrl;
 
-                // 2. Save lead data to table
+                // 2. Save lead data
                 const { error: dbError } = await supabase
                     .from('leads')
-                    .insert([
-                        {
-                            nome: name,
-                            email: email,
-                            whatsapp: whatsapp,
-                            arquivo_url: fileUrl,
-                            status: 'Novo',
-                            tipo_origem: 'Receita'
-                        }
-                    ]);
+                    .insert([{
+                        nome: name,
+                        email: email,
+                        whatsapp: whatsapp,
+                        arquivo_url: fileUrl,
+                        status: 'Novo',
+                        tipo_origem: 'Receita'
+                    }]);
 
                 if (dbError) throw dbError;
 
                 document.getElementById('lead-form').style.display = 'none';
                 document.getElementById('success-message').style.display = 'block';
-                document.querySelector('.modal-title').style.display = 'none';
-                document.querySelector('.modal-phrase').style.display = 'none';
+                btnResetUpload.style.display = 'none';
 
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 3000);
+                setTimeout(() => { window.location.href = 'index.html'; }, 3000);
             } catch (err) {
                 console.error(err);
                 alert('Erro ao enviar: ' + err.message);
                 finalSendBtn.disabled = false;
-                finalSendBtn.textContent = 'Confirmar Envio';
+                finalSendBtn.textContent = 'Enviar para o médico';
             }
         });
 
