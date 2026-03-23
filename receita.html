@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maori | Enviar Receita (v3.1)</title>
-    <!-- Version: 3.1.2 - Force update cache -->
+    <!-- Version: 3.2.0 - Force update cache -->
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -376,104 +376,111 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase Configuration
+        // --- CONFIGURAÇÃO ---
         const SUPABASE_URL = 'https://pzewkvmaewnijwhxkqaj.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZXdrdm1hZXduaWp3aHhrcWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjk0ODQsImV4cCI6MjA4ODc0NTQ4NH0.a42vFvm5vUcZ3euBUoNW_QuWM9MKPW2W7ZvcCyl_P4Y';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Elementos Globais
+        const els = {
+            fileInput: document.getElementById('file-input'),
+            dropZone: document.getElementById('drop-zone'),
+            previewBox: document.getElementById('preview-box'),
+            imagePreview: document.getElementById('image-preview'),
+            statusDisplay: document.getElementById('status-display'),
+            pdfFrame: document.getElementById('pdf-frame'),
+            pdfPreviewContainer: document.getElementById('pdf-preview-container'),
+            leadSection: document.getElementById('lead-section'),
+            transcriptionResult: document.getElementById('transcription-result'),
+            processingBox: document.getElementById('processing-box'),
+            btnResetUpload: document.getElementById('btn-reset-upload'),
+            fileNameLabel: document.getElementById('file-name-label')
+        };
 
-        const fileInput = document.getElementById('file-input');
-        const dropZone = document.getElementById('drop-zone');
-        const previewBox = document.getElementById('preview-box');
-        const imagePreview = document.getElementById('image-preview');
-        const statusDisplay = document.getElementById('status-display');
-        const pdfFrame = document.getElementById('pdf-frame');
-        const pdfPreviewContainer = document.getElementById('pdf-preview-container');
-        const leadSection = document.getElementById('lead-section');
-        const transcriptionResult = document.getElementById('transcription-result');
-        const processingBox = document.getElementById('processing-box');
-        const btnResetUpload = document.getElementById('btn-reset-upload');
-
+        let supabase = null;
         let selectedFile = null;
 
+        // --- INICIALIZAÇÃO ---
+        window.addEventListener('load', () => {
+            console.log('Site carregado v3.2.0');
+            try {
+                if (!window.supabase) throw new Error('Biblioteca Supabase não encontrada.');
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                console.log('Supabase pronto.');
+            } catch (e) {
+                console.error('Erro no Supabase:', e);
+            }
+        });
+
+        // Captura de erro global para ajudar o usuário
+        window.onerror = function(msg, url, line) {
+            alert('Aviso do Site: ' + msg + '\nLinha: ' + line);
+            return false;
+        };
+
         function showStatus(msg, type = 'info') {
-            statusDisplay.innerText = msg;
-            statusDisplay.className = 'status-msg ' + type;
+            if (!els.statusDisplay) return;
+            els.statusDisplay.innerText = msg;
+            els.statusDisplay.className = 'status-msg ' + type;
+            els.statusDisplay.style.display = 'block';
         }
 
-        fileInput.addEventListener('change', function (e) {
+        els.fileInput.addEventListener('change', function (e) {
+            console.log('Arquivo selecionado');
             if (e.target.files && e.target.files[0]) {
                 handleFile(e.target.files[0]);
             }
         });
 
         function handleFile(file) {
+            console.log('Processando:', file.name);
             if (!file) return;
             selectedFile = file;
 
-            // Visual Setup
-            document.getElementById('file-name-label').textContent = file.name;
-            dropZone.style.display = 'none';
-            previewBox.style.display = 'block';
-            leadSection.style.display = 'none';
-            transcriptionResult.style.display = 'none';
-            processingBox.style.display = 'block';
-            btnResetUpload.style.display = 'none'; // Hide reset while processing
+            // Interface Reset
+            els.dropZone.style.display = 'none';
+            els.previewBox.style.display = 'block';
+            els.leadSection.style.display = 'none';
+            els.transcriptionResult.style.display = 'none';
+            els.processingBox.style.display = 'block';
+            els.btnResetUpload.style.display = 'none';
+            els.fileNameLabel.textContent = file.name;
 
-            // Type handling
+            // Tipo de arquivo
             if (file.type === 'application/pdf') {
-                imagePreview.style.display = 'none';
-                pdfPreviewContainer.style.display = 'block';
-                pdfFrame.src = URL.createObjectURL(file);
+                els.imagePreview.style.display = 'none';
+                els.pdfPreviewContainer.style.display = 'block';
+                els.pdfFrame.src = URL.createObjectURL(file);
                 document.getElementById('file-icon').textContent = '📕';
             } else if (file.type.startsWith('image/')) {
-                pdfPreviewContainer.style.display = 'none';
-                imagePreview.style.display = 'block';
+                els.pdfPreviewContainer.style.display = 'none';
+                els.imagePreview.style.display = 'block';
                 document.getElementById('file-icon').textContent = '🖼️';
                 const reader = new FileReader();
-                reader.onload = (e) => { imagePreview.src = e.target.result; }
+                reader.onload = (e) => { els.imagePreview.src = e.target.result; }
                 reader.readAsDataURL(file);
             }
 
-            // Automated Flow Trigger
-            // Now using REAL AI with Gemini
             requestTranscription(file);
         }
 
-        async function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = error => reject(error);
-            });
-        }
-
         async function requestTranscription(file) {
-            console.log('Iniciando transcrição para:', file.name);
-            
-            // Configuração da API do Gemini
             const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY';
             
-            // Validação da Chave
             if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY') {
-                console.warn('GEMINI_API_KEY não configurada.');
+                console.log('Modo manual (sem chave)');
                 setTimeout(() => {
-                    processingBox.style.display = 'none';
-                    transcriptionResult.style.display = 'block';
-                    leadSection.style.display = 'block';
-                    btnResetUpload.style.display = 'inline-block';
+                    els.processingBox.style.display = 'none';
+                    els.transcriptionResult.style.display = 'block';
+                    els.leadSection.style.display = 'block';
+                    els.btnResetUpload.style.display = 'inline-block';
                     
-                    transcriptionResult.innerHTML = `
+                    els.transcriptionResult.innerHTML = `
                         <div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
                             <div style="color: #c53030; font-weight: 700; margin-bottom: 5px;">📍 Arquivo Recebido com Sucesso</div>
-                            <p style="font-size: 0.9rem; color: #742a2a;">A leitura automática está temporariamente desativada. <b>Por favor, siga preenchendo os dados abaixo</b> para que nossa equipe médica faça a análise manual agora mesmo.</p>
+                            <p style="font-size: 0.9rem; color: #742a2a;">Recebemos sua imagem. <b>Por favor, informe seus dados logo abaixo</b> para finalizarmos seu atendimento.</p>
                         </div>
                     `;
-                    
-                    // Force scroll to form
-                    setTimeout(() => {
-                        leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 300);
+                    els.leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 1000);
                 return;
             }
@@ -481,90 +488,61 @@
             const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
             try {
-                const base64Data = await fileToBase64(file);
+                const reader = new FileReader();
+                const base64Promise = new Promise((resolve) => {
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.readAsDataURL(file);
+                });
+                const base64Data = await base64Promise;
                 
                 const prompt = `Analise esta foto de receita médica e extraia:
                 1. Quais os medicamentos prescritos?
                 2. Qual a dosagem e instrução de uso de cada um?
-                3. Responda em Português de forma clara e profissional.
-                Se não conseguir ler, informe que a imagem está ilegível.`;
+                3. Responda em Português de forma clara e profissional.`;
 
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{
-                            parts: [
-                                { text: prompt },
-                                { inline_data: { mime_type: file.type, data: base64Data } }
-                            ]
-                        }]
+                        contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: file.type, data: base64Data } }] }]
                     })
                 });
 
                 const data = await response.json();
+                if (data.error) throw new Error(data.error.message);
                 
-                if (data.error) throw new Error(data.error.message || 'Erro na API');
-                if (!data.candidates) throw new Error('IA não retornou resultados');
-
                 const aiText = data.candidates[0].content.parts[0].text;
+                window.lastTranscriptionText = aiText;
 
-                // Atualizar a UI com o resultado real
-                processingBox.style.display = 'none';
-                transcriptionResult.style.display = 'block';
-                leadSection.style.display = 'block';
-                btnResetUpload.style.display = 'inline-block';
+                els.processingBox.style.display = 'none';
+                els.transcriptionResult.style.display = 'block';
+                els.leadSection.style.display = 'block';
+                els.btnResetUpload.style.display = 'inline-block';
 
-                transcriptionResult.innerHTML = `
+                els.transcriptionResult.innerHTML = `
                     <div style="background: #f0fff4; border: 1px solid #c6f6d5; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
                         <div style="color: #2f855a; font-weight: 700; margin-bottom: 10px;">✅ Leitura da IA Concluída</div>
-                        <div style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.6; color: #2d3748;">
-                            ${aiText.replace(/\*/g, '')}
-                        </div>
+                        <div style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.6; color: #1a202c;">${aiText.replace(/\*/g, '')}</div>
                     </div>
                 `;
-
-                showStatus('Transcrição realizada pela IA.', 'info');
-                setTimeout(() => {
-                    leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 500);
-
-                window.lastTranscriptionText = aiText;
+                els.leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             } catch (err) {
                 console.error('Erro na IA:', err);
-                processingBox.style.display = 'none';
-                transcriptionResult.style.display = 'block';
-                leadSection.style.display = 'block';
-                btnResetUpload.style.display = 'inline-block';
-                
-                transcriptionResult.innerHTML = `
+                els.processingBox.style.display = 'none';
+                els.transcriptionResult.style.display = 'block';
+                els.leadSection.style.display = 'block';
+                els.btnResetUpload.style.display = 'inline-block';
+                els.transcriptionResult.innerHTML = `
                     <div style="background: #fffaf0; border: 1px solid #fbd38d; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                        <div style="color: #c05621; font-weight: 700; margin-bottom: 5px;">⚠️ Análise Manual Necessária</div>
-                        <p style="font-size: 0.9rem; color: #7b341e;">Não conseguimos ler automaticamente agora. Prossiga preenchendo seus dados abaixo para análise da nossa equipe.</p>
+                        <div style="color: #c05621; font-weight: 700; margin-bottom: 5px;">⚠️ Análise por Equipe Médica</div>
+                        <p style="font-size: 0.9rem; color: #7b341e;">Não foi possível ler automaticamente agora. Prossiga com seus dados abaixo para análise manual.</p>
                     </div>
                 `;
-                
-                leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                els.leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
-        function resetFile() {
-            selectedFile = null;
-            fileInput.value = '';
-            dropZone.style.display = 'flex';
-            previewBox.style.display = 'none';
-            statusDisplay.style.display = 'none';
-            leadSection.style.display = 'none';
-            transcriptionResult.style.display = 'none';
-            if (pdfFrame.src) URL.revokeObjectURL(pdfFrame.src);
-            pdfFrame.src = '';
-            document.getElementById('lead-form').style.display = 'block';
-            document.getElementById('success-message').style.display = 'none';
-            showStatus('Pronto para receber sua receita.', 'info');
-        }
-
-        // Final Confirm Send
         const finalSendBtn = document.getElementById('final-send-btn');
         finalSendBtn.addEventListener('click', async function () {
             const name = document.getElementById('lead-name').value;
@@ -572,7 +550,7 @@
             const whatsapp = document.getElementById('lead-whatsapp').value;
 
             if (!name || !email || !whatsapp) {
-                alert('Por favor, preencha todos os campos para enviar sua receita.');
+                alert('Informe Nome, E-mail e WhatsApp para continuar.');
                 return;
             }
 
@@ -580,75 +558,54 @@
             finalSendBtn.textContent = 'Enviando...';
 
             try {
-                // 1. Upload file to Supabase Storage
                 const fileExt = selectedFile.name.split('.').pop();
                 const fileName = `${Date.now()}.${fileExt}`;
                 const filePath = `prescriptions/${fileName}`;
 
-                const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from('prescriptions')
-                    .upload(filePath, selectedFile);
-
+                const { error: uploadError } = await supabase.storage.from('prescriptions').upload(filePath, selectedFile);
                 if (uploadError) throw uploadError;
 
                 const { data: urlData } = supabase.storage.from('prescriptions').getPublicUrl(filePath);
-                const fileUrl = urlData.publicUrl;
-
-                // 2. Save lead data
-                const { error: dbError } = await supabase
-                    .from('leads')
-                    .insert([{
-                        nome: name,
-                        email: email,
-                        whatsapp: whatsapp,
-                        arquivo_url: fileUrl,
-                        status: 'Novo',
-                        tipo_origem: 'Receita'
-                    }]);
+                
+                const { data: leadArr, error: dbError } = await supabase.from('leads').insert([{
+                    nome: name, email: email, whatsapp: whatsapp, arquivo_url: urlData.publicUrl, tipo_origem: 'Receita', status: 'Novo'
+                }]).select('id');
 
                 if (dbError) throw dbError;
 
-                // 3. Save AI Transcription if available
-                if (window.lastTranscriptionText) {
-                    // Fetch the lead ID just created
-                    const { data: leadData } = await supabase
-                        .from('leads')
-                        .select('id')
-                        .eq('email', email)
-                        .order('created_at', { ascending: false })
-                        .limit(1)
-                        .single();
-
-                    if (leadData) {
-                        await supabase
-                            .from('transcription_results')
-                            .insert([{
-                                lead_id: leadData.id,
-                                full_text: window.lastTranscriptionText,
-                                status: 'processed'
-                            }]);
-                    }
+                if (window.lastTranscriptionText && leadArr && leadArr[0]) {
+                    await supabase.from('transcription_results').insert([{
+                        lead_id: leadArr[0].id, full_text: window.lastTranscriptionText, status: 'processed'
+                    }]);
                 }
 
                 document.getElementById('lead-form').style.display = 'none';
                 document.getElementById('success-message').style.display = 'block';
-                btnResetUpload.style.display = 'none';
-
+                els.btnResetUpload.style.display = 'none';
                 setTimeout(() => { window.location.href = 'index.html'; }, 3000);
             } catch (err) {
-                console.error(err);
                 alert('Erro ao enviar: ' + err.message);
                 finalSendBtn.disabled = false;
                 finalSendBtn.textContent = 'Enviar para o médico';
             }
         });
 
-        // Drag and Drop
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = '#0047AB'; });
-        dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = '#CBD5E0'; });
-        dropZone.addEventListener('drop', (e) => {
+        function resetFile() {
+            selectedFile = null;
+            els.fileInput.value = '';
+            els.dropZone.style.display = 'flex';
+            els.previewBox.style.display = 'none';
+            els.leadSection.style.display = 'none';
+            els.transcriptionResult.style.display = 'none';
+            document.getElementById('lead-form').style.display = 'block';
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        els.dropZone.addEventListener('dragover', (e) => { e.preventDefault(); els.dropZone.style.borderColor = '#0047AB'; });
+        els.dropZone.addEventListener('dragleave', () => { els.dropZone.style.borderColor = '#CBD5E0'; });
+        els.dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.style.borderColor = '#CBD5E0';
+            els.dropZone.style.borderColor = '#CBD5E0';
             handleFile(e.dataTransfer.files[0]);
         });
     </script>
