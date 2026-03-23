@@ -565,7 +565,11 @@
 
             try {
                 const fileExt = selectedFile.name.split('.').pop();
-                const fileName = `${Date.now()}.${fileExt}`;
+                // Carimba o arquivo com nome, email e zap da pessoa
+                const safeName = name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_\-áéíóúâêîôûãõàèìòùç]/g, '');
+                const safeEmail = email.replace(/[^a-zA-Z0-9@._\-]/g, '');
+                const safeZap = whatsapp.replace(/\D/g, '');
+                const fileName = `${safeName}_${safeEmail}_${safeZap}_${Date.now()}.${fileExt}`;
                 const filePath = `prescriptions/${fileName}`;
 
                 const { error: uploadError } = await supabase.storage.from('prescriptions').upload(filePath, selectedFile);
