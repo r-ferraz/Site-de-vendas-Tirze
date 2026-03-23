@@ -291,14 +291,15 @@
 
             <!-- Removed Main Action Buttons as requested -->
 
-            <input type="file" id="file-input" style="display: none;" accept="image/*,application/pdf">
-            <label for="file-input" class="upload-box" id="drop-zone" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:15px;">
+            <div class="upload-box" id="drop-zone" style="position:relative;">
                 <div class="upload-icon">📄</div>
                 <div style="font-weight: 700; color: var(--text-dark); font-size: 1.1rem;">Clique para escolher um
                     arquivo ou tire uma foto</div>
                 <div style="font-size: 0.9rem; color: #718096; max-width: 80%; line-height: 1.4;">Você pode enviar uma
                     foto legível ou um documento PDF da sua receita médica. (Máx 10MB)</div>
-            </label>
+                <input type="file" id="file-input" accept="image/*,application/pdf"
+                    style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer; font-size:100px;">
+            </div>
 
             <div id="status-display" class="status-msg"></div>
 
