@@ -462,10 +462,19 @@
                     transcriptionResult.style.display = 'block';
                     leadSection.style.display = 'block';
                     btnResetUpload.style.display = 'inline-block';
-                    transcriptionResult.innerHTML = `<div class="transcription-title">Aviso</div>
-                        <p>A transcrição automática está desativada (Chave de API ausente). Por favor, preencha os dados abaixo e nossa equipe fará a leitura manual.</p>`;
-                    leadSection.scrollIntoView({ behavior: 'smooth' });
-                }, 1500);
+                    
+                    transcriptionResult.innerHTML = `
+                        <div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                            <div style="color: #c53030; font-weight: 700; margin-bottom: 5px;">📍 Arquivo Recebido com Sucesso</div>
+                            <p style="font-size: 0.9rem; color: #742a2a;">A leitura automática está temporariamente desativada. <b>Por favor, siga preenchendo os dados abaixo</b> para que nossa equipe médica faça a análise manual agora mesmo.</p>
+                        </div>
+                    `;
+                    
+                    // Force scroll to form
+                    setTimeout(() => {
+                        leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 300);
+                }, 1000);
                 return;
             }
 
@@ -495,13 +504,8 @@
 
                 const data = await response.json();
                 
-                if (data.error) {
-                    throw new Error(data.error.message || 'Erro na API do Gemini');
-                }
-
-                if (!data.candidates || !data.candidates[0].content) {
-                    throw new Error('Resposta da IA em formato inesperado');
-                }
+                if (data.error) throw new Error(data.error.message || 'Erro na API');
+                if (!data.candidates) throw new Error('IA não retornou resultados');
 
                 const aiText = data.candidates[0].content.parts[0].text;
 
@@ -511,27 +515,37 @@
                 leadSection.style.display = 'block';
                 btnResetUpload.style.display = 'inline-block';
 
-                // Formatando o resultado da IA
-                transcriptionResult.innerHTML = `<div class="transcription-title">Receita Transcrita (IA)</div>
-                    <div style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.6; color: #4a5568;">
-                        ${aiText.replace(/\*/g, '')}
-                    </div>`;
+                transcriptionResult.innerHTML = `
+                    <div style="background: #f0fff4; border: 1px solid #c6f6d5; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                        <div style="color: #2f855a; font-weight: 700; margin-bottom: 10px;">✅ Leitura da IA Concluída</div>
+                        <div style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.6; color: #2d3748;">
+                            ${aiText.replace(/\*/g, '')}
+                        </div>
+                    </div>
+                `;
 
-                showStatus('Transcrição realizada com sucesso pela IA.', 'info');
-                leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                showStatus('Transcrição realizada pela IA.', 'info');
+                setTimeout(() => {
+                    leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 500);
 
-                // Salvar o resultado da transcrição e vincular futuramente
                 window.lastTranscriptionText = aiText;
 
             } catch (err) {
                 console.error('Erro na IA:', err);
-                // Fallback para o comportamento anterior em caso de erro na API
                 processingBox.style.display = 'none';
                 transcriptionResult.style.display = 'block';
                 leadSection.style.display = 'block';
                 btnResetUpload.style.display = 'inline-block';
-                transcriptionResult.innerHTML = `<div class="transcription-title">Aviso</div>
-                    <p style="color: #991b1b;">Não foi possível usar a IA no momento (Verifique sua API Key). Por favor, prossiga com o envio e nossa equipe transcreverá manualmente.</p>`;
+                
+                transcriptionResult.innerHTML = `
+                    <div style="background: #fffaf0; border: 1px solid #fbd38d; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                        <div style="color: #c05621; font-weight: 700; margin-bottom: 5px;">⚠️ Análise Manual Necessária</div>
+                        <p style="font-size: 0.9rem; color: #7b341e;">Não conseguimos ler automaticamente agora. Prossiga preenchendo seus dados abaixo para análise da nossa equipe.</p>
+                    </div>
+                `;
+                
+                leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
