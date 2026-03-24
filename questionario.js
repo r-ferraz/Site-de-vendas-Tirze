@@ -87,16 +87,62 @@ async function saveLead(data) {
                     email: data.email,
                     status: 'Novo',
                     tipo_origem: 'Questionário',
-                    metadata: data // Full questionnaire progress
+                    metadata: data
                 }
             ]);
 
         if (error) throw error;
         console.log('Lead salvo com sucesso!');
+
+        // --- Monta o resumo das respostas para o email ---
+        const labels = {
+            objetivos: 'Objetivos',
+            tratamento_anterior: 'Tratamento anterior?',
+            tentativas_anteriores: 'Já tentou',
+            tempo_tentativa: 'Tempo tentando emagrecer',
+            desafios: 'Maiores desafios',
+            nome: 'Nome',
+            whatsapp: 'WhatsApp',
+            email: 'E-mail',
+            data_nasc: 'Data de nascimento',
+            sexo: 'Sexo biológico',
+            peso: 'Peso (kg)',
+            altura: 'Altura (cm)',
+            target: 'Tem meta de peso?',
+            meta_peso: 'Meta de peso (kg)',
+            saude_historico: 'Histórico de saúde',
+            bariatrica: 'Cirurgia bariátrica?',
+            preferencia: 'Prioridade no tratamento'
+        };
+
+        let respostasHtml = '';
+        Object.entries(labels).forEach(([key, label]) => {
+            const valor = data[key];
+            if (!valor) return;
+            const display = Array.isArray(valor) ? valor.join(', ') : valor;
+            const bg = respostasHtml.split('<tr').length % 2 === 0 ? '#f9f9f9' : 'white';
+            respostasHtml += `<tr style="background:${bg}"><td style="padding:8px;color:#555;width:200px">${label}</td><td style="padding:8px;font-weight:500">${display}</td></tr>`;
+        });
+
+        // --- Envia para o n8n → Gmail ---
+        fetch('https://n8n.akinconsultoria.com.br/webhook/nova-receita', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tipo: 'Questionário Respondido',
+                nome: data.nome || 'Cliente',
+                email: data.email || '',
+                whatsapp: data.whatsapp || '',
+                arquivo_url: '',
+                respostas_html: `<table style="width:100%;border-collapse:collapse">${respostasHtml}</table>`
+            })
+        }).catch(err => console.warn('[n8n] Questionário webhook falhou:', err));
+
     } catch (err) {
         console.error('Erro ao salvar lead:', err.message);
     }
 }
+
 
 function nextStep() {
     // Collect input data
