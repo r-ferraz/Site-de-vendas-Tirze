@@ -1,0 +1,95 @@
+{
+  "name": "Maori - Nova Receita → Gmail com PDF",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nova-receita",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "node-webhook-001",
+      "name": "Webhook - Recebe Receita",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [100, 300],
+      "webhookId": "maori-nova-receita-2026"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.body.arquivo_url }}",
+        "method": "GET",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "pdf_receita"
+            }
+          }
+        }
+      },
+      "id": "node-http-002",
+      "name": "HTTP - Baixar PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [340, 300]
+    },
+    {
+      "parameters": {
+        "sendTo": "SEU_EMAIL@gmail.com",
+        "subject": "=📋 Nova Receita - {{ $('Webhook - Recebe Receita').item.json.body.nome }}",
+        "emailType": "html",
+        "message": "=<div style=\"font-family:Arial,sans-serif;max-width:600px;margin:auto;border:1px solid #e0e0e0;border-radius:12px;overflow:hidden\">\n  <div style=\"background:#0047AB;padding:20px 24px\">\n    <h2 style=\"color:white;margin:0\">📋 Nova Receita Recebida</h2>\n    <p style=\"color:#cce5ff;margin:4px 0 0\">Site Maori – Plataforma de Saúde</p>\n  </div>\n  <div style=\"padding:24px\">\n    <table style=\"width:100%;border-collapse:collapse\">\n      <tr><td style=\"padding:8px 0;color:#555;width:120px\">👤 Nome</td><td style=\"padding:8px 0;font-weight:bold\">{{ $('Webhook - Recebe Receita').item.json.body.nome }}</td></tr>\n      <tr style=\"background:#f9f9f9\"><td style=\"padding:8px 0;color:#555\">📧 E-mail</td><td style=\"padding:8px 0\">{{ $('Webhook - Recebe Receita').item.json.body.email }}</td></tr>\n      <tr><td style=\"padding:8px 0;color:#555\">📱 WhatsApp</td><td style=\"padding:8px 0\">{{ $('Webhook - Recebe Receita').item.json.body.whatsapp }}</td></tr>\n    </table>\n    <p style=\"margin-top:20px;color:#555\">O arquivo PDF com a assinatura do paciente está <strong>anexado a este email</strong>.</p>\n    <p style=\"margin-top:8px;color:#888;font-size:13px\">Acesse o CRM: <a href=\"https://siteakin.relatorios1.workers.dev/crm\">siteakin.relatorios1.workers.dev/crm</a></p>\n  </div>\n</div>",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "pdf_receita"
+              }
+            ]
+          }
+        }
+      },
+      "id": "node-gmail-003",
+      "name": "Gmail - Enviar com Anexo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [580, 300],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - Recebe Receita": {
+      "main": [
+        [
+          {
+            "node": "HTTP - Baixar PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Baixar PDF": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Enviar com Anexo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}

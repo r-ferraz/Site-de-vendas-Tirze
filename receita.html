@@ -660,6 +660,18 @@
                     }]);
                 }
 
+                // Notifica o n8n para enviar email com o PDF anexado
+                fetch('https://n8n.akinconsultoria.com.br/webhook/nova-receita', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nome: name,
+                        email: email,
+                        whatsapp: whatsapp,
+                        arquivo_url: urlData.publicUrl
+                    })
+                }).catch(err => console.warn('[n8n] Webhook não respondeu:', err));
+
                 document.getElementById('lead-form').style.display = 'none';
                 document.getElementById('success-message').style.display = 'block';
                 els.btnResetUpload.style.display = 'none';
