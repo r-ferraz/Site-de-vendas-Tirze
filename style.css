@@ -584,17 +584,28 @@ footer {
 .glp1-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-areas: "image text";
     gap: 60px;
     align-items: start;
 }
 
 .glp1-image {
-    background: #fff7f1;
+    grid-area: image;
+    background: var(--bg-offwhite);
     border-radius: 30px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    padding: 40px 20px;
+}
+
+.glp1-text {
+    grid-area: text;
+    background: var(--bg-offwhite);
+    padding: 40px;
+    border-radius: 20px;
 }
 
 .glp1-image img {
