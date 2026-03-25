@@ -122,5 +122,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 
+    // Scroll Reveal Animation (Intersection Observer)
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                // Optional: stop observing once revealed
+                // revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.15 // Trigger when 15% of the element is visible
+    });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+        revealObserver.observe(el);
+    });
+
     console.log('Maori site initialized successfully.');
 });

@@ -39,7 +39,7 @@
 
     <main>
         <!-- Hero Section -->
-        <section class="hero">
+        <section class="hero reveal">
             <div class="container">
                 <div class="hero-content">
                     <h1>Emagreça sem sair de casa</h1>
@@ -91,7 +91,7 @@
         </section>
 
         <!-- Stats Counter Section (Social Proof) -->
-        <section class="section" style="background: white; border-bottom: 1px solid var(--border-color);">
+        <section class="section reveal" style="background: white; border-bottom: 1px solid var(--border-color);">
             <div class="container" style="text-align: center;">
                 <h2 style="font-size: 3rem; margin-bottom: 10px;">Mais de 2.000 Vidas Transformadas</h2>
                 <h3 style="font-size: 2rem; margin-bottom: 20px; font-weight: 500; color: var(--primary-dark);">Mais de 40.000 kg de Gordura Eliminada</h3>
@@ -102,78 +102,53 @@
         </section>
 
         <!-- The Journey (Jornada) Section -->
-        <section id="como-funciona" class="section" style="background: var(--bg-offwhite);">
-            <div class="container">
-                <h2 style="text-align: center; margin-bottom: 60px; font-size: 2.5rem;">Uma jornada simples e segura
-                </h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
-                    <!-- Step 1 -->
-                    <div
-                        style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                        <div
-                            style="width: 50px; height: 50px; background: var(--accent-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; color: var(--primary-blue); font-weight: bold; font-size: 1.2rem;">
-                            1</div>
-                        <h3 style="margin-bottom: 16px;">Questionário Online</h3>
-                        <p style="color: var(--text-muted);">Responda algumas perguntas sobre sua saúde e histórico
-                            médico em poucos minutos.</p>
+        <section id="como-funciona" class="section reveal" style="background: var(--bg-offwhite);">
+            <div class="container journey-container">
+                <h2 class="section-title reveal">Uma jornada simples e segura</h2>
+                <div class="journey-grid">
+                    <div class="journey-step reveal delay-100">
+                        <div class="step-number">1</div>
+                        <h3>Questionário Online</h3>
+                        <p>Responda algumas perguntas sobre sua saúde e histórico médico em poucos minutos.</p>
                     </div>
-                    <!-- Step 2 -->
-                    <div
-                        style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                        <div
-                            style="width: 50px; height: 50px; background: var(--accent-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; color: var(--primary-blue); font-weight: bold; font-size: 1.2rem;">
-                            2</div>
-                        <h3 style="margin-bottom: 16px;">Análise Médica</h3>
-                        <p style="color: var(--text-muted);">Nossos especialistas atendem você para criar um tratamento efetivo e seguro.</p>
+                    <div class="journey-step reveal delay-200">
+                        <div class="step-number">2</div>
+                        <h3>Análise Médica</h3>
+                        <p>Nossos especialistas atendem você para criar um tratamento efetivo e seguro.</p>
                     </div>
-                    <!-- Step 3 -->
-                    <div
-                        style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                        <div
-                            style="width: 50px; height: 50px; background: var(--accent-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; color: var(--primary-blue); font-weight: bold; font-size: 1.2rem;">
-                            3</div>
-                        <h3 style="margin-bottom: 16px;">Entrega na sua porta</h3>
-                        <p style="color: var(--text-muted);">Receba o tratamento no conforto de sua casa com total
-                            discrição e conveniência.</p>
+                    <div class="journey-step reveal delay-300">
+                        <div class="step-number">3</div>
+                        <h3>Entrega na sua porta</h3>
+                        <p>Receba o tratamento no conforto de sua casa com total discrição e conveniência.</p>
                     </div>
-                    <!-- Step 4 -->
-                    <div
-                        style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                        <div
-                            style="width: 50px; height: 50px; background: var(--accent-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; color: var(--primary-blue); font-weight: bold; font-size: 1.2rem;">
-                            4</div>
-                        <h3 style="margin-bottom: 16px;">Suporte Contínuo</h3>
-                        <p style="color: var(--text-muted);">Acompanhamento mensal com o time para ajustar o plano e garantir resultados.</p>
+                    <div class="journey-step reveal delay-400">
+                        <div class="step-number">4</div>
+                        <h3>Suporte Contínuo</h3>
+                        <p>Acompanhamento mensal com o time para ajustar o plano e garantir resultados.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Treatments Section -->
-        <section id="tratamentos" class="section" style="background: white;">
-            <div class="container">
-                <div style="text-align: center; margin-bottom: 80px;">
-                    <h2 style="font-size: 2.5rem; margin-bottom: 20px; color: var(--primary-dark);">Tratamentos modernos
-                        e seguros</h2>
-                    <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto; font-size: 1.15rem;">
-                        Oferecemos acesso aos medicamentos mais avançados do mercado para o gerenciamento de peso, todos
-                        com laudos, controle de qualidade e com procedência garantida.</p>
-                </div>
-
+        <section id="tratamentos" class="section reveal">
+            <div class="container treatments-summary">
+                <h2 class="section-title reveal">Tratamentos modernos e seguros</h2>
+                <p class="section-subtitle reveal">Oferecemos acesso aos medicamentos mais avançados do mercado para o gerenciamento
+                    de peso, todos com laudos, controle de qualidade e com procedência garantida.</p>
+            </div>
         </section>
 
         <!-- Evaluation Section (Off-white break) -->
-        <section class="section" style="background: var(--bg-offwhite);">
-            <div class="container">
-                <div style="margin-top: 0px;">
-                    <h2 style="font-size: 2.5rem; margin-bottom: 20px; color: var(--primary-dark);">Faça uma
-                        avaliação médica e tenha o diagnóstico certo</h2>
-                    <p style="color: var(--text-muted); margin-bottom: 40px; font-size: 1.1rem;">Existem vários
-                        tratamentos seguros e registrados na ANVISA que funcionam como inibidores de apetite, cada
-                        um com um princípio ativo. É essencial que o médico entenda sua necessidade antes de
-                        qualquer prescrição.</p>
-
-                    <div class="med-eval-grid" style="display: flex; justify-content: center;">
+        <section class="section reveal" style="background: var(--bg-offwhite);">
+            <div class="container medical-evaluation">
+                <div class="eval-content reveal">
+                    <h2 class="section-title-large">Faça uma avaliação médica e tenha o diagnóstico certo</h2>
+                    <p>Existem vários tratamentos seguros e registrados na ANVISA que funcionam como inibidores de apetite,
+                        cada um com um princípio ativo. É essencial que o médico entenda sua necessidade antes de qualquer
+                        prescrição.</p>
+                </div>
+      <div class="med-eval-grid" style="display: flex; justify-content: center;">
                         <!-- Tirzepatida Card -->
                         <div class="med-card" style="max-width: 350px;">
                             <div class="med-card-img">
@@ -191,9 +166,9 @@
         </section>
 
         <!-- GLP-1 Section (White background, swapped columns) -->
-        <section class="section" style="background: white;">
-            <div class="container">
-                <div style="margin-top: 40px;" class="glp1-container">
+        <section class="section reveal" style="background: white;">
+            <div class="container glp1-container">
+                <div class="glp1-content reveal">
                     <!-- Image moved to LEFT -->
                     <div class="glp1-image">
                         <img src="assets/nova_caneta.png"
@@ -274,11 +249,11 @@
         </section>
 
         <!-- O que Oferecemos Section (MeuBeme style) -->
-        <section id="oferecemos" class="section" style="background: var(--bg-offwhite);">
+        <section id="oferecemos" class="section reveal" style="background: var(--bg-offwhite);">
             <div class="container">
-                <h2 style="font-size: 2.5rem; margin-bottom: 60px;">O que oferecemos?</h2>
+                <h2 class="reveal" style="font-size: 2.5rem; margin-bottom: 60px;">O que oferecemos?</h2>
                 <div class="offering-grid">
-                    <div class="offering-card">
+                    <div class="offering-card reveal delay-100">
                         <div class="offering-img"
                             style="background-image: url('https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?q=80&w=800&auto=format&fit=crop');">
                         </div>
@@ -287,7 +262,7 @@
                             <p>Prescrição individualizada e entrega domiciliar de tratamentos.</p>
                         </div>
                     </div>
-                    <div class="offering-card">
+                    <div class="offering-card reveal delay-200">
                         <div class="offering-img"
                             style="background-image: url('https://images.unsplash.com/photo-1576091160550-2173dad99901?q=80&w=800&auto=format&fit=crop');">
                         </div>
@@ -296,7 +271,7 @@
                             <p>Planos personalizados e acompanhamento multidisciplinar focado em resultados reais.</p>
                         </div>
                     </div>
-                    <div class="offering-card">
+                    <div class="offering-card reveal delay-300">
                         <div class="offering-img"
                             style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop');">
                         </div>
@@ -311,9 +286,9 @@
         </section>
 
         <!-- Scientific Data Section -->
-        <section class="section" style="background: white;">
+        <section class="section reveal" style="background: white;">
             <div class="container">
-                <div class="data-card">
+                <div class="data-card reveal">
                     <div>
                         <h2 style="font-size: 2.5rem; margin-bottom: 24px; color: white;">Dados Científicos</h2>
                         <p style="margin-bottom: 40px; opacity: 0.9;">Estudos mostram que o acompanhamento
@@ -342,11 +317,11 @@
         </section>
 
         <!-- FAQ Section -->
-        <section id="faq" class="section" style="background: var(--bg-offwhite);">
+        <section id="faq" class="section reveal" style="background: var(--bg-offwhite);">
             <div class="container">
-                <h2 style="text-align: center; margin-bottom: 60px; font-size: 2.5rem;">Perguntas Frequentes</h2>
+                <h2 class="reveal" style="text-align: center; margin-bottom: 60px; font-size: 2.5rem;">Perguntas Frequentes</h2>
                 <div class="faq-container">
-                    <div class="faq-item">
+                    <div class="faq-item reveal">
                         <div class="faq-question">Preciso de receita médica para comprar? <span>+</span></div>
                         <div class="faq-answer">Sim, todos os medicamentos que oferecemos exigem prescrição. Se você já
                             tem a sua, pode fazer o upload na nossa plataforma. Se não tem, nosso sistema de triagem
@@ -371,9 +346,9 @@
         <!-- MEUBEME INTEGRATION START -->
 
         <!-- MB Hero Section -->
-        <section class="mb-hero">
+        <section class="mb-hero reveal">
             <div class="container mb-hero-container">
-                <div class="mb-hero-content">
+                <div class="mb-hero-content reveal">
                     <div class="mb-badge">E o melhor de tudo: sem sair de casa.</div>
                     <h2>Inicie a sua jornada rumo ao gerenciamento de peso saudável</h2>
 
@@ -399,9 +374,9 @@
         </section>
 
         <!-- MB "Por que escolher" Section -->
-        <section class="section" style="background: var(--bg-teal-light);">
+        <section class="section reveal" style="background: var(--bg-teal-light);">
             <div class="container mb-why-container">
-                <div>
+                <div class="reveal">
                     <h2 class="section-title-large">Por que escolher a Maori?</h2>
                     <p style="font-size: 1.2rem; color: var(--text-muted);">Nascemos para transformar o acesso aos melhores tratamentos para gerenciamento de peso no Brasil.</p>
                 </div>
@@ -434,23 +409,23 @@
 
 
         <!-- MB Icon Bar -->
-        <div class="mb-icon-bar" style="border-top: 1px solid #eee;">
-            <div class="mb-icon-item">
+        <div class="mb-icon-bar reveal" style="border-top: 1px solid #eee;">
+            <div class="mb-icon-item reveal delay-100">
                 <span
                     style="font-size: 2.5rem; color: var(--primary-teal); display: block; margin-bottom: 15px;">🩺</span>
                 <p>PROFISSIONAIS QUALIFICADOS E FORNECEDORES REGULAMENTADAS</p>
             </div>
-            <div class="mb-icon-item">
+            <div class="mb-icon-item reveal delay-200">
                 <span
                     style="font-size: 2.5rem; color: var(--primary-teal); display: block; margin-bottom: 15px;">🛡️</span>
                 <p>PROTOCOLOS RIGOROSOS DE QUALIDADE E SEGURANÇA</p>
             </div>
-            <div class="mb-icon-item">
+            <div class="mb-icon-item reveal delay-300">
                 <span
                     style="font-size: 2.5rem; color: var(--primary-teal); display: block; margin-bottom: 15px;">❤️</span>
                 <p>ATENDIMENTO EMPÁTICO E LINGUAGEM ACESSÍVEL</p>
             </div>
-            <div class="mb-icon-item">
+            <div class="mb-icon-item reveal delay-400">
                 <span
                     style="font-size: 2.5rem; color: var(--primary-teal); display: block; margin-bottom: 15px;">📱</span>
                 <p>EXPERIÊNCIA DIGITAL FLUIDA, SEM BUROCRACIA</p>

@@ -787,3 +787,22 @@ footer {
         font-size: 1.5rem;
     }
 }
+
+/* Scroll Reveal Animations */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Staggered Delay Utilities */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
