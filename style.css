@@ -580,12 +580,12 @@ footer {
 }
 
 /* GLP-1 Section */
-.glp1-container {
+.glp1-content {
     display: grid;
     grid-template-columns: 1fr 1.25fr;
-    grid-template-areas: "image text";
     gap: 40px;
     align-items: stretch; /* Aligns heights of both cards */
+    width: 100%;
 }
 
 .glp1-image {
@@ -712,9 +712,9 @@ footer {
         max-width: 100%;
     }
 
-    .glp1-container {
+    .glp1-content {
         grid-template-columns: 1fr;
-        gap: 40px;
+        gap: 30px;
     }
 
     .glp1-image {
