@@ -177,6 +177,38 @@ function showResults() {
     questionnaireBox.style.display = 'none';
     resultsBox.style.display = 'block';
 
+    // --- Salva TODOS os dados do questionário neste momento (completo) ---
+    const labels = {
+        objetivos: 'Objetivos',
+        tratamento_anterior: 'Tratamento anterior?',
+        tentativas_anteriores: 'Já tentou',
+        tempo_tentativa: 'Tempo tentando emagrecer',
+        desafios: 'Maiores desafios',
+        nome: 'Nome',
+        whatsapp: 'WhatsApp',
+        email: 'E-mail',
+        data_nasc: 'Data de nascimento',
+        sexo: 'Sexo biológico',
+        peso: 'Peso (kg)',
+        altura: 'Altura (cm)',
+        target: 'Tem meta de peso?',
+        meta_peso: 'Meta de peso (kg)',
+        saude_historico: 'Histórico de saúde',
+        bariatrica: 'Cirurgia bariátrica?',
+        preferencia: 'Prioridade no tratamento'
+    };
+    let rows = '';
+    let i = 0;
+    Object.entries(labels).forEach(([key, label]) => {
+        const valor = userData[key];
+        if (!valor) return;
+        const display = Array.isArray(valor) ? valor.join(', ') : valor;
+        const bg = i++ % 2 === 0 ? 'white' : '#f9f9f9';
+        rows += `<tr style="background:${bg}"><td style="padding:10px;color:#555;width:200px;font-weight:500">${label}</td><td style="padding:10px">${display}</td></tr>`;
+    });
+    window._questionarioRespostasHtml = `<table style="width:100%;border-collapse:collapse;font-family:Arial,sans-serif">${rows}</table>`;
+    window._questionarioLeadData = { nome: userData.nome, email: userData.email, whatsapp: userData.whatsapp };
+
     const peso = parseFloat(userData.peso);
     const meta = parseFloat(userData.meta_peso) || (peso * 0.85); // Default 15% loss
     const altura = parseFloat(userData.altura) / 100;
