@@ -221,7 +221,7 @@ function showResults() {
             <button class="btn btn-primary" style="margin-top: 20px; width: 100%;" onclick="
                 const lead = window._questionarioLeadData || {};
                 const html = window._questionarioRespostasHtml || '';
-                fetch('https://n8n.akinconsultoria.com.br/webhook/nova-receita', {
+                fetch('https://n8n.akinconsultoria.com.br/webhook/novo-questionario', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
