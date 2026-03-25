@@ -342,20 +342,19 @@ footer {
     display: flex;
     align-items: center;
     padding: 120px 5%;
-    background-color: white;
-    min-height: 80vh;
+    background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), 
+                url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1800&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 70vh;
 }
 
 .mb-hero-content {
     flex: 1;
-    padding-right: 50px;
-}
-
-.mb-hero-visual {
-    flex: 1;
-    position: relative;
-    display: flex;
-    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .mb-hero h1 {
