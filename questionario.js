@@ -295,7 +295,7 @@ function showResults() {
             const rect = el.getBoundingClientRect();
             const containerRect = chartContainer.getBoundingClientRect();
             const x = rect.left - containerRect.left + rect.width / 2;
-            const targetY = h - (h * targetHeights[index] / 100) - 20; // top minus label offset
+            const targetY = h - (h * targetHeights[index] / 100); // bottom minus exact bar height
             d += (index === 0 ? 'M' : 'L') + ` ${x},${targetY} `;
         });
         
