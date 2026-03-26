@@ -457,9 +457,9 @@
                 <div class="footer-col">
                     <h4>Legal</h4>
                     <ul>
-                        <li><a href="#">Termos de Uso</a></li>
-                        <li><a href="#">Privacidade</a></li>
-                        <li><a href="#">Ética Médica</a></li>
+                        <li><a href="termos-de-uso.html">Termos de Uso Automático/Telemedicina</a></li>
+                        <li><a href="politica-de-privacidade.html">Privacidade e Proteção de Dados Sigilosos</a></li>
+                        <li><a href="politica-de-cookies.html">Política de Cookies</a></li>
                     </ul>
                 </div>
             </div>
@@ -470,7 +470,29 @@
         </div>
     </footer>
 
+    <!-- LGPD Cookie Banner -->
+    <div id="cookie-banner" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 25px 20px; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); z-index: 9999; flex-direction: column; align-items: center; justify-content: space-between; gap: 20px; border-top: 2px solid var(--primary-teal); font-family: var(--font-sans);">
+        <div style="max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; width: 100%;">
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <h3 style="margin: 0; color: var(--primary-dark); font-size: 1.25rem;">Nós valorizamos a sua privacidade e os seus dados de saúde</h3>
+                <p style="margin: 0; color: var(--text-muted); font-size: 1rem; line-height: 1.5;">Nós (Clínica Maori) utilizamos cookies técnicos e analíticos para garantir que o nosso ambiente virtual funcione corretamente, proteger seus dados de saúde na avaliação, e entender como você utiliza nossa plataforma de telemedicina. Conheça nossa nova <a href="politica-de-privacidade.html" style="color: var(--primary-blue); text-decoration: underline;">Política de Privacidade</a> e <a href="politica-de-cookies.html" style="color: var(--primary-blue); text-decoration: underline;">Política de Cookies</a>.</p>
+            </div>
+            <div style="display: flex; gap: 15px; align-self: flex-end;">
+                <button id="btn-aceitar-cookies" class="btn btn-primary" style="padding: 12px 30px; border-radius: 8px;">Concordo e Aceito</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (!localStorage.getItem("lgpd_consent_maori")) {
+                document.getElementById("cookie-banner").style.display = "flex";
+            }
+            document.getElementById("btn-aceitar-cookies").addEventListener("click", function () {
+                localStorage.setItem("lgpd_consent_maori", "true");
+                document.getElementById("cookie-banner").style.display = "none";
+            });
+        });
+    </script>
     <script src="main.js"></script>
 </body>
-
 </html>
