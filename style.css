@@ -868,6 +868,22 @@ footer {
     .logo {
         font-size: 1.5rem;
     }
+
+    .mb-badge {
+        font-size: 1rem;
+        padding: 10px 20px;
+        letter-spacing: 0;
+    }
+
+    .mb-feature-item {
+        font-size: 1.1rem;
+        align-items: flex-start;
+    }
+
+    .mb-feature-item span svg {
+        width: 22px;
+        height: 22px;
+    }
 }
 
 /* Scroll Reveal Animations */
