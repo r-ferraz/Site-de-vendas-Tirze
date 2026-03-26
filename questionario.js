@@ -128,6 +128,18 @@ async function saveLead(data) {
         window._questionarioRespostasHtml = `<table style="width:100%;border-collapse:collapse">${respostasHtml}</table>`;
         window._questionarioLeadData = { nome: data.nome, email: data.email, whatsapp: data.whatsapp };
 
+        // Integração de Nome e WhatsApp para oferta de Avaliação Online Gratuita
+        fetch('https://n8n.akinconsultoria.com.br/webhook/novo-questionario', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tipo: 'Novo Lead - Avaliação Gratuita',
+                nome: data.nome,
+                whatsapp: data.whatsapp,
+                email: data.email
+            })
+        }).catch(e => console.warn('[n8n lead capture]', e));
+
     } catch (err) {
         console.error('Erro ao salvar lead:', err.message);
     }

@@ -499,10 +499,12 @@
 
                 if (error) throw error;
 
-                // Placeholder for specific payment integration (Mercado Pago or WhatsApp)
+                // Pós-Venda: Redirecionamento automático para o WhatsApp
                 setTimeout(() => {
-                    alert('Pedido capturado com sucesso! Em breve você receberá um contato para finalizar o pagamento.');
-                    window.location.href = 'index.html';
+                    alert('Pedido capturado com sucesso! Você será direcionado para o nosso WhatsApp para concluir a avaliação e finalizar o pagamento.');
+                    const mensagem = encodeURIComponent(`Olá! Acabei de finalizar o pedido da minha avaliação no site e gostaria de seguir com o próximo passo.`);
+                    // O número abaixo pode ser alterado diretamente aqui no href
+                    window.location.href = `https://wa.me/5511999999999?text=${mensagem}`;
                 }, 1500);
 
             } catch (err) {
