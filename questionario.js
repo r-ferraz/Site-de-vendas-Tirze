@@ -214,33 +214,57 @@ function showResults() {
     const altura = parseFloat(userData.altura) / 100;
     const imc = (peso / (altura * altura)).toFixed(1);
 
-    // Generate Evolution Chart
+    // Generate Evolution Chart with 5 steps
     const chartContainer = document.getElementById('chart-container');
     chartContainer.innerHTML = '';
 
-    // 10 month projection
-    for (let i = 0; i < 11; i++) {
-        // Clinical curve for GLP-1: faster at start, then tapers
-        // Weight(t) = Target + (Start - Target) * exp(-k * t)
-        const k = 0.25;
-        const currentProjection = meta + (peso - meta) * Math.exp(-k * (i / 2));
-        const heightPercent = (currentProjection / peso) * 100;
+    // 5 projections with steeper visual drop
+    for (let i = 0; i < 5; i++) {
+        const stepRatio = i / 4; // goes from 0 to 1
+        const currentProjection = meta + (peso - meta) * Math.pow(1 - stepRatio, 1.8);
+        
+        // Baseline height at 20% to make the drop visually larger
+        const minHeight = 20; 
+        const heightPercent = minHeight + ((currentProjection - meta) / (peso - meta)) * (100 - minHeight);
+
+        const barWrapper = document.createElement('div');
+        barWrapper.style.width = '16%';
+        barWrapper.style.display = 'flex';
+        barWrapper.style.flexDirection = 'column';
+        barWrapper.style.alignItems = 'center';
+        barWrapper.style.justifyContent = 'flex-end';
+        barWrapper.style.height = '100%';
+
+        const label = document.createElement('div');
+        label.style.fontSize = '0.9rem';
+        label.style.fontWeight = 'bold';
+        label.style.color = '#555';
+        label.style.marginBottom = '5px';
+        label.innerText = `${currentProjection.toFixed(1)}kg`;
 
         const bar = document.createElement('div');
         bar.className = 'chart-bar';
         bar.style.height = '0%';
-        chartContainer.appendChild(bar);
+        bar.style.width = '100%';
+        bar.style.borderRadius = '8px 8px 0 0';
+        bar.style.background = 'var(--primary-blue)';
+        bar.style.transition = 'height 1s cubic-bezier(0.4, 0, 0.2, 1)';
+
+        barWrapper.appendChild(label);
+        barWrapper.appendChild(bar);
+        chartContainer.appendChild(barWrapper);
 
         setTimeout(() => {
             bar.style.height = `${heightPercent}%`;
-        }, i * 100);
+        }, i * 200);
     }
 
     const planDetails = document.getElementById('plan-details');
     planDetails.innerHTML = `
         <div style="text-align: center; background: var(--accent-blue); padding: 20px; border-radius: 16px; margin-bottom: 20px;">
-            <p style="font-size: 1.1rem;">Seu IMC é <strong>${imc}</strong></p>
-            <p>Com o plano Maori, você poderá chegar aos <strong>${meta.toFixed(1)}kg</strong> em aproximadamente 10 meses.</p>
+            <h3 style="color: var(--primary-blue); font-size: 1.4rem; margin-bottom: 15px; line-height: 1.3;">Com o plano da Maori, conseguimos levar você até o seu objetivo</h3>
+            <p style="font-size: 1.1rem; margin-bottom: 5px;">De <strong>${peso.toFixed(1)}kg</strong> para <strong>${meta.toFixed(1)}kg</strong></p>
+            <p style="font-size: 0.95rem; color: #555;">Seu IMC inicial é <strong>${imc}</strong></p>
         </div>
         <div style="border: 1px solid #eee; padding: 20px; border-radius: 16px;">
             <h3 style="margin-bottom: 15px;">O que está incluso:</h3>
