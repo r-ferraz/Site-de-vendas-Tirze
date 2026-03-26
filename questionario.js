@@ -218,6 +218,28 @@ function showResults() {
     const chartContainer = document.getElementById('chart-container');
     chartContainer.innerHTML = '';
 
+    // Create SVG for trend line
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.style.position = 'absolute';
+    svg.style.top = '0';
+    svg.style.left = '0';
+    svg.style.width = '100%';
+    svg.style.height = '100%';
+    svg.style.pointerEvents = 'none';
+    svg.style.zIndex = '10';
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "var(--primary-dark)"); 
+    path.setAttribute("stroke-width", "3");
+    path.setAttribute("stroke-dasharray", "6,6");
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("stroke-linejoin", "round");
+    svg.appendChild(path);
+    chartContainer.appendChild(svg);
+
+    const targetHeights = [];
+
     // 5 projections with steeper visual drop
     for (let i = 0; i < 5; i++) {
         const stepRatio = i / 4; // goes from 0 to 1
@@ -226,8 +248,10 @@ function showResults() {
         // Baseline height at 20% to make the drop visually larger
         const minHeight = 20; 
         const heightPercent = minHeight + ((currentProjection - meta) / (peso - meta)) * (100 - minHeight);
+        targetHeights.push(heightPercent);
 
         const barWrapper = document.createElement('div');
+        barWrapper.className = 'chart-col-wrapper';
         barWrapper.style.width = '16%';
         barWrapper.style.display = 'flex';
         barWrapper.style.flexDirection = 'column';
@@ -258,6 +282,33 @@ function showResults() {
             bar.style.height = `${heightPercent}%`;
         }, i * 200);
     }
+
+    // Draw SVG trendline coordinates after layout finishes calculation (approx 50ms)
+    setTimeout(() => {
+        const w = chartContainer.clientWidth;
+        const h = chartContainer.clientHeight;
+        svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+        
+        let d = '';
+        const wrappers = chartContainer.querySelectorAll('.chart-col-wrapper');
+        wrappers.forEach((el, index) => {
+            const rect = el.getBoundingClientRect();
+            const containerRect = chartContainer.getBoundingClientRect();
+            const x = rect.left - containerRect.left + rect.width / 2;
+            const targetY = h - (h * targetHeights[index] / 100) - 20; // top minus label offset
+            d += (index === 0 ? 'M' : 'L') + ` ${x},${targetY} `;
+        });
+        
+        path.setAttribute("d", d);
+        const length = path.getTotalLength();
+        path.style.strokeDasharray = `${length} ${length}`;
+        path.style.strokeDashoffset = length;
+        
+        // Force reflow and start stroke transition
+        path.getBoundingClientRect();
+        path.style.transition = 'stroke-dashoffset 2s ease-out';
+        path.style.strokeDashoffset = '0';
+    }, 100);
 
     const planDetails = document.getElementById('plan-details');
     planDetails.innerHTML = `
