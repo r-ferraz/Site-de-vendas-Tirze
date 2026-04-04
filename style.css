@@ -521,6 +521,7 @@ footer {
 
 .offering-img {
     height: 250px;
+    width: 100%;
     background-size: cover;
     background-position: center 20%;
 }
@@ -807,6 +808,10 @@ footer {
         --section-padding: 60px 5%;
     }
 
+    body {
+        padding-bottom: 110px !important;
+    }
+
     .header-actions .btn-login {
         display: none;
     }
@@ -860,7 +865,7 @@ footer {
         flex-direction: column;
         gap: 40px;
     }
-}
+
     /* Centralize Content for Mobile */
     .hero-content, 
     .journey-step, 
@@ -891,6 +896,7 @@ footer {
     .benefit-item {
         justify-content: center;
     }
+}
 
 @media (max-width: 480px) {
     .hero-content h1 {
@@ -913,12 +919,21 @@ footer {
 
     .mb-feature-item {
         font-size: 1.1rem;
-        align-items: flex-start;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: left;
+        max-width: fit-content;
+        margin: 0 auto;
+    }
+
+    .mb-feature-item span {
+        justify-content: flex-start !important;
     }
 
     .mb-feature-item span svg {
         width: 22px;
         height: 22px;
+        min-width: 22px;
     }
 }
 
