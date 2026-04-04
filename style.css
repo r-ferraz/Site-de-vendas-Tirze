@@ -872,6 +872,11 @@ footer {
     .mb-hero-content,
     .mb-why-container {
         text-align: center !important;
+        align-items: center;
+    }
+
+    .hero-content p, .glp1-text p, .journey-step p, .mb-hero-content p {
+        text-align: center !important;
     }
 
     .hero-cta {
