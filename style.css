@@ -916,14 +916,18 @@ footer {
         letter-spacing: 0;
     }
 
+    .mb-feature-list {
+        width: fit-content;
+        margin: 0 auto;
+        align-items: flex-start !important;
+    }
+
     .mb-feature-item {
         font-size: 1.1rem;
         align-items: flex-start;
         justify-content: flex-start;
         text-align: left;
         width: 100%;
-        max-width: 280px;
-        margin: 0 auto;
     }
 
     .mb-feature-item span {
