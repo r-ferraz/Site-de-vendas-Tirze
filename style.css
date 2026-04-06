@@ -654,10 +654,10 @@ footer {
 
 /* GLP-1 Section */
 .glp1-content {
-    display: grid;
-    grid-template-columns: 1fr 1.25fr;
-    gap: 40px;
-    align-items: stretch; /* Aligns heights of both cards */
+    display: flex;
+    flex-direction: column;
+    max-width: 900px;
+    margin: 0 auto;
     width: 100%;
 }
 
@@ -674,13 +674,10 @@ footer {
 }
 
 .glp1-text {
-    background: var(--bg-offwhite);
-    padding: 60px;
-    border-radius: 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+    text-align: center;
 }
 
 .glp1-text h2 {
