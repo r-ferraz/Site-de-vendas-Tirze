@@ -662,7 +662,6 @@ footer {
 }
 
 .glp1-image {
-    grid-area: image;
     background: var(--bg-offwhite);
     border-radius: 30px;
     display: flex;
@@ -675,7 +674,6 @@ footer {
 }
 
 .glp1-text {
-    grid-area: text;
     background: var(--bg-offwhite);
     padding: 60px;
     border-radius: 30px;
