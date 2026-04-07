@@ -571,17 +571,44 @@
 
                 if (error) throw error;
 
-                // Pós-Venda: Redirecionamento automático para o WhatsApp
-                setTimeout(() => {
-                    alert('Pedido capturado com sucesso! Você será direcionado para o nosso WhatsApp para concluir a avaliação e finalizar o pagamento.');
-                    const mensagem = encodeURIComponent(`Olá! Acabei de finalizar o pedido da minha avaliação no site e gostaria de seguir com o próximo passo.`);
-                    // O número abaixo pode ser alterado diretamente aqui no href
-                    window.location.href = `https://wa.me/5511999999999?text=${mensagem}`;
-                }, 1500);
+                // POST seguro disfarçado pelo Webhook n8n para não haver bloqueio CORS do Asaas
+                finishBtn.innerText = 'Autenticando Pagamento Seguro...';
+                
+                const webhookPayload = {
+                    name: leadData.nome_cartao || "Cliente Site (Sem Nome Redigido)",
+                    email: leadData.email,
+                    phone: leadData.whatsapp,
+                    value: 1200.00 /* Valor que o Webhook do n8n vai processar na cobranca final */
+                };
+
+                // 👇 COLOQUE O LINK DO SEU WEBHOOK N8N (DE PRODUÇÃO) DENTRO DAS ASPAS AQUI EMBAIXO 👇
+                const URL_DO_SEU_WEBHOOK = "https://n8n.akinconsultoria.com.br/webhook/Lq4slMazVRUiCpRM/webhook%20do%20site/gerar-checkout-asaas";
+
+                const n8nResponse = await fetch(URL_DO_SEU_WEBHOOK, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(webhookPayload)
+                });
+
+                if (!n8nResponse.ok) {
+                    const errorText = await n8nResponse.text();
+                    throw new Error("Erro no servidor Webhook do n8n: " + errorText);
+                }
+
+                const n8nData = await n8nResponse.json();
+                
+                // Redirecionamento instantaneo e blindado pra pagina do Asaas retornada via webhook!
+                if(n8nData.checkoutUrl) {
+                    window.location.href = n8nData.checkoutUrl;
+                } else {
+                    throw new Error("O webhook n8n não devolveu o 'checkoutUrl' válido. Resposta: " + JSON.stringify(n8nData));
+                }
 
             } catch (err) {
                 console.error('Error saving lead:', err);
-                alert('Ocorreu um erro ao processar seu pedido. Por favor, tente novamente.');
+                alert('Ocorreu um erro interno ao processar seu pedido. Por favor, tente novamente.');
                 finishBtn.disabled = false;
                 finishBtn.innerText = 'Finalizar Pedido';
             }
