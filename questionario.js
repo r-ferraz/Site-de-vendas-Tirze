@@ -359,7 +359,7 @@ function showResults() {
                     })
                 }).catch(e => console.warn('[n8n]', e)).finally(() => {
                     const currentParams = window.location.search;
-                    window.location.href = 'pagamento.html' + currentParams;
+                    window.location.href = 'oferta.html' + currentParams;
                 });
             ">Garantir meu Plano Personalizado</button>
         </div>
