@@ -390,32 +390,61 @@
         </div>
     </div>
 
+    <!-- Lógica de UI - Carrega IMEDIATAMENTE antes de qualquer script externo -->
+    <script>
+        (function() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const pId = params.get('plano') || '20';
+                const pPrecoStr = params.get('preco') || '1.200';
+                const pValor = parseFloat(params.get('valor') || '1200.00');
+
+                function runUpdate() {
+                    const resumoNome = document.getElementById('summary-product-name');
+                    const resumoSubtotal = document.getElementById('summary-subtotal');
+                    const resumoTotal = document.getElementById('summary-total');
+                    const discountRow = document.getElementById('summary-discount-row');
+                    const parcelamento = document.getElementById('parcelamento');
+                    
+                    if (resumoNome) resumoNome.innerText = "Plano Maori - Mounjaro® " + pId + "mg";
+                    if (resumoSubtotal) resumoSubtotal.innerText = "R$ " + pPrecoStr + ",00";
+                    if (resumoTotal) resumoTotal.innerText = "R$ " + pPrecoStr + ",00";
+                    if (discountRow) discountRow.style.display = 'none';
+
+                    // Atualizar as opções de parcelamento dinamicamente
+                    if (parcelamento) {
+                        const p1 = (pValor).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                        const p2 = (pValor / 2).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                        const p3 = (pValor / 3).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                        
+                        parcelamento.innerHTML = `
+                            <option value="1">1x de R$ ${p1} (Sem juros)</option>
+                            <option value="2">2x de R$ ${p2} (Sem juros)</option>
+                            <option value="3" selected>3x de R$ ${p3} (Sem juros)</option>
+                        `;
+                    }
+                    console.log("UI Updated: ", pId, pPrecoStr);
+                }
+
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', runUpdate);
+                } else {
+                    runUpdate();
+                }
+            } catch (e) {
+                console.error("UI Script Error:", e);
+            }
+        })();
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // Data persists here for the rest of the script
         const urlParams = new URLSearchParams(window.location.search);
         const planoId = urlParams.get('plano') || '20';
         const planoValor = parseFloat(urlParams.get('valor') || '1200.00');
         const planoPrecoFormatado = urlParams.get('preco') || '1.200';
         const receitaStatus = urlParams.get('receita') || 'nao';
-
-        // Atualizar o resumo visual IMEDIATAMENTE (sem depender do Supabase)
-        function updateSummary() {
-            const resumoNome = document.getElementById('summary-product-name');
-            const resumoSubtotal = document.getElementById('summary-subtotal');
-            const resumoTotal = document.getElementById('summary-total');
-            const discountRow = document.getElementById('summary-discount-row');
-            
-            if (resumoNome) resumoNome.innerText = `Plano Maori - Mounjaro® ${planoId}mg`;
-            if (resumoSubtotal) resumoSubtotal.innerText = `R$ ${planoPrecoFormatado},00`;
-            if (resumoTotal) resumoTotal.innerText = `R$ ${planoPrecoFormatado},00`;
-            if (discountRow) discountRow.style.display = 'none';
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', updateSummary);
-        } else {
-            updateSummary();
-        }
 
         // Supabase Initialization
         let supabase;
