@@ -704,7 +704,7 @@
 
                 const n8nResponse = await fetch(URL_DO_SEU_WEBHOOK, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "text/plain" },
                     body: JSON.stringify(webhookPayload)
                 });
 
