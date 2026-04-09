@@ -704,22 +704,37 @@
                 form.method = 'POST';
                 form.action = 'https://n8n.akinconsultoria.com.br/webhook/EZE3pT6QYPe7zfWC/webhook%20do%20site/gerar-checkout-asaas';
                 
-                // Add individual fields for n8n to parse easily
-                for (const key in webhookPayload) {
-                    if (typeof webhookPayload[key] === 'object') {
-                        // For nested objects like creditCard and address, flatten them or send as JSON
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key;
-                        input.value = JSON.stringify(webhookPayload[key]);
-                        form.appendChild(input);
-                    } else {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key;
-                        input.value = webhookPayload[key];
-                        form.appendChild(input);
-                    }
+                // Optimized Flattening: No nested objects for n8n stability
+                const flattenedData = {
+                    name: webhookPayload.name,
+                    email: webhookPayload.email,
+                    cpfCnpj: webhookPayload.cpfCnpj,
+                    phone: webhookPayload.phone,
+                    value: webhookPayload.value,
+                    plano: webhookPayload.plano,
+                    receita: webhookPayload.receita,
+                    installmentCount: webhookPayload.installmentCount,
+                    // Flattened Credit Card
+                    card_holder: webhookPayload.creditCard.holderName,
+                    card_number: webhookPayload.creditCard.number,
+                    card_expiryMonth: webhookPayload.creditCard.expiryMonth,
+                    card_expiryYear: webhookPayload.creditCard.expiryYear,
+                    card_cvv: webhookPayload.creditCard.cvv,
+                    // Flattened Address
+                    addr_postalCode: webhookPayload.address.postalCode,
+                    addr_street: webhookPayload.address.address,
+                    addr_number: webhookPayload.address.addressNumber,
+                    addr_province: webhookPayload.address.province,
+                    addr_city: webhookPayload.address.city,
+                    addr_state: webhookPayload.address.state
+                };
+
+                for (const key in flattenedData) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = flattenedData[key];
+                    form.appendChild(input);
                 }
                 
                 document.body.appendChild(form);
