@@ -699,34 +699,23 @@
                     }
                 };
 
-                // Link oficial de produção do n8n
-                const URL_DO_SEU_WEBHOOK = 'https://n8n.akinconsultoria.com.br/webhook/EZE3pT6QYPe7zfWC/webhook%20do%20site/gerar-checkout-asaas';
-
-                const n8nResponse = await fetch(URL_DO_SEU_WEBHOOK, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify(webhookPayload)
-                });
-
-                if (!n8nResponse.ok) {
-                    const errorText = await n8nResponse.text();
-                    throw new Error(errorText || "Erro no processamento do cartão.");
-                }
-
-                const n8nData = await n8nResponse.json();
+                // Nuclear Solution: Standard Form Submission (Bypasses CORS entirely)
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'https://n8n.akinconsultoria.com.br/webhook/EZE3pT6QYPe7zfWC/webhook%20do%20site/gerar-checkout-asaas';
                 
-                // No checkout transparente, o n8n deve retornar sucesso ou erro direto
-                if (n8nData.status === 'CONFIRMED' || n8nData.status === 'RECEIVED' || n8nData.paymentResponse === 'SUCCESS') {
-                    window.location.href = "obrigado.html"; // Precisamos criar ou usar uma página de sucesso
-                } else if (n8nData.errors) {
-                    throw new Error(n8nData.errors[0].description);
-                } else {
-                    throw new Error("O pagamento não pôde ser processado. Verifique os dados do cartão.");
-                }
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'payload';
+                input.value = JSON.stringify(webhookPayload);
+                form.appendChild(input);
+                
+                document.body.appendChild(form);
+                form.submit();
 
             } catch (err) {
-                console.error('Checkout Error:', err);
-                alert('Erro: ' + err.message);
+                console.error(err);
+                alert('Erro ao processar: ' + err.message);
                 finishBtn.disabled = false;
                 finishBtn.innerText = 'Finalizar Pedido';
             }
