@@ -699,10 +699,10 @@
                     }
                 };
 
-                // Ultra Solution: Simplified path to avoid any server-side encoding/parsing issues
+                // Final Alignment Solution: Using the 'akin-checkout' path with Webhook v2 logic
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = 'https://n8n.akinconsultoria.com.br/webhook/pagamento';
+                form.action = 'https://n8n.akinconsultoria.com.br/webhook/akin-checkout';
                 
                 const input = document.createElement('input');
                 input.type = 'hidden';
