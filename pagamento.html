@@ -443,22 +443,29 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Data persists here for the rest of the script
-        const urlParams = new URLSearchParams(window.location.search);
-        const planoId = urlParams.get('plano') || '20';
-        const planoValor = parseFloat(urlParams.get('valor') || '1200.00');
-        const planoPrecoFormatado = urlParams.get('preco') || '1.200';
-        const receitaStatus = urlParams.get('receita') || 'nao';
+        // Supabase Initialization & Event Binding
+        document.addEventListener('DOMContentLoaded', () => {
+            // Data persists here for the rest of the script
+            const urlParams = new URLSearchParams(window.location.search);
+            const planoId = urlParams.get('plano') || '20';
+            const planoValor = parseFloat(urlParams.get('valor') || '1200.00');
+            const planoPrecoFormatado = urlParams.get('preco') || '1.200';
+            const receitaStatus = urlParams.get('receita') || 'nao';
 
-        // Supabase Initialization
-        let supabase;
-        try {
-            const SUPABASE_URL = 'https://pzewkvmaewnijwhxkqaj.supabase.co';
-            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZXdrdm1hZXduaWp3aHhrcWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjk0ODQsImV4cCI6MjA4ODc0NTQ4NH0.a42vFvm5vUcZ3euBUoNW_QuWM9MKPW2W7ZvcCyl_P4Y';
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        } catch (e) {
-            console.error('Supabase failed to load:', e);
-        }
+            let supabase;
+            try {
+                const SUPABASE_URL = 'https://pzewkvmaewnijwhxkqaj.supabase.co';
+                const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZXdrdm1hZXduaWp3aHhrcWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjk0ODQsImV4cCI6MjA4ODc0NTQ4NH0.a42vFvm5vUcZ3euBUoNW_QuWM9MKPW2W7ZvcCyl_P4Y';
+                
+                if (window.supabase) {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                    console.log("Supabase initialized successfully");
+                } else {
+                    console.warn("Supabase library not found - Lead sync will be disabled but checkout will continue.");
+                }
+            } catch (e) {
+                console.error('Supabase init error:', e);
+            }
 
         const cepInput = document.getElementById('cep');
         const btnCep = document.getElementById('btn-cep');
@@ -722,6 +729,7 @@
                 finishBtn.disabled = false;
                 finishBtn.innerText = 'Finalizar Pedido';
             }
+        });
         });
     </script>
 </body>
