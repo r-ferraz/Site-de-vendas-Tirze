@@ -654,15 +654,14 @@ footer {
 
 /* GLP-1 Section */
 .glp1-content {
-    display: grid;
-    grid-template-columns: 1fr 1.25fr;
-    gap: 40px;
-    align-items: stretch; /* Aligns heights of both cards */
+    display: flex;
+    flex-direction: column;
+    max-width: 900px;
+    margin: 0 auto;
     width: 100%;
 }
 
 .glp1-image {
-    grid-area: image;
     background: var(--bg-offwhite);
     border-radius: 30px;
     display: flex;
@@ -675,14 +674,10 @@ footer {
 }
 
 .glp1-text {
-    grid-area: text;
-    background: var(--bg-offwhite);
-    padding: 60px;
-    border-radius: 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+    text-align: center;
 }
 
 .glp1-text h2 {
@@ -808,6 +803,10 @@ footer {
         --section-padding: 60px 5%;
     }
 
+    body {
+        padding-bottom: 110px !important;
+    }
+
     .header-actions .btn-login {
         display: none;
     }
@@ -872,7 +871,14 @@ footer {
     .mb-hero-content,
     .mb-why-container {
         text-align: center !important;
-        align-items: center;
+    }
+
+    .glp1-text {
+        padding: 20px 0 !important;
+        width: 100%;
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
     }
 
     .hero-content p, .glp1-text p, .journey-step p, .mb-hero-content p {
@@ -913,20 +919,31 @@ footer {
         letter-spacing: 0;
     }
 
+    .mb-feature-list {
+        width: 100%;
+        align-items: center !important;
+    }
+
     .mb-feature-item {
         font-size: 1.1rem;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
+        display: flex !important;
+        gap: 15px;
+        align-items: flex-start;
+        justify-content: flex-start;
+        text-align: left;
+        width: 280px;
     }
 
     .mb-feature-item span {
-        justify-content: center !important;
+        justify-content: flex-start !important;
+        text-align: left !important;
     }
 
     .mb-feature-item span svg {
         width: 22px;
         height: 22px;
+        min-width: 22px;
+        margin-top: 2px;
     }
 }
 
