@@ -187,6 +187,10 @@
                         <input type="tel" class="form-input" placeholder="(00) 00000-0000" id="checkout-tel">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label>CPF</label>
+                    <input type="text" class="form-input" placeholder="000.000.000-00" id="checkout-cpf" maxlength="14">
+                </div>
             </div>
 
             <!-- Step 2: Shipping -->
@@ -559,21 +563,35 @@
             e.target.value = val;
         });
 
+        // Mask for CPF
+        const cpfInput = document.getElementById('checkout-cpf');
+        cpfInput.addEventListener('input', (e) => {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 3) val = val.substring(0, 3) + '.' + val.substring(3);
+            if (val.length > 7) val = val.substring(0, 7) + '.' + val.substring(7);
+            if (val.length > 11) val = val.substring(0, 11) + '-' + val.substring(11);
+            if (val.length > 14) val = val.substring(0, 14);
+            e.target.value = val;
+        });
+
         const finishBtn = document.getElementById('btn-finalizar');
 
         function validateForm() {
             const requiredFields = [
-                'checkout-email', 'checkout-tel', 'cep', 'rua', 'bairro',
+                'checkout-email', 'checkout-tel', 'checkout-cpf', 'cep', 'rua', 'bairro',
                 'cidade', 'estado', 'numero', 'card-name', 'card-number',
                 'card-expiry', 'card-cvv'
             ];
 
             let isValid = true;
+            let firstError = null;
+
             requiredFields.forEach(id => {
                 const el = document.getElementById(id);
-                if (!el.value || el.value.trim() === '') {
-                    el.classList.add('error');
+                if (!el || !el.value || el.value.trim() === '') {
+                    if (el) el.classList.add('error');
                     isValid = false;
+                    if (!firstError) firstError = el;
                 } else {
                     el.classList.remove('error');
                 }
@@ -584,8 +602,13 @@
             if (email.value && !email.value.includes('@')) {
                 email.classList.add('error');
                 isValid = false;
-            } else {
-                email.classList.remove('error');
+            }
+
+            // CPF validation (simple length check)
+            const cpf = document.getElementById('checkout-cpf');
+            if (cpf.value && cpf.value.length < 14) {
+                cpf.classList.add('error');
+                isValid = false;
             }
 
             // Termos validation
@@ -599,6 +622,7 @@
 
             if (!isValid) {
                 alert('Por favor, preencha todos os campos obrigatórios corretamente e aceite os termos.');
+                if (firstError) firstError.focus();
             }
             return isValid;
         }
@@ -609,10 +633,16 @@
             finishBtn.disabled = true;
             finishBtn.innerText = 'Processando...';
 
+            // Split expiry MM/YY
+            const expiry = document.getElementById('card-expiry').value.split('/');
+            const expMonth = expiry[0] ? expiry[0].trim() : '';
+            const expYear = expiry[1] ? '20' + expiry[1].trim() : '';
+
             const leadData = {
                 email: document.getElementById('checkout-email').value,
                 whatsapp: document.getElementById('checkout-tel').value,
-                cep: document.getElementById('cep').value,
+                cpf: document.getElementById('checkout-cpf').value.replace(/\D/g, ''),
+                cep: document.getElementById('cep').value.replace(/\D/g, ''),
                 endereco: `${document.getElementById('rua').value}, ${document.getElementById('numero').value}`,
                 bairro: document.getElementById('bairro').value,
                 cidade: document.getElementById('cidade').value,
@@ -620,59 +650,75 @@
                 complemento: document.getElementById('complemento').value,
                 nome_cartao: document.getElementById('card-name').value,
                 parcelamento: document.getElementById('parcelamento').value,
-                plano_escolhido: `Mounjaro ${planoId}mg`, // Novo campo
-                tem_receita: receitaStatus, // Novo campo
-                status: 'Aguardando Pagamento',
-                tipo_origem: 'Checkout'
+                plano_escolhido: `Mounjaro ${planoId}mg`,
+                tem_receita: receitaStatus,
+                status: 'Processando Pagamento',
+                tipo_origem: 'Checkout Transparente'
             };
 
             try {
+                // Salva no Supabase
                 const { error } = await supabase
                     .from('leads')
                     .insert([leadData]);
 
-                if (error) throw error;
+                if (error) console.error("Database sync error (non-blocking):", error);
 
-                // POST seguro disfarçado pelo Webhook n8n para não haver bloqueio CORS do Asaas
-                finishBtn.innerText = 'Autenticando Pagamento Seguro...';
+                finishBtn.innerText = 'Validando Cartão...';
                 
                 const webhookPayload = {
-                    name: leadData.nome_cartao || "Cliente Site (Sem Nome Redigido)",
+                    name: leadData.nome_cartao,
                     email: leadData.email,
+                    cpfCnpj: leadData.cpf,
                     phone: leadData.whatsapp,
                     value: planoValor,
-                    plano: leadData.plano_escolhido, // Passa pro n8n/Typebot
-                    receita: leadData.tem_receita // Passa pro n8n/Typebot
+                    plano: leadData.plano_escolhido,
+                    receita: leadData.tem_receita,
+                    installmentCount: leadData.parcelamento,
+                    creditCard: {
+                        holderName: leadData.nome_cartao,
+                        number: document.getElementById('card-number').value.replace(/\s+/g, ''),
+                        expiryMonth: expMonth,
+                        expiryYear: expYear,
+                        cvv: document.getElementById('card-cvv').value
+                    },
+                    address: {
+                        postalCode: leadData.cep,
+                        address: document.getElementById('rua').value,
+                        addressNumber: document.getElementById('numero').value,
+                        province: leadData.bairro,
+                        city: leadData.cidade,
+                        state: leadData.estado
+                    }
                 };
 
-                // 👇 COLOQUE O LINK DO SEU WEBHOOK N8N (DE PRODUÇÃO) DENTRO DAS ASPAS AQUI EMBAIXO 👇
                 const URL_DO_SEU_WEBHOOK = "https://n8n.akinconsultoria.com.br/webhook/Lq4slMazVRUiCpRM/webhook%20do%20site/gerar-checkout-asaas";
 
                 const n8nResponse = await fetch(URL_DO_SEU_WEBHOOK, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(webhookPayload)
                 });
 
                 if (!n8nResponse.ok) {
                     const errorText = await n8nResponse.text();
-                    throw new Error("Erro no servidor Webhook do n8n: " + errorText);
+                    throw new Error(errorText || "Erro no processamento do cartão.");
                 }
 
                 const n8nData = await n8nResponse.json();
                 
-                // Redirecionamento instantaneo e blindado pra pagina do Asaas retornada via webhook!
-                if(n8nData.checkoutUrl) {
-                    window.location.href = n8nData.checkoutUrl;
+                // No checkout transparente, o n8n deve retornar sucesso ou erro direto
+                if (n8nData.status === 'CONFIRMED' || n8nData.status === 'RECEIVED' || n8nData.paymentResponse === 'SUCCESS') {
+                    window.location.href = "obrigado.html"; // Precisamos criar ou usar uma página de sucesso
+                } else if (n8nData.errors) {
+                    throw new Error(n8nData.errors[0].description);
                 } else {
-                    throw new Error("O webhook n8n não devolveu o 'checkoutUrl' válido. Resposta: " + JSON.stringify(n8nData));
+                    throw new Error("O pagamento não pôde ser processado. Verifique os dados do cartão.");
                 }
 
             } catch (err) {
-                console.error('Error saving lead:', err);
-                alert('Ocorreu um erro interno ao processar seu pedido. Por favor, tente novamente.');
+                console.error('Checkout Error:', err);
+                alert('Erro: ' + err.message);
                 finishBtn.disabled = false;
                 finishBtn.innerText = 'Finalizar Pedido';
             }
