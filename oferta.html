@@ -207,8 +207,20 @@
             </div>
 
             <div class="oferta-body">
-                <h2 style="font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 24px;">📦 Escolha seu Protocolo
-                    Monetário</h2>
+                <h2 style="font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 24px;">📦 Escolha seu Protocolo Monetário</h2>
+
+                <!-- BLOCO DE TESTE (PROMOÇÃO) -->
+                <div class="protocolo-box" data-plano="Teste de Sistema" data-valor="5.00" data-preco="5"
+                    onclick="selectPlano(this)" 
+                    style="cursor: pointer; border: 2px dashed #10b981; background: #ecfdf5; margin-bottom: 25px;">
+                    <div style="background: #10b981; color: white; display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-bottom: 10px;">PROMOÇÃO DE TESTE 🧪</div>
+                    <h3 style="font-size: 1.3rem; margin-bottom: 5px; display: flex; align-items: center; gap: 8px;">🎁 Teste de Processamento</h3>
+                    <p style="color: #047857; margin-bottom: 15px;">Use este plano para validar a venda e o salvamento dos dados no Supabase.</p>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="price-risked">De R$ 50,00</span>
+                        <span class="price-final" style="color: #059669;">R$ 5,00</span>
+                    </div>
+                </div>
 
                 <div class="protocolo-box" data-plano="20" data-valor="1200.00" data-preco="1.200"
                     onclick="selectPlano(this)"

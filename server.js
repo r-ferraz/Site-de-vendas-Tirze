@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
@@ -9,6 +10,13 @@ app.use(cors());
 
 // Servir arquivos estáticos da pasta atual
 app.use(express.static(__dirname));
+
+// Configurações Asaas
+const ASAAS_API_KEY = process.env.ASAAS_API_KEY;
+const IS_SANDBOX = process.env.ASAAS_ENVIRONMENT === 'sandbox';
+const ASAAS_URL = IS_SANDBOX ? 'https://sandbox.asaas.com/api/v3' : 'https://api.asaas.com/v3';
+
+console.log(`[SERVER] Modo: ${IS_SANDBOX ? 'SANDBOX' : 'PRODUÇÃO'}`);
 
 // Configurações Supabase
 const supabase = createClient(
@@ -22,6 +30,11 @@ async function enviarWhatsApp({ whatsapp, nome, produto, temReceita }) {
         const numeroLimpo = whatsapp.replace(/\D/g, '');
         const apikey = process.env.UAZAPI_KEY;
         const url = process.env.UAZAPI_URL;
+
+        if (!url || !apikey) {
+            console.warn('[WA] Configurações de WhatsApp ausentes (UAZAPI_URL/KEY)');
+            return;
+        }
 
         const mensagem = temReceita ? 
             `Oi, ${nome}, tudo bem?
@@ -68,20 +81,27 @@ app.post('/api/processar-pagamento', async (req, res) => {
         console.log(`[PAYMENT] Iniciando processo para: ${customer.email} (${produto})`);
         
         // Log de diagnóstico
-        console.log("[DEBUG] Payload recebido no pagamento:", JSON.stringify({
-            billingType: payment.billingType,
+        console.log("[DEBUG] Payload recebido:", JSON.stringify({
+            billingType: payment.billingType || 'CREDIT_CARD',
             value: payment.value,
+            customer: customer.email,
             creditCard: {
                 holderName: payment.creditCard?.holderName,
                 number: payment.creditCard?.number ? '****' + payment.creditCard.number.slice(-4) : 'AUSENTE',
                 expiryMonth: payment.creditCard?.expiryMonth,
                 expiryYear: payment.creditCard?.expiryYear,
-                cvv: payment.creditCard?.cvv || payment.creditCard?.ccv ? '***' : 'AUSENTE'
+                cvv: payment.creditCard?.cvv ? '***' : 'AUSENTE'
             }
         }, null, 2));
 
         // 1. Criar ou Buscar Cliente no Asaas
-        const customerResponse = await axios.post(`${ASAAS_URL}/customers`, customer, {
+        const customerData = {
+            ...customer,
+            // Asaas endpoint validation
+            postalCode: customer.postalCode ? customer.postalCode.replace(/\D/g, '') : undefined
+        };
+
+        const customerResponse = await axios.post(`${ASAAS_URL}/customers`, customerData, {
             headers: {
                 'access_token': ASAAS_API_KEY,
                 'Content-Type': 'application/json'
@@ -89,15 +109,17 @@ app.post('/api/processar-pagamento', async (req, res) => {
         });
 
         const customerId = customerResponse.data.id;
-        console.log(`[ASAAS] Cliente Criado/Encontrado: ${customerId}`);
+        console.log(`[ASAAS] Cliente: ${customerId}`);
 
         // 2. Criar Cobrança (Cartão de Crédito)
         const paymentData = {
+            billingType: 'CREDIT_CARD',
+            dueDate: new Date().toISOString().split('T')[0],
             ...payment,
             customer: customerId
         };
 
-        // Garantir que enviamos tanto 'cvv' quanto 'ccv' por compatibilidade
+        // Compatibilidade CVV/CCV
         if (paymentData.creditCard && paymentData.creditCard.cvv) {
             paymentData.creditCard.ccv = paymentData.creditCard.cvv;
         }
@@ -109,7 +131,7 @@ app.post('/api/processar-pagamento', async (req, res) => {
             }
         });
 
-        console.log(`[ASAAS] Pagamento Gerado: ${paymentResponse.data.id} - Status: ${paymentResponse.data.status}`);
+        console.log(`[ASAAS] Pagamento: ${paymentResponse.data.id} - ${paymentResponse.data.status}`);
 
         // 3. Salvar no Supabase (Tabela Clientes)
         try {
@@ -127,9 +149,9 @@ app.post('/api/processar-pagamento', async (req, res) => {
                 }]);
             
             if (dbError) console.error("[DB-ERROR] Erro ao salvar cliente:", dbError);
-            else console.log("[DB] Cliente salvo com sucesso no Supabase.");
+            else console.log("[DB] Cliente salvo com sucesso.");
         } catch (dbErr) {
-            console.error("[DB-CRITICAL] Falha catastrófica no banco:", dbErr);
+            console.error("[DB-CRITICAL] Falha no banco:", dbErr);
         }
 
         // 4. Enviar WhatsApp Automático
@@ -143,8 +165,7 @@ app.post('/api/processar-pagamento', async (req, res) => {
         res.json({
             success: true,
             paymentId: paymentResponse.data.id,
-            status: paymentResponse.data.status,
-            invoiceUrl: paymentResponse.data.invoiceUrl
+            status: paymentResponse.data.status
         });
 
     } catch (error) {
@@ -159,11 +180,10 @@ app.post('/api/processar-pagamento', async (req, res) => {
 // Webhook para notificações de pagamento
 app.post('/webhook/asaas', (req, res) => {
     const { event, payment } = req.body;
-    console.log(`[WEBHOOK] Evento recebido: ${event} para o pagamento ${payment.id}`);
+    console.log(`[WEBHOOK] Evento: ${event} ID: ${payment.id}`);
 
     if (event === 'PAYMENT_RECEIVED' || event === 'PAYMENT_CONFIRMED') {
         console.log('✅ Pagamento Aprovado!');
-        // Aqui você pode adicionar lógica para liberar acesso, enviar e-mail, etc.
     }
 
     res.status(200).send('OK');

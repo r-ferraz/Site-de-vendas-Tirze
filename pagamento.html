@@ -567,12 +567,15 @@
                         postalCode: document.getElementById('cep').value.replace(/\D/g, '')
                     },
                     payment: {
+                        billingType: 'CREDIT_CARD',
                         value: planoValor,
+                        dueDate: new Date().toISOString().split('T')[0],
+                        description: `Plano Maori - ${leadData.plano_escolhido}`,
                         creditCard: {
                             holderName: leadData.nome,
                             number: document.getElementById('card-number').value.replace(/\s+/g, ''),
-                            expiryMonth: expiry[0],
-                            expiryYear: '20' + expiry[1],
+                            expiryMonth: expiry[0] ? expiry[0].trim() : '',
+                            expiryYear: expiry[1] ? '20' + expiry[1].trim() : '',
                             cvv: document.getElementById('card-cvv').value
                         },
                         installmentCount: parseInt(document.getElementById('parcelamento').value)
