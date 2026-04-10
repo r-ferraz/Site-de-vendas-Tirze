@@ -1,0 +1,155 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "maori-vendas",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.asaas.com/v3/customers",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"{{ $node[\"Webhook\"].json[\"customer\"][\"name\"] }}\",\n  \"email\": \"{{ $node[\"Webhook\"].json[\"customer\"][\"email\"] }}\",\n  \"cpfCnpj\": \"{{ $node[\"Webhook\"].json[\"customer\"][\"cpfCnpj\"] }}\"\n}",
+        "options": {}
+      },
+      "id": "2",
+      "name": "Asaas Criar Cliente",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YOUR_ASAAS_CREDENTIAL_ID",
+          "name": "Asaas Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.asaas.com/v3/payments",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"customer\": \"{{ $node[\"Asaas Criar Cliente\"].json[\"id\"] }}\",\n  \"billingType\": \"{{ $node[\"Webhook\"].json[\"payment\"][\"billingType\"] }}\",\n  \"value\": {{ $node[\"Webhook\"].json[\"payment\"][\"value\"] }},\n  \"dueDate\": \"{{ $node[\"Webhook\"].json[\"payment\"][\"dueDate\"] }}\",\n  \"creditCard\": {\n    \"holderName\": \"{{ $node[\"Webhook\"].json[\"payment\"][\"creditCard\"][\"holderName\"] }}\",\n    \"number\": \"{{ $node[\"Webhook\"].json[\"payment\"][\"creditCard\"][\"number\"] }}\",\n    \"expiryMonth\": \"{{ $node[\"Webhook\"].json[\"payment\"][\"creditCard\"][\"expiryMonth\"] }}\",\n    \"expiryYear\": \"{{ $node[\"Webhook\"].json[\"payment\"][\"creditCard\"][\"expiryYear\"] }}\",\n    \"cvv\": \"{{ $node[\"Webhook\"].json[\"payment\"][\"creditCard\"][\"cvv\"] }}\",\n    \"ccv\": \"{{ $node[\"Webhook\"].json[\"payment\"][\"creditCard\"][\"cvv\"] }}\"\n  },\n  \"creditCardHolderInfo\": {{ JSON.stringify($node[\"Webhook\"].json[\"payment\"][\"creditCardHolderInfo\"]) }}\n}",
+        "options": {}
+      },
+      "id": "3",
+      "name": "Asaas Cobrar Cartão",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YOUR_ASAAS_CREDENTIAL_ID",
+          "name": "Asaas Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://pzewkvmaewnijwhxkqaj.supabase.co/rest/v1/clientes",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"nome\": \"{{ $node[\"Webhook\"].json[\"customer\"][\"name\"] }}\",\n  \"email\": \"{{ $node[\"Webhook\"].json[\"customer\"][\"email\"] }}\",\n  \"cpf\": \"{{ $node[\"Webhook\"].json[\"customer\"][\"cpfCnpj\"] }}\",\n  \"whatsapp\": \"{{ $node[\"Webhook\"].json[\"whatsapp\"] }}\",\n  \"produto\": \"{{ $node[\"Webhook\"].json[\"produto\"] }}\",\n  \"tem_receita\": {{ $node[\"Webhook\"].json[\"temReceita\"] === \"sim\" ? \"true\" : \"false\" }},\n  \"payment_id\": \"{{ $node[\"Asaas Cobrar Cartão\"].json[\"id\"] }}\",\n  \"status\": \"aprovado\"\n}",
+        "options": {}
+      },
+      "id": "4",
+      "name": "Supabase Salvar Cliente",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [850, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YOUR_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase Admin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://zpro-akin.uazapi.com/message/sendText/Maori Vendas",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"55{{ $node[\"Webhook\"].json[\"whatsapp\"].replace(/\\D/g, '') }}\",\n  \"options\": { \"delay\": 1200, \"presence\": \"composing\" },\n  \"textMessage\": {\n    \"text\": \"{{ $node[\"Webhook\"].json[\"temReceita\"] === 'sim' ? 'Oi, ' + $node[\"Webhook\"].json[\"customer\"][\"name\"] + ', tudo bem?\\\\nSeja bem-vindo à Maori.\\\\nRecebemos sua receita e o pagamento do seu tratamento (' + $node[\"Webhook\"].json[\"produto\"] + '), e já fizemos a validação inicial por aqui...\\\\nPosso te enviar os horários disponíveis?' : 'Oi, ' + $node[\"Webhook\"].json[\"customer\"][\"name\"] + ', tudo bem?\\\\nSeja bem-vindo à Maori.\\\\nRecebemos o pagamento do seu tratamento (' + $node[\"Webhook\"].json[\"produto\"] + ') e já iniciamos seu onboarding por aqui...\\\\nPosso te enviar os horários disponíveis?' }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "5",
+      "name": "UAZAPI Enviar Mensagem",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1050, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YOUR_UAZAPI_CREDENTIAL_ID",
+          "name": "UAZAPI Key"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Asaas Criar Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asaas Criar Cliente": {
+      "main": [
+        [
+          {
+            "node": "Asaas Cobrar Cartão",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asaas Cobrar Cartão": {
+      "main": [
+        [
+          {
+            "node": "Supabase Salvar Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Salvar Cliente": {
+      "main": [
+        [
+          {
+            "node": "UAZAPI Enviar Mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

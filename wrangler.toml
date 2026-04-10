@@ -1,0 +1,4 @@
+name = "siteakin"
+main = "worker.js"
+compatibility_date = "2024-04-10"
+#:schema https://p8a.me/wrangler-json-schema

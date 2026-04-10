@@ -585,6 +585,7 @@
                     produto: leadData.plano_escolhido
                 };
 
+<<<<<<< HEAD:public/pagamento-maori.html
                 try {
                     // Sync Supabase (Non-blocking)
                     if (supabase) {
@@ -610,6 +611,25 @@
                     }
                 } catch (err) {
                     alert('Erro: ' + err.message);
+=======
+                // PLANO B: Envio via URL-encoded para bypass de CORS
+                const N8N_WEBHOOK_URL = 'https://n8n.akinconsultoria.com.br/webhook/maori-vendas';
+
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/x-www-form-urlencoded' 
+                    },
+                    body: `payload=${encodeURIComponent(JSON.stringify(payload))}`
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    window.location.href = 'obrigado.html?payment=' + result.paymentId;
+                } else {
+                    alert('Erro no Pagamento: ' + (result.error || 'Verifique os dados do cartão.'));
+>>>>>>> 95cb451 (fix: implement Plano B (CORS bypass) and fix Cloudflare build):pagamento-maori.html
                     finishBtn.disabled = false;
                     finishBtn.innerText = 'Finalizar Pedido';
                 }

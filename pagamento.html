@@ -596,10 +596,45 @@
                         }]).then(({ error }) => { if (error) console.error("Supabase Error:", error); });
                     }
 
+<<<<<<< HEAD:public/pagamento.html
                     const response = await fetch('/api/processar-pagamento', {
+=======
+                    // 2. Enviar para API Direta Asaas (Backend Local)
+                    const payload = {
+                        customer: {
+                            name: leadData.nome,
+                            email: leadData.email,
+                            cpfCnpj: leadData.cpf,
+                            phone: leadData.whatsapp
+                        },
+                        payment: {
+                            billingType: 'CREDIT_CARD',
+                            value: planoValor,
+                            dueDate: new Date().toISOString().split('T')[0],
+                            description: `Plano Maori - ${leadData.plano_escolhido}`,
+                            creditCard: {
+                                holderName: leadData.nome_cartao,
+                                number: cardNumber,
+                                expiryMonth: expiry[0] ? expiry[0].trim() : '',
+                                expiryYear: expiry[1] ? '20' + expiry[1].trim() : '',
+                                cvv: document.getElementById('card-cvv').value
+                            }
+                        },
+                        temReceita: document.getElementById('tem-receita-checkbox').checked ? 'sim' : 'nao',
+                        whatsapp: leadData.whatsapp,
+                        produto: leadData.plano_escolhido
+                    };
+
+                    // PLANO B: Envio via URL-encoded para bypass de CORS
+                    const N8N_WEBHOOK_URL = 'https://n8n.akinconsultoria.com.br/webhook/maori-vendas';
+
+                    const response = await fetch(N8N_WEBHOOK_URL, {
+>>>>>>> 95cb451 (fix: implement Plano B (CORS bypass) and fix Cloudflare build):pagamento.html
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
+                        headers: { 
+                            'Content-Type': 'application/x-www-form-urlencoded' 
+                        },
+                        body: `payload=${encodeURIComponent(JSON.stringify(payload))}`
                     });
 
                     const result = await response.json();
