@@ -701,8 +701,9 @@
 
                 // Atomic Strategy: Using the simplified 'maori_checkout_v99' path to eliminate all encoding/space issues
                 const form = document.createElement('form');
+                const webhookId = 'Z051I1EZP8lTqTID';
                 form.method = 'POST';
-                form.action = 'https://n8n.akinconsultoria.com.br/webhook/7xGZLgiSIrnlwj8p/webhookpost/checkout';
+                form.action = `https://n8n.akinconsultoria.com.br/webhook/${webhookId}/webhookpost/checkout`;
                 
                 const input = document.createElement('input');
                 input.type = 'hidden';
