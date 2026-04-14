@@ -113,7 +113,7 @@ async function saveLead(data) {
         window._questionarioLeadData = { nome: data.nome, email: data.email, whatsapp: data.whatsapp, respostas_triagem: data };
 
         // Integração para captura de lead
-        const response = await fetch('https://n8n.akinconsultoria.com.br/webhook/novo-questionario', {
+        const response = await fetch('https://n8n.srv1586236.hstgr.cloud/webhook/novo-questionario', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -336,7 +336,7 @@ function showResults() {
             <button class="btn btn-primary" style="margin-top: 20px; width: 100%;" onclick="
                 const lead = window._questionarioLeadData || {};
                 const html = window._questionarioRespostasHtml || '';
-                fetch('https://n8n.akinconsultoria.com.br/webhook/novo-questionario', {
+                fetch('https://n8n.srv1586236.hstgr.cloud/webhook/novo-questionario', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
