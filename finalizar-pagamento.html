@@ -500,9 +500,8 @@
                         }
                     } else throw new Error(res.error || 'Cartão Recusado');
                 } catch(e) {
-                    alert(e.message);
-                    finishBtn.disabled = false;
-                    finishBtn.innerText = 'CONCLUIR PEDIDO';
+                    const errorMsg = encodeURIComponent(e.message || 'Cartão Recusado');
+                    window.location.href = `erro-pagamento.html?motivo=${errorMsg}&${params.toString()}`;
                 }
             });
         });
