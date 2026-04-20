@@ -330,7 +330,7 @@ function showResults() {
             <h3 style="margin-bottom: 15px;">O que está incluso:</h3>
             <ul style="list-style: none; padding: 0;">
                 <li style="margin-bottom:10px;">✅ Medicação GLP-1 (Wegovy/Ozempic)</li>
-                <li style="margin-bottom:10px;">✅ Suporte médico via WhatsApp 24/7</li>
+                <li style="margin-bottom:10px;">✅ Suporte médico via <a href="https://wa.me/5511913506985?text=Ola,%20estou%20terminando%20de%20responder%20o%20questionario%20e%20tenho%20uma%20duvida" target="_blank" style="color: inherit; font-weight: 700;">WhatsApp 24/7</a></li>
                 <li style="margin-bottom:10px;">✅ Acompanhamento Nutricional</li>
                 <li style="margin-bottom:10px;">✅ Entrega garantida e discreta</li>
             </ul>
