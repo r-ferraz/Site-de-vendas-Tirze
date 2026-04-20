@@ -1,80 +1,226 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maori | Pedido Confirmado</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script src="utm.js"></script>
     <style>
-        .success-page {
+        :root {
+            --primary: #9d4615;
+            --primary-light: #bc551b;
+            --primary-dark: #7a3610;
+            --success: #059669;
+            --bg-page: #fdfaf7;
+            --bg-card: #ffffff;
+            --text-main: #3d2b24;
+            --text-muted: #7e6b62;
+            --border-soft: #e9dccf;
+            --shadow-premium: 0 20px 40px rgba(61, 43, 36, 0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .checkout-header {
+            background: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            padding: 0 1.5rem;
+        }
+
+        .success-content {
+            flex: 1;
+            display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 80vh;
-            text-align: center;
-            padding: 40px 20px;
+            padding: 2rem 1.5rem;
         }
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background: #48bb78;
-            color: white;
+
+        .card-premium {
+            background: var(--bg-card);
+            max-width: 500px;
+            width: 100%;
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            box-shadow: var(--shadow-premium);
+            text-align: center;
+            border: 1px solid rgba(157, 70, 21, 0.04);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-circle {
+            width: 100px;
+            height: 100px;
+            background: #f0fdf4;
+            border: 3px solid var(--success);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
-            margin-bottom: 30px;
-            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            margin: 0 auto 2rem;
+            color: var(--success);
+            font-size: 3rem;
+            font-weight: 800;
+            box-shadow: 0 0 30px rgba(5, 150, 105, 0.15);
         }
-        .order-card {
-            background: white;
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            max-width: 500px;
+
+        h1 {
+            font-family: 'Lora', serif;
+            font-size: 1.8rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+
+        .success-msg {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .steps-box {
+            background: #fdfaf7;
+            border: 1.5px solid #eee4dc;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2.5rem;
+            text-align: left;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .steps-box strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .steps-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .steps-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+        }
+
+        .steps-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .btn-home {
             width: 100%;
+            padding: 1.2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+            box-shadow: 0 10px 20px rgba(157, 70, 21, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        @keyframes bounceIn {
-            0% { transform: scale(0); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+
+        .btn-home:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .support-msg {
+            margin-top: 2.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .support-msg a {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .support-msg a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .card-premium { padding: 2.5rem 1.5rem; }
+            h1 { font-size: 1.5rem; }
         }
     </style>
 </head>
+
 <body>
-    <header style="height: 80px; background: white; border-bottom: 1px solid #edf2f7; display: flex; align-items: center;">
-        <div class="container" style="display: flex; justify-content: center; width: 100%;">
-            <a href="index.html" class="logo">
-                <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 40px; width: auto;">
-            </a>
+    <header class="checkout-header">
+        <div class="header-inner">
+            <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 32px;">
         </div>
     </header>
 
-    <div class="success-page">
-        <div class="success-icon">✓</div>
-        <div class="order-card">
-            <h1 style="font-family: var(--font-sans); margin-bottom: 15px;">Seu pedido foi recebido!</h1>
-            <p style="color: #64748b; margin-bottom: 30px; line-height: 1.6;">
+    <main class="success-content">
+        <div class="card-premium">
+            <div class="success-circle">✓</div>
+            <h1>Seu pedido foi recebido!</h1>
+            <p class="success-msg">
                 Estamos processando seu pagamento. Em alguns instantes você receberá um e-mail com os próximos passos para iniciar seu tratamento.
             </p>
-            
-            <div style="background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 30px; text-align: left;">
-                <p style="font-size: 0.9rem; color: #4a5568; margin-bottom: 10px;">🛡️ <strong>Próximos Passos:</strong></p>
-                <ul style="font-size: 0.85rem; color: #64748b; padding-left: 20px;">
+
+            <div class="steps-box">
+                <strong>🛡️ Próximos Passos:</strong>
+                <ul class="steps-list">
                     <li>Confirmação de pagamento no Asaas</li>
                     <li>Liberação do acesso à plataforma em até 24h</li>
                     <li>Agendamento com nossa equipe médica</li>
                 </ul>
             </div>
 
-            <a href="index.html" class="btn btn-primary" style="display: block; text-decoration: none;">Voltar para o Início</a>
+            <a href="index.html" class="btn-home">Voltar para o Início</a>
+
+            <p class="support-msg">
+                Ficou com alguma dúvida? <br>
+                Fale com nosso <a href="https://wa.me/5511913506985?text=Ola,%20fiz%20meu%20pedido%20e%20gostaria%20de%20tirar%20uma%20duvida" target="_blank">Suporte via WhatsApp</a>.
+            </p>
         </div>
-        
-        <p style="margin-top: 40px; color: #94a3b8; font-size: 0.9rem;">
-            Dúvidas? Entre em contato com nosso <a href="#" style="color: var(--primary-blue);">Suporte via WhatsApp</a>.
-        </p>
-    </div>
+    </main>
 </body>
+
 </html>
