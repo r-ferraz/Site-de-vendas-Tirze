@@ -4,532 +4,484 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maori | Checkout Seguro</title>
+    <title>Maori | Checkout de Tratamento</title>
     <link rel="stylesheet" href="style.css">
     <script src="utm.js"></script>
     <style>
+        :root {
+            --primary: #a44716;
+            --primary-light: #c15b24;
+            --primary-dark: #7d350f;
+            --bg-page: #fff9f5;
+            --bg-card: #ffffff;
+            --text-main: #4a342b;
+            --text-muted: #8c7369;
+            --border-soft: #e9dccf;
+            --shadow-premium: 0 15px 45px rgba(125, 53, 15, 0.08);
+        }
+
         body {
-            background-color: #f8fafc;
-            color: var(--text-dark);
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding-bottom: 60px;
         }
 
-        .checkout-layout {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 40px 5%;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .checkout-card {
+        .checkout-header {
             background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-soft);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .checkout-container {
+            max-width: 760px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Progress Bar */
+        .progress-stepper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .progress-stepper::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border-soft);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .step-pill {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: 2px solid var(--border-soft);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 2;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-muted);
+        }
+
+        .step-pill.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 15px rgba(164, 71, 22, 0.3);
+        }
+
+        .step-pill.completed {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .step-label {
+            position: absolute;
+            top: 45px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .active + .step-label {
+            color: var(--primary);
+        }
+
+        /* Cards */
+        .card-premium {
+            background: var(--bg-card);
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow: var(--shadow-premium);
+            margin-bottom: 30px;
+            border: 1px solid rgba(164, 71, 22, 0.05);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-title {
+            font-family: 'Lora', serif;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Inputs */
+        .input-group {
             margin-bottom: 24px;
         }
 
-        .protocolo-box {
-            border: 2px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: border-color 0.2s, background 0.2s;
-            cursor: pointer;
-        }
-
-        .protocolo-box:hover {
-            border-color: var(--primary-blue);
-        }
-
-        .protocolo-box.active {
-            border-color: var(--primary-blue);
-            background: #f0f9ff;
-        }
-
-        .price-risked {
-            text-decoration: line-through;
-            color: #94a3b8;
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
             font-size: 0.9rem;
+            color: var(--text-main);
         }
 
-        .price-final {
-            font-size: 1.5rem;
-            font-weight: 800;
+        .premium-input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid var(--border-soft);
+            border-radius: 14px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            color: var(--text-main);
+            background: #fff;
+        }
+
+        .premium-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(164, 71, 22, 0.05);
+        }
+
+        /* Protocol Boxes */
+        .protocol-selection {
+            display: grid;
+            gap: 16px;
+        }
+
+        .protocol-item {
+            border: 2px solid var(--border-soft);
+            border-radius: 20px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .protocol-item:hover {
+            border-color: var(--primary-light);
+            background: rgba(164, 71, 22, 0.02);
+            transform: scale(1.01);
+        }
+
+        .protocol-item.active {
+            border-color: var(--primary);
+            background: rgba(164, 71, 22, 0.05);
+            box-shadow: 0 8px 20px rgba(164, 71, 22, 0.1);
+        }
+
+        .protocol-info h3 {
+            margin: 0 0 4px 0;
+            font-size: 1.25rem;
+            font-family: 'Inter', sans-serif;
             color: var(--primary-dark);
         }
 
-        @media (max-width: 600px) {
-            .checkout-layout {
-                padding: 20px 20px;
-            }
-            .checkout-card {
-                padding: 20px;
-            }
+        .protocol-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
         }
 
-        .payment-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
+        .protocol-price {
+            text-align: right;
         }
 
-        .payment-tab {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+        .price-original {
+            font-size: 0.85rem;
+            text-decoration: line-through;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .price-now {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* Button */
+        .btn-premium {
+            width: 100%;
+            padding: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.15rem;
+            font-weight: 700;
             cursor: pointer;
-            text-align: center;
-            font-weight: 600;
             transition: all 0.3s;
+            box-shadow: 0 10px 25px rgba(164, 71, 22, 0.25);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 5px;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
         }
 
-        .payment-tab.active {
-            border-color: var(--primary-blue);
-            background: #f0f7ff;
-            color: var(--primary-blue);
+        .btn-premium:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(164, 71, 22, 0.35);
         }
 
-        #pix-area {
-            display: none;
+        .trust-line {
             text-align: center;
-            padding: 30px;
-            background: #f8fafc;
-            border-radius: 15px;
-            border: 1px dashed #cbd5e1;
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .error-field {
+            border-color: #ef4444 !important;
+            background-color: #fef2f2 !important;
+        }
+
+        @media (max-width: 600px) {
+            .card-premium { padding: 30px 20px; }
+            .protocol-item { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .protocol-price { text-align: left; }
         }
     </style>
 </head>
 
 <body>
-    <header
-        style="height: 80px; background: white; border-bottom: 1px solid #edf2f7; display: flex; align-items: center;">
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <a href="index.html" class="logo">
-                <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 40px; width: auto;">
-            </a>
-            <div style="font-size: 0.9rem; color: #64748b; display: flex; align-items: center; gap: 8px;">
-                🔒 Checkout Seguro
-            </div>
+    <header class="checkout-header">
+        <div class="container" style="display: flex; justify-content: center;">
+            <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 35px;">
         </div>
     </header>
 
-    <div class="checkout-layout">
-        <div class="checkout-steps">
-            <!-- Step 1: Contact -->
-            <div class="checkout-card">
-                <div class="step-header">
-                    <div class="step-number">1</div>
-                    <h2 style="font-size: 1.25rem; font-family: var(--font-sans);">Dados de Contato</h2>
+    <main class="checkout-container">
+        <!-- Barra de Progresso -->
+        <div class="progress-stepper">
+            <div class="step-pill active">1<span class="step-label">Contato</span></div>
+            <div class="step-pill">2<span class="step-label">Entrega</span></div>
+            <div class="step-pill">3<span class="step-label">Opção</span></div>
+            <div class="step-pill" style="opacity: 0.5;">4<span class="step-label">Pagamento</span></div>
+        </div>
+
+        <!-- Passo 1: Contato -->
+        <div class="card-premium">
+            <h2 class="card-title"><span>👤</span> Dados Pessoais</h2>
+            <div class="input-group">
+                <label>E-mail para acompanhamento</label>
+                <input type="email" class="premium-input" placeholder="exemplo@email.com" id="checkout-email">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="input-group">
+                    <label>WhatsApp</label>
+                    <input type="tel" class="premium-input" placeholder="(00) 00000-0000" id="checkout-tel">
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>E-mail</label>
-                        <input type="email" class="form-input" placeholder="seu@email.com" id="checkout-email">
-                    </div>
-                    <div class="form-group">
-                        <label>WhatsApp</label>
-                        <input type="tel" class="form-input" placeholder="(00) 00000-0000" id="checkout-tel">
-                    </div>
-                </div>
-                <div class="form-group">
+                <div class="input-group">
                     <label>CPF</label>
-                    <input type="text" class="form-input" placeholder="000.000.000-00" id="checkout-cpf" maxlength="14">
+                    <input type="text" class="premium-input" placeholder="000.000.000-00" id="checkout-cpf">
                 </div>
-            </div>
-
-            <!-- Step 2: Shipping -->
-            <div class="checkout-card">
-                <div class="step-header">
-                    <div class="step-number">2</div>
-                    <h2 style="font-size: 1.25rem; font-family: var(--font-sans);">Informações de Entrega</h2>
-                </div>
-                <div class="form-row" style="grid-template-columns: 1fr 0.5fr;">
-                    <div class="form-group">
-                        <label>CEP</label>
-                        <input type="text" class="form-input" placeholder="00000-000" id="cep" maxlength="9">
-                        <small id="cep-error" style="color: #e53e3e; display: none; margin-top: 5px;"></small>
-                    </div>
-                    <div class="form-group">
-                        <label>&nbsp;</label>
-                        <button type="button" class="btn btn-primary" id="btn-cep"
-                            style="padding: 12px; width: 100%; font-size: 0.9rem;">Buscar</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Rua / Avenida</label>
-                    <input type="text" class="form-input" id="rua">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Bairro</label>
-                        <input type="text" class="form-input" id="bairro">
-                    </div>
-                    <div class="form-group">
-                        <label>Cidade</label>
-                        <input type="text" class="form-input" id="cidade">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Estado (UF)</label>
-                        <input type="text" class="form-input" id="estado" maxlength="2">
-                    </div>
-                    <div class="form-group">
-                        <label>Número</label>
-                        <input type="text" class="form-input" id="numero">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Complemento</label>
-                    <input type="text" class="form-input" id="complemento">
-                </div>
-            </div>
-
-            <!-- Passo 3: Escolha seu protocolo -->
-            <div class="checkout-card">
-                <div class="step-header">
-                    <div class="step-number">3</div>
-                    <h2 style="font-size: 1.25rem; font-family: var(--font-sans);">Escolha seu protocolo de tratamento</h2>
-                </div>
-                
-                <div class="protocolo-box active" data-plano="20" data-valor="1200.00" data-preco="1.200" onclick="selectPlano(this)">
-                    <h3 style="font-size: 1.2rem; margin-bottom: 5px; display: flex; align-items: center; gap: 8px;">🔹 20mg</h3>
-                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 10px;">Ideal para início e ajuste do corpo.</p>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <span class="price-risked">De R$ 1.500</span>
-                        <span class="price-final" style="font-size: 1.3rem;">R$ 1.200</span>
-                    </div>
-                </div>
-
-                <div class="protocolo-box" data-plano="60" data-valor="2800.00" data-preco="2.800" onclick="selectPlano(this)">
-                    <h3 style="font-size: 1.2rem; margin-bottom: 5px; display: flex; align-items: center; gap: 8px;">🔹 60mg</h3>
-                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 10px;">Focado em continuidade e máxima performance.</p>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <span class="price-risked">De R$ 3.500</span>
-                        <span class="price-final" style="font-size: 1.3rem;">R$ 2.800</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Passo 4: Pagamento -->
-            <div class="checkout-card">
-                <div class="step-header">
-                    <div class="step-number">4</div>
-                    <h2 style="font-size: 1.25rem; font-family: var(--font-sans);">Forma de Pagamento</h2>
-                </div>
-
-                <div class="payment-tabs">
-                    <div class="payment-tab active" id="tab-card" onclick="setPaymentMethod('CREDIT_CARD')">
-                        <span>💳 Cartão</span>
-                    </div>
-                    <div class="payment-tab" id="tab-pix" onclick="setPaymentMethod('PIX')">
-                        <span>🌀 Pix</span>
-                    </div>
-                </div>
-
-                <div id="card-form">
-                    <div class="form-group">
-                        <label>Nome no Cartão</label>
-                        <input type="text" class="form-input" id="card-name" placeholder="Nome como no cartão">
-                    </div>
-                    <div class="form-group">
-                        <label>Número do Cartão</label>
-                        <input type="text" class="form-input" id="card-number" placeholder="0000 0000 0000 0000">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Validade</label>
-                            <input type="text" class="form-input" id="card-expiry" placeholder="MM/AA">
-                        </div>
-                        <div class="form-group">
-                            <label>CVV</label>
-                            <input type="text" class="form-input" id="card-cvv" placeholder="000">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Parcelamento</label>
-                        <select class="form-input" id="parcelamento"></select>
-                    </div>
-                </div>
-
-                <div id="pix-area">
-                    <p style="font-weight: 600; color: #475569; margin-bottom: 10px;">Pague com PIX e tenha aprovação imediata</p>
-                    <p style="font-size: 0.9rem; color: #64748b;">O QR Code será gerado após clicar em Finalizar.</p>
-                </div>
-                <div class="form-group" style="margin-top: 30px;">
-                    <label style="font-size: 0.95rem; font-weight: 600;">Termo de Ciência e Responsabilidade</label>
-                    <div style="height: 180px; overflow-y: auto; background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; font-size: 0.85rem; line-height: 1.5; color: #4a5568; margin-bottom: 12px; font-family: var(--font-sans);">
-                        <strong>TERMO DE CIÊNCIA, CONSENTIMENTO E RESPONSABILIDADE</strong><br><br>
-                        Pelo presente instrumento, o paciente declara que leu, compreendeu e concorda integralmente com as condições abaixo, ao iniciar ou dar continuidade ao acompanhamento junto à Maori:<br><br>
-                        <strong>1. OBJETO</strong><br>
-                        O presente termo tem como objeto a prestação de serviços de natureza médica e assistencial, consistentes em avaliação, acompanhamento e definição de condutas clínicas individualizadas, baseadas em critérios técnicos, científicos e na individualidade biológica do paciente.<br><br>
-                        <strong>2. NATUREZA DA ATIVIDADE</strong><br>
-                        A Maori atua exclusivamente como clínica médica, não exercendo atividades de comércio, dispensação, armazenamento ou distribuição de medicamentos, em conformidade com a legislação vigente e normas éticas aplicáveis à prática médica.<br><br>
-                        <strong>3. PRESCRIÇÃO MÉDICA</strong><br>
-                        O paciente declara estar ciente de que:<br>
-                        I. Eventuais prescrições decorrem de avaliação clínica individualizada<br>
-                        II. São realizadas por profissionais legalmente habilitados<br>
-                        III. Não garantem resultado específico, estando sujeitas à resposta individual do organismo<br><br>
-                        <strong>4. FORNECIMENTO POR TERCEIROS</strong><br>
-                        O paciente reconhece e concorda que:<br>
-                        I. A eventual manipulação ou fornecimento de substâncias prescritas será realizada por farmácias ou laboratórios parceiros, devidamente regularizados perante os órgãos competentes<br>
-                        II. Tais estabelecimentos são integralmente responsáveis pela produção, controle de qualidade, armazenamento e dispensação dos produtos<br>
-                        III. A Maori não possui ingerência sobre os processos internos desses terceiros<br><br>
-                        <strong>5. CONFORMIDADE REGULATÓRIA</strong><br>
-                        Todo o fluxo clínico e de prescrição observa rigorosamente:<br>
-                        I. Normas da Agência Nacional de Vigilância Sanitária (ANVISA)<br>
-                        II. Código de Ética Médica<br>
-                        III. Demais legislações sanitárias e regulatórias aplicáveis<br><br>
-                        <strong>6. RESPONSABILIDADES DO PACIENTE</strong><br>
-                        O paciente se compromete a:<br>
-                        I. Fornecer informações verídicas, completas e atualizadas sobre seu estado de saúde<br>
-                        II. Informar o uso de medicamentos, suplementos ou tratamentos paralelos<br>
-                        III. Seguir corretamente as orientações médicas<br>
-                        IV. Não utilizar substâncias prescritas de forma diversa da recomendada<br><br>
-                        <strong>7. LIMITAÇÃO DE RESPONSABILIDADE</strong><br>
-                        A Maori não se responsabiliza por:<br>
-                        I. Uso inadequado ou em desacordo com a prescrição médica<br>
-                        II. Aquisição de substâncias por canais não indicados<br>
-                        III. Intercorrências decorrentes de omissão de informações pelo paciente<br>
-                        IV. Atos, falhas ou produtos fornecidos por terceiros (farmácias ou laboratórios)<br><br>
-                        <strong>8. AUSÊNCIA DE GARANTIA DE RESULTADOS</strong><br>
-                        O paciente declara estar ciente de que os resultados clínicos podem variar conforme fatores individuais, não havendo garantia de resultado específico, uma vez que a resposta terapêutica depende de múltiplas variáveis biológicas e comportamentais.<br><br>
-                        <strong>9. CONSENTIMENTO LIVRE E ESCLARECIDO</strong><br>
-                        O paciente declara que:<br>
-                        I. Recebeu informações claras sobre a natureza do acompanhamento<br>
-                        II. Teve a oportunidade de esclarecer dúvidas<br>
-                        III. Está ciente dos benefícios, riscos e limitações do tratamento<br><br>
-                        <strong>10. AUTONOMIA E DECISÃO</strong><br>
-                        O paciente reconhece que a decisão de iniciar, manter ou interromper qualquer conduta terapêutica é realizada de forma livre e consciente, podendo, a qualquer momento, optar pela descontinuidade do acompanhamento.<br><br>
-                        <strong>11. PROTEÇÃO DE DADOS (LGPD)</strong><br>
-                        O paciente autoriza o tratamento de seus dados pessoais e sensíveis, incluindo dados de saúde, para fins de prestação de serviços médicos, acompanhamento clínico e cumprimento de obrigações legais e regulatórias, nos termos da Lei nº 13.709/2018 (Lei Geral de Proteção de Dados).<br>
-                        A Maori se compromete a adotar medidas técnicas e administrativas adequadas para garantir a segurança, confidencialidade e integridade das informações.<br><br>
-                        <strong>12. TELEATENDIMENTO (QUANDO APLICÁVEL)</strong><br>
-                        O paciente declara estar ciente de que atendimentos poderão ocorrer por meio de telemedicina, nos termos da regulamentação vigente, reconhecendo suas limitações e concordando com esse formato quando utilizado.<br><br>
-                        <strong>13. VIGÊNCIA</strong><br>
-                        O presente termo passa a vigorar a partir do aceite do paciente, sendo aplicável durante todo o período de acompanhamento junto à Maori.<br><br>
-                        <strong>14. FORO</strong><br>
-                        Para dirimir quaisquer dúvidas ou controvérsias oriundas deste termo, as partes elegem o foro da Comarca de Santo André/SP, com renúncia a qualquer outro, por mais privilegiado que seja.<br><br>
-                        <strong>15. ACEITE</strong><br>
-                        Ao prosseguir com o atendimento, o paciente declara que leu, compreendeu e aceita integralmente os termos acima.
-                    </div>
-                    <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 500; margin-bottom: 12px;">
-                        <input type="checkbox" id="tem-receita-checkbox" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
-                        <span>Eu tenho receita médica</span>
-                    </label>
-                    <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 500;">
-                        <input type="checkbox" id="accept-terms" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
-                        <span>Declaro que li, compreendi e aceito integralmente os termos acima.</span>
-                    </label>
-                    <small id="terms-error" style="color: #e53e3e; display: none; margin-top: 5px;">Você precisa aceitar os termos de responsabilidade para finalizar o pedido.</small>
-                </div>
-                <button id="btn-finalizar" class="btn btn-primary"
-                    style="width: 100%; padding: 20px; font-size: 1.2rem; margin-top: 10px;">Finalizar Pedido</button>
             </div>
         </div>
 
+        <!-- Passo 2: Entrega -->
+        <div class="card-premium">
+            <h2 class="card-title"><span>📍</span> Endereço de Entrega</h2>
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; margin-bottom: 24px;">
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>CEP</label>
+                    <input type="text" class="premium-input" placeholder="00000-000" id="cep">
+                </div>
+                <div class="input-group" style="margin-bottom: 0; display: flex; align-items: flex-end;">
+                    <button class="btn" id="btn-cep" style="width: 100%; height: 50px; background: #f0ebe6; color: var(--text-main); font-size: 0.9rem; font-weight: 700; border-radius: 12px;">BUSCAR</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Rua / Avenida</label>
+                <input type="text" class="premium-input" id="rua">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="input-group">
+                    <label>Bairro</label>
+                    <input type="text" class="premium-input" id="bairro">
+                </div>
+                <div class="input-group">
+                    <label>Número</label>
+                    <input type="text" class="premium-input" id="numero">
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px;">
+                <div class="input-group">
+                    <label>Cidade</label>
+                    <input type="text" class="premium-input" id="cidade">
+                </div>
+                <div class="input-group">
+                    <label>Estado (UF)</label>
+                    <input type="text" class="premium-input" id="estado" maxlength="2">
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Scripts -->
+        <!-- Passo 3: Protocolo -->
+        <div class="card-premium">
+            <h2 class="card-title"><span>🧬</span> Seu Protocolo de Início</h2>
+            <div class="protocol-selection">
+                <div class="protocol-item active" data-plano="20" data-valor="1200.00" data-preco="1.200" onclick="selectPlano(this)">
+                    <div class="protocol-info">
+                        <h3>Tratamento 20mg</h3>
+                        <p>Foco em adaptação e primeiros resultados.</p>
+                    </div>
+                    <div class="protocol-price">
+                        <span class="price-original">R$ 1.500</span>
+                        <span class="price-now">R$ 1.200</span>
+                    </div>
+                </div>
+
+                <div class="protocol-item" data-plano="60" data-valor="2800.00" data-preco="2.800" onclick="selectPlano(this)">
+                    <div class="protocol-info">
+                        <h3>Tratamento 60mg</h3>
+                        <p>Protocolo completo para máxima performance.</p>
+                    </div>
+                    <div class="protocol-price">
+                        <span class="price-original">R$ 3.500</span>
+                        <span class="price-now">R$ 2.800</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 35px; border-top: 1px dashed var(--border-soft); padding-top: 25px;">
+                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; color: var(--text-muted); font-size: 0.9rem;">
+                    <input type="checkbox" id="accept-terms" style="width: 18px; height: 18px;">
+                    Aceito os termos de ciência e responsabilidade da Maori.
+                </label>
+                <button id="btn-prosseguir" class="btn-premium">
+                    IR PARA O PAGAMENTO
+                    <span>➔</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="trust-line">
+            <span>🔒 Ambiente 100% Seguro</span>
+            <span>🛡️ Criptografia de Ponta</span>
+            <span>🚚 Frete Grátis</span>
+        </div>
+    </main>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            let selectedPlanoId = urlParams.get('plano') || '20';
-            let selectedPlanoValor = parseFloat(urlParams.get('valor') || '1200.00');
+        let selectedPlano = { id: '20', valor: '1200.00', preco: '1.200' };
 
-            let currentPaymentMethod = 'CREDIT_CARD';
-            window.setPaymentMethod = (method) => {
-                currentPaymentMethod = method;
-                document.getElementById('tab-card').classList.toggle('active', method === 'CREDIT_CARD');
-                document.getElementById('tab-pix').classList.toggle('active', method === 'PIX');
-                document.getElementById('card-form').style.display = method === 'CREDIT_CARD' ? 'block' : 'none';
-                document.getElementById('pix-area').style.display = method === 'PIX' ? 'block' : 'none';
+        window.selectPlano = (element) => {
+            document.querySelectorAll('.protocol-item').forEach(p => p.classList.remove('active'));
+            element.classList.add('active');
+            selectedPlano = {
+                id: element.getAttribute('data-plano'),
+                valor: element.getAttribute('data-valor'),
+                preco: element.getAttribute('data-preco')
             };
+        };
 
-            // Função para selecionar plano e atualizar preços
-            window.selectPlano = (element) => {
-                document.querySelectorAll('.protocolo-box').forEach(box => {
-                    box.classList.remove('active');
-                });
-                element.classList.add('active');
-
-                selectedPlanoId = element.getAttribute('data-plano');
-                selectedPlanoValor = parseFloat(element.getAttribute('data-valor'));
-
-                updatePricingUI();
-            };
-
-            function updatePricingUI() {
-                // Atualiza o texto do botão finalizar para mostrar o valor
-                const finishBtn = document.getElementById('btn-finalizar');
-                finishBtn.innerText = `Finalizar Pedido - R$ ${selectedPlanoValor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-
-                // Recalcula parcelamento
-                const parcelamento = document.getElementById('parcelamento');
-                if (parcelamento) {
-                    parcelamento.innerHTML = '';
-                    for (let i = 1; i <= 3; i++) {
-                        const val = (selectedPlanoValor / i).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-                        const opt = document.createElement('option');
-                        opt.value = i;
-                        opt.innerText = `${i}x de R$ ${val} (Sem juros)`;
-                        if (i === 3) opt.selected = true;
-                        parcelamento.appendChild(opt);
-                    }
+        // CEP integration
+        const btnCep = document.getElementById('btn-cep');
+        btnCep.addEventListener('click', async () => {
+            const cep = document.getElementById('cep').value.replace(/\D/g, '');
+            if(cep.length !== 8) return;
+            btnCep.innerText = "...";
+            try {
+                const resp = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                const data = await resp.json();
+                if(!data.erro) {
+                    document.getElementById('rua').value = data.logradouro || '';
+                    document.getElementById('bairro').value = data.bairro || '';
+                    document.getElementById('cidade').value = data.localidade || '';
+                    document.getElementById('estado').value = data.uf || '';
+                    document.getElementById('numero').focus();
                 }
-            }
+            } catch(e) {}
+            btnCep.innerText = "BUSCAR";
+        });
 
-            // Inicializa a UI
-            // Se houver parâmetro na URL, marca o box correto
-            document.querySelectorAll('.protocolo-box').forEach(box => {
-                if (box.getAttribute('data-plano') === selectedPlanoId) {
-                    window.selectPlano(box);
-                }
-            });
-            updatePricingUI();
-
-            // CEP search
-            const btnCep = document.getElementById('btn-cep');
-            if (btnCep) {
-                btnCep.addEventListener('click', async () => {
-                    const cep = document.getElementById('cep').value.replace(/\D/g, '');
-                    if (cep.length !== 8) return;
-                    btnCep.disabled = true;
-                    btnCep.innerText = '...';
-                    try {
-                        const resp = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-                        const data = await resp.json();
-                        if (!data.error) {
-                            document.getElementById('rua').value = data.logradouro || '';
-                            document.getElementById('bairro').value = data.bairro || '';
-                            document.getElementById('cidade').value = data.localidade || '';
-                            document.getElementById('estado').value = data.uf || '';
-                            document.getElementById('numero').focus();
-                        }
-                    } catch(e) {}
-                    btnCep.disabled = false;
-                    btnCep.innerText = 'Buscar';
-                });
-            }
-
-            // Input Masks
-            const mask = (id, fn) => {
+        // Redirect logic
+        document.getElementById('btn-prosseguir').addEventListener('click', () => {
+            const fields = ['checkout-email', 'checkout-tel', 'checkout-cpf', 'cep', 'rua', 'numero', 'bairro', 'cidade', 'estado'];
+            let valid = true;
+            fields.forEach(id => {
                 const el = document.getElementById(id);
-                if (el) el.addEventListener('input', e => e.target.value = fn(e.target.value));
-            };
-            mask('checkout-tel', v => v.replace(/\D/g, '').substring(0, 11).replace(/^(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2'));
-            mask('checkout-cpf', v => v.replace(/\D/g, '').substring(0, 11).replace(/^(\d{3})(\d)/, '$1.$2').replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d)/, '.$1-$2'));
-            mask('card-number', v => v.replace(/\D/g, '').substring(0, 16).replace(/(\d{4})(?=\d)/g, '$1 '));
-            mask('card-expiry', v => v.replace(/\D/g, '').substring(0, 4).replace(/^(\d{2})(\d)/, '$1/$2'));
-            mask('card-cvv', v => v.replace(/\D/g, '').substring(0, 4));
+                if(!el.value) { el.classList.add('error-field'); valid = false; }
+                else el.classList.remove('error-field');
+            });
 
-            // Form Validation
-            function validateForm() {
-                const required = ['checkout-email', 'checkout-tel', 'checkout-cpf', 'cep', 'rua', 'numero', 'bairro', 'cidade', 'estado'];
-                if (currentPaymentMethod === 'CREDIT_CARD') {
-                    required.push('card-name', 'card-number', 'card-expiry', 'card-cvv');
-                }
-                
-                let valid = true;
-                required.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (!el || !el.value || el.value.trim() === '') {
-                        if (el) el.classList.add('error');
-                        valid = false;
-                    } else {
-                        if (el) el.classList.remove('error');
-                    }
-                });
-
-                if (!document.getElementById('accept-terms').checked) {
-                    document.getElementById('terms-error').style.display = 'block';
-                    valid = false;
-                } else {
-                    document.getElementById('terms-error').style.display = 'none';
-                }
-
-                return valid;
+            if(!document.getElementById('accept-terms').checked) {
+                alert("Por favor, aceite os termos de responsabilidade.");
+                return;
             }
 
-            // Finalizar Pedido
-            const finishBtn = document.getElementById('btn-finalizar');
-            finishBtn.addEventListener('click', async () => {
-                if(!validateForm()) return alert('Preencha os campos obrigatórios e aceite os termos.');
-                
-                finishBtn.disabled = true;
-                finishBtn.innerText = 'Processando...';
+            if(!valid) {
+                alert("Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
 
-                const utms = window.getUtmParams ? window.getUtmParams() : {};
-                const payload = {
-                    lead_id: utms.lead_id || localStorage.getItem('lead_id') || '',
-                    billingType: currentPaymentMethod,
-                    customer: {
-                        name: currentPaymentMethod === 'CREDIT_CARD' ? document.getElementById('card-name').value : 'Cliente',
-                        email: document.getElementById('checkout-email').value,
-                        cpfCnpj: document.getElementById('checkout-cpf').value.replace(/\D/g, ''),
-                        phone: document.getElementById('checkout-tel').value.replace(/\D/g, ''),
-                        address: document.getElementById('rua').value,
-                        addressNumber: document.getElementById('numero').value,
-                        province: document.getElementById('bairro').value,
-                        city: document.getElementById('cidade').value,
-                        state: document.getElementById('estado').value,
-                        postalCode: document.getElementById('cep').value.replace(/\D/g, '')
-                    },
-                    payment: {
-                        value: selectedPlanoValor,
-                        installmentCount: currentPaymentMethod === 'CREDIT_CARD' ? parseInt(document.getElementById('parcelamento').value) : 1,
-                        creditCard: currentPaymentMethod === 'CREDIT_CARD' ? {
-                            holderName: document.getElementById('card-name').value,
-                            number: document.getElementById('card-number').value.replace(/\s+/g, ''),
-                            expiryMonth: document.getElementById('card-expiry').value.split('/')[0],
-                            expiryYear: '20' + document.getElementById('card-expiry').value.split('/')[1],
-                            cvv: document.getElementById('card-cvv').value
-                        } : null
-                    },
-                    temReceita: document.getElementById('tem-receita-checkbox').checked ? 'sim' : 'nao',
-                    produto: `Plano Maori - ${selectedPlanoId}mg`,
-                    utm_source: utms.utm_source || '',
-                    utm_medium: utms.utm_medium || '',
-                    utm_campaign: utms.utm_campaign || '',
-                    utm_term: utms.utm_term || '',
-                    utm_content: utms.utm_content || ''
-                };
+            // Save lead data temporarily
+            const leadData = {
+                email: document.getElementById('checkout-email').value,
+                whatsapp: document.getElementById('checkout-tel').value,
+                cpf: document.getElementById('checkout-cpf').value,
+                cep: document.getElementById('cep').value,
+                endereco: document.getElementById('rua').value,
+                numero: document.getElementById('numero').value,
+                bairro: document.getElementById('bairro').value,
+                cidade: document.getElementById('cidade').value,
+                estado: document.getElementById('estado').value
+            };
+            localStorage.setItem('maori_checkout_lead', JSON.stringify(leadData));
 
-                try {
-                    const response = await fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    const res = await response.json();
-                    if(res.success) {
-                        if (currentPaymentMethod === 'PIX' && res.pixQrCode) {
-                            document.getElementById('pix-area').innerHTML = `
-                                <p style="font-weight: 700; color: #059669; margin-bottom: 15px;">QR Code Gerado!</p>
-                                <img src="data:image/png;base64,${res.pixQrCode}" style="max-width: 200px; margin-bottom: 15px;">
-                                <div style="background: white; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px;">
-                                    <code style="font-size: 0.8rem; word-break: break-all;">${res.pixCopyPaste}</code>
-                                </div>
-                                <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText('${res.pixCopyPaste}')">Copiar Código PIX</button>
-                                <p style="font-size: 0.85rem; color: #64748b; margin-top: 15px;">Após pagar, você será redirecionado automaticamente.</p>
-                            `;
-                            finishBtn.style.display = 'none';
-                        } else {
-                            window.location.href = 'obrigado.html?id=' + (res.paymentId || '');
-                        }
-                    } else throw new Error(res.error || 'Erro no processamento');
-                } catch(e) {
-                    const errorMsg = encodeURIComponent(e.message || 'Erro desconhecido');
-                    window.location.href = `erro-pagamento.html?motivo=${errorMsg}`;
-                } finally {
+            // Redirect
+            const baseUrl = `finalizar-pagamento.html?plano=${selectedPlano.id}&valor=${selectedPlano.valor}&preco=${selectedPlano.preco}`;
+            const finalUrl = window.addUtmsToUrl ? window.addUtmsToUrl(baseUrl) : baseUrl;
+            window.location.href = finalUrl;
+        });
+
+        // Simple Masks
+        const mask = (id, fn) => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', e => e.target.value = fn(e.target.value));
+        };
+        mask('checkout-tel', v => v.replace(/\D/g, '').substring(0, 11).replace(/^(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d)/, "$1-$2"));
+        mask('checkout-cpf', v => v.replace(/\D/g, '').substring(0, 11).replace(/^(\d{3})(\d)/, "$1.$2").replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3").replace(/\.(\d{3})(\d)/, ".$1-$2"));
+        mask('cep', v => v.replace(/\D/g, '').substring(0, 8).replace(/^(\d{5})(\d)/, "$1-$2"));
+    </script>
+</body>
+</html>
                     finishBtn.disabled = false;
                     finishBtn.innerText = 'Finalizar Pedido';
                 }

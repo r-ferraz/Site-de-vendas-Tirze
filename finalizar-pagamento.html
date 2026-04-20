@@ -4,121 +4,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maori | Checkout Seguro</title>
+    <title>Maori | Finalizar Pagamento</title>
     <link rel="stylesheet" href="style.css">
     <script src="utm.js"></script>
     <style>
+        :root {
+            --primary: #a44716;
+            --primary-light: #c15b24;
+            --primary-dark: #7d350f;
+            --bg-page: #fff9f5;
+            --bg-card: #ffffff;
+            --text-main: #4a342b;
+            --text-muted: #8c7369;
+            --border-soft: #e9dccf;
+            --shadow-premium: 0 15px 45px rgba(125, 53, 15, 0.08);
+        }
+
         body {
-            background-color: #f8fafc;
-            color: var(--text-dark);
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding-bottom: 60px;
+        }
+
+        .checkout-header {
+            background: white;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-soft);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .checkout-layout {
             display: grid;
-            grid-template-columns: 1.5fr 1fr;
+            grid-template-columns: 1.2fr 0.8fr;
             gap: 40px;
-            padding: 40px 5%;
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
-        .checkout-card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            margin-bottom: 24px;
-        }
-
-        .step-header {
+        /* Summary Step Blocks */
+        .summary-block {
+            background: #fdfaf7;
+            border: 1px solid var(--border-soft);
+            border-radius: 16px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #edf2f7;
+            font-size: 0.9rem;
         }
 
-        .step-number {
-            width: 30px;
-            height: 30px;
-            background: var(--primary-blue);
+        .summary-block-info span {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            display: block;
+        }
+
+        .summary-block-info p {
+            margin: 2px 0 0 0;
+            font-weight: 600;
+        }
+
+        .edit-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* Progress Bar (Condensed) */
+        .progress-stepper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto 40px;
+        }
+
+        .progress-stepper::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .step-pill {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
+        .step-pill.current {
+            background: var(--primary);
+            box-shadow: 0 0 15px rgba(164, 71, 22, 0.4);
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        .card-premium {
+            background: white;
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow: var(--shadow-premium);
+            border: 1px solid rgba(164, 71, 22, 0.05);
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #4a5568;
+        .card-title {
+            font-family: 'Lora', serif;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .form-input {
+        /* Payment Tabs */
+        .payment-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .payment-tab {
+            flex: 1;
+            padding: 20px;
+            border: 2px solid var(--border-soft);
+            border-radius: 18px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .payment-tab.active {
+            border-color: var(--primary);
+            background: rgba(164, 71, 22, 0.05);
+            color: var(--primary);
+        }
+
+        /* Inputs */
+        .premium-input {
             width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
+            padding: 14px 20px;
+            border: 2px solid var(--border-soft);
+            border-radius: 14px;
             font-size: 1rem;
-            transition: border-color 0.2s;
+            margin-bottom: 20px;
+            transition: all 0.3s;
         }
 
-        .form-input:focus {
+        .premium-input:focus {
             outline: none;
-            border-color: var(--primary-blue);
-        }
-
-        .form-input.error {
-            border-color: #e53e3e !important;
-            background-color: #fff5f5;
-        }
-
-        .error-message {
-            color: #e53e3e;
-            font-size: 0.8rem;
-            margin-top: 4px;
-            display: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(164, 71, 22, 0.05);
         }
 
         /* Summary Card */
-        .summary-card {
+        .order-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-premium);
             position: sticky;
-            top: 100px;
+            top: 120px;
         }
 
-        .product-info {
+        .product-preview {
             display: flex;
             gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-soft);
             margin-bottom: 20px;
         }
 
         .product-img {
-            width: 80px;
-            height: 80px;
-            background: #f1f5f9;
+            width: 70px;
+            height: 70px;
+            background: #f8fafc;
             border-radius: 12px;
+            background-image: url('assets/semaglutida.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         }
 
         .price-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 12px;
-            color: #718096;
+            color: var(--text-muted);
+            font-size: 0.95rem;
         }
 
         .price-total {
@@ -126,665 +226,283 @@
             justify-content: space-between;
             margin-top: 20px;
             padding-top: 20px;
-            border-top: 2px solid #f1f5f9;
-            font-size: 1.25rem;
+            border-top: 2px solid var(--bg-page);
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        .btn-premium {
+            width: 100%;
+            padding: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.15rem;
             font-weight: 700;
-        }
-
-        .trust-badge {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            color: #718096;
-            margin-top: 20px;
-        }
-
-        .trust-badge svg {
-            color: #48bb78;
-        }
-
-        @media (max-width: 968px) {
-            .checkout-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .summary-card {
-                position: static;
-                order: -1;
-            }
-        }
-        .payment-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .payment-tab {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
             cursor: pointer;
-            text-align: center;
-            font-weight: 600;
             transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
+            margin-top: 20px;
+            box-shadow: 0 10px 25px rgba(164, 71, 22, 0.3);
         }
 
-        .payment-tab.active {
-            border-color: var(--primary-blue);
-            background: #f0f7ff;
-            color: var(--primary-blue);
-        }
-
-        .payment-tab i {
-            font-size: 1.2rem;
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            background: var(--primary-dark);
         }
 
         #pix-area {
-            display: none;
             text-align: center;
-            padding: 30px;
-            background: #f8fafc;
-            border-radius: 15px;
-            border: 1px dashed #cbd5e1;
+            padding: 20px;
+            background: #fdfaf7;
+            border-radius: 16px;
+            border: 1px dashed var(--border-soft);
+        }
+
+        @media (max-width: 900px) {
+            .checkout-layout { grid-template-columns: 1fr; }
+            .order-summary { position: static; order: -1; }
         }
     </style>
 </head>
 
 <body>
-    <header
-        style="height: 80px; background: white; border-bottom: 1px solid #edf2f7; display: flex; align-items: center;">
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <a href="index.html" class="logo">
-                <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 40px; width: auto;">
-            </a>
-            <div style="font-size: 0.9rem; color: #64748b; display: flex; align-items: center; gap: 8px;">
-                🔒 Checkout Seguro
-            </div>
+    <header class="checkout-header">
+        <div class="container" style="display: flex; justify-content: center;">
+            <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 35px;">
         </div>
     </header>
 
     <div class="checkout-layout">
-        <div class="checkout-steps">
-            <!-- Step 1: Contact -->
-            <div class="checkout-card">
-                <div class="step-header">
-                    <div class="step-number">1</div>
-                    <h2 style="font-size: 1.25rem; font-family: var(--font-sans);">Dados de Contato</h2>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>E-mail</label>
-                        <input type="email" class="form-input" placeholder="seu@email.com" id="checkout-email">
-                    </div>
-                    <div class="form-group">
-                        <label>WhatsApp</label>
-                        <input type="tel" class="form-input" placeholder="(00) 00000-0000" id="checkout-tel">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>CPF</label>
-                    <input type="text" class="form-input" placeholder="000.000.000-00" id="checkout-cpf" maxlength="14">
-                </div>
+        <div class="payment-section">
+            <!-- Barra de Progresso Final -->
+            <div class="progress-stepper">
+                <div class="step-pill">✓</div>
+                <div class="step-pill">✓</div>
+                <div class="step-pill">✓</div>
+                <div class="step-pill current">4</div>
             </div>
 
-            <!-- Step 2: Shipping -->
-            <div class="checkout-card">
-                <div class="step-header">
-                    <div class="step-number">2</div>
-                    <h2 style="font-size: 1.25rem; font-family: var(--font-sans);">Informações de Entrega</h2>
+            <!-- Resumo Condensado -->
+            <div class="summary-block">
+                <div class="summary-block-info">
+                    <span>Contato</span>
+                    <p id="sum-contact">Carregando...</p>
                 </div>
-                <div class="form-row" style="grid-template-columns: 1fr 0.5fr;">
-                    <div class="form-group">
-                        <label>CEP</label>
-                        <input type="text" class="form-input" placeholder="00000-000" id="cep" maxlength="9">
-                        <small id="cep-error" style="color: #e53e3e; display: none; margin-top: 5px;"></small>
-                    </div>
-                    <div class="form-group">
-                        <label>&nbsp;</label>
-                        <button type="button" class="btn btn-primary" id="btn-cep"
-                            style="padding: 12px; width: 100%; font-size: 0.9rem;">Buscar</button>
-                    </div>
+                <a href="pagamento.html" class="edit-link">EDITAR</a>
+            </div>
+            <div class="summary-block">
+                <div class="summary-block-info">
+                    <span>Entrega</span>
+                    <p id="sum-address">Carregando...</p>
                 </div>
-                <div class="form-group">
-                    <label>Rua / Avenida</label>
-                    <input type="text" class="form-input" id="rua">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Bairro</label>
-                        <input type="text" class="form-input" id="bairro">
-                    </div>
-                    <div class="form-group">
-                        <label>Cidade</label>
-                        <input type="text" class="form-input" id="cidade">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Estado (UF)</label>
-                        <input type="text" class="form-input" id="estado" maxlength="2">
-                    </div>
-                    <div class="form-group">
-                        <label>Número</label>
-                        <input type="text" class="form-input" id="numero">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Complemento</label>
-                    <input type="text" class="form-input" id="complemento">
-                </div>
+                <a href="pagamento.html" class="edit-link">EDITAR</a>
             </div>
 
-            <!-- Step 3: Payment -->
-            <div class="checkout-card">
-                <div class="step-header">
-                    <div class="step-number">3</div>
-                    <h2 style="font-size: 1.25rem; font-family: var(--font-sans);">Forma de Pagamento</h2>
-                </div>
-
+            <div class="card-premium">
+                <h2 class="card-title">💳 Forma de Pagamento</h2>
+                
                 <div class="payment-tabs">
                     <div class="payment-tab active" id="tab-card" onclick="setPaymentMethod('CREDIT_CARD')">
-                        <span>💳 Cartão</span>
+                        <span>Cartão de Crédito</span>
                     </div>
                     <div class="payment-tab" id="tab-pix" onclick="setPaymentMethod('PIX')">
-                        <span>🌀 Pix</span>
+                        <span>PIX</span>
                     </div>
                 </div>
 
                 <div id="card-form">
-                    <div class="form-group">
+                    <div class="input-group">
                         <label>Nome no Cartão</label>
-                        <input type="text" class="form-input" id="card-name" placeholder="Como no cartão">
+                        <input type="text" class="premium-input" id="card-name" placeholder="Como impresso no cartão">
                     </div>
-                    <div class="form-group">
+                    <div class="input-group">
                         <label>Número do Cartão</label>
-                        <input type="text" class="form-input" id="card-number" placeholder="0000 0000 0000 0000">
+                        <input type="text" class="premium-input" id="card-number" placeholder="0000 0000 0000 0000">
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="input-group">
                             <label>Validade</label>
-                            <input type="text" class="form-input" id="card-expiry" placeholder="MM/AA">
+                            <input type="text" class="premium-input" id="card-expiry" placeholder="MM/AA">
                         </div>
-                        <div class="form-group">
+                        <div class="input-group">
                             <label>CVV</label>
-                            <input type="text" class="form-input" id="card-cvv" placeholder="000">
+                            <input type="text" class="premium-input" id="card-cvv" placeholder="000">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="input-group">
                         <label>Parcelamento</label>
-                        <select class="form-input" id="parcelamento"></select>
+                        <select class="premium-input" id="parcelamento"></select>
                     </div>
                 </div>
 
-                <div id="pix-area">
-                    <p style="font-weight: 600; color: #475569; margin-bottom: 10px;">Pague com PIX e tenha aprovação imediata</p>
-                    <p style="font-size: 0.9rem; color: #64748b;">O QR Code será gerado após clicar em Finalizar.</p>
+                <div id="pix-area" style="display: none;">
+                    <p style="font-weight: 700; color: var(--primary);">🌀 Pagamento via PIX</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">O QR Code será gerado após clicar no botão abaixo.</p>
                 </div>
 
-                <div class="form-group" style="margin-top: 30px;">
-                    <label style="font-size: 0.95rem; font-weight: 600;">Termo de Ciência e Responsabilidade</label>
-                    <div style="height: 180px; overflow-y: auto; background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; font-size: 0.85rem; line-height: 1.5; color: #4a5568; margin-bottom: 12px; font-family: var(--font-sans);">
-                        <strong>TERMO DE CIÊNCIA, CONSENTIMENTO E RESPONSABILIDADE</strong><br><br>
-                        Pelo presente instrumento, o paciente declara que leu, compreendeu e concorda integralmente com as condições abaixo, ao iniciar ou dar continuidade ao acompanhamento junto à Maori:<br><br>
-                        <strong>1. OBJETO</strong><br>
-                        O presente termo tem como objeto a prestação de serviços de natureza médica e assistencial, consistentes em avaliação, acompanhamento e definição de condutas clínicas individualizadas, baseadas em critérios técnicos, científicos e na individualidade biológica do paciente.<br><br>
-                        <strong>2. NATUREZA DA ATIVIDADE</strong><br>
-                        A Maori atua exclusivamente como clínica médica, não exercendo atividades de comércio, dispensação, armazenamento ou distribuição de medicamentos, em conformidade com a legislação vigente e normas éticas aplicáveis à prática médica.<br><br>
-                        <strong>3. PRESCRIÇÃO MÉDICA</strong><br>
-                        O paciente declara estar ciente de que:<br>
-                        I. Eventuais prescrições decorrem de avaliação clínica individualizada<br>
-                        II. São realizadas por profissionais legalmente habilitados<br>
-                        III. Não garantem resultado específico, estando sujeitas à resposta individual do organismo<br><br>
-                        <strong>4. FORNECIMENTO POR TERCEIROS</strong><br>
-                        O paciente reconhece e concorda que:<br>
-                        I. A eventual manipulação ou fornecimento de substâncias prescritas será realizada por farmácias ou laboratórios parceiros, devidamente regularizados perante os órgãos competentes<br>
-                        II. Tais estabelecimentos são integralmente responsáveis pela produção, controle de qualidade, armazenamento e dispensação dos produtos<br>
-                        III. A Maori não possui ingerência sobre os processos internos desses terceiros<br><br>
-                        <strong>5. CONFORMIDADE REGULATÓRIA</strong><br>
-                        Todo o fluxo clínico e de prescrição observa rigorosamente:<br>
-                        I. Normas da Agência Nacional de Vigilância Sanitária (ANVISA)<br>
-                        II. Código de Ética Médica<br>
-                        III. Demais legislações sanitárias e regulatórias aplicáveis<br><br>
-                        <strong>6. RESPONSABILIDADES DO PACIENTE</strong><br>
-                        O paciente se compromete a:<br>
-                        I. Fornecer informações verídicas, completas e atualizadas sobre seu estado de saúde<br>
-                        II. Informar o uso de medicamentos, suplementos ou tratamentos paralelos<br>
-                        III. Seguir corretamente as orientações médicas<br>
-                        IV. Não utilizar substâncias prescritas de forma diversa da recomendada<br><br>
-                        <strong>7. LIMITAÇÃO DE RESPONSABILIDADE</strong><br>
-                        A Maori não se responsabiliza por:<br>
-                        I. Uso inadequado ou em desacordo com a prescrição médica<br>
-                        II. Aquisição de substâncias por canais não indicados<br>
-                        III. Intercorrências decorrentes de omissão de informações pelo paciente<br>
-                        IV. Atos, falhas ou produtos fornecidos por terceiros (farmácias ou laboratórios)<br><br>
-                        <strong>8. AUSÊNCIA DE GARANTIA DE RESULTADOS</strong><br>
-                        O paciente declara estar ciente de que os resultados clínicos podem variar conforme fatores individuais, não havendo garantia de resultado específico, uma vez que a resposta terapêutica depende de múltiplas variáveis biológicas e comportamentais.<br><br>
-                        <strong>9. CONSENTIMENTO LIVRE E ESCLARECIDO</strong><br>
-                        O paciente declara que:<br>
-                        I. Recebeu informações claras sobre a natureza do acompanhamento<br>
-                        II. Teve a oportunidade de esclarecer dúvidas<br>
-                        III. Está ciente dos benefícios, riscos e limitações do tratamento<br><br>
-                        <strong>10. AUTONOMIA E DECISÃO</strong><br>
-                        O paciente reconhece que a decisão de iniciar, manter ou interromper qualquer conduta terapêutica é realizada de forma livre e consciente, podendo, a qualquer momento, optar pela descontinuidade do acompanhamento.<br><br>
-                        <strong>11. PROTEÇÃO DE DADOS (LGPD)</strong><br>
-                        O paciente autoriza o tratamento de seus dados pessoais e sensíveis, incluindo dados de saúde, para fins de prestação de serviços médicos, acompanhamento clínico e cumprimento de obrigações legais e regulatórias, nos termos da Lei nº 13.709/2018 (Lei Geral de Proteção de Dados).<br>
-                        A Maori se compromete a adotar medidas técnicas e administrativas adequadas para garantir a segurança, confidencialidade e integridade das informações.<br><br>
-                        <strong>12. TELEATENDIMENTO (QUANDO APLICÁVEL)</strong><br>
-                        O paciente declara estar ciente de que atendimentos poderão ocorrer por meio de telemedicina, nos termos da regulamentação vigente, reconhecendo suas limitações e concordando com esse formato quando utilizado.<br><br>
-                        <strong>13. VIGÊNCIA</strong><br>
-                        O presente termo passa a vigorar a partir do aceite do paciente, sendo aplicável durante todo o período de acompanhamento junto à Maori.<br><br>
-                        <strong>14. FORO</strong><br>
-                        Para dirimir quaisquer dúvidas ou controvérsias oriundas deste termo, as partes elegem o foro da Comarca de Santo André/SP, com renúncia a qualquer outro, por mais privilegiado que seja.<br><br>
-                        <strong>15. ACEITE</strong><br>
-                        Ao prosseguir com o atendimento, o paciente declara que leu, compreendeu e aceita integralmente os termos acima.
-                    </div>
-                    <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 500;">
-                        <input type="checkbox" id="accept-terms" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
-                        <span>Declaro que li, compreendi e aceito integralmente os termos acima.</span>
-                    </label>
-                    <small id="terms-error" style="color: #e53e3e; display: none; margin-top: 5px;">Você precisa aceitar os termos de responsabilidade para finalizar o pedido.</small>
+                <div style="margin-top: 30px; font-size: 0.8rem; color: var(--text-muted); background: #fdfaf7; padding: 15px; border-radius: 12px; border: 1px solid var(--border-soft);">
+                    Ao finalizar, você concorda com os termos de uso e a política de privacidade da Maori Saúde.
                 </div>
-                <button id="btn-finalizar" class="btn btn-primary"
-                    style="width: 100%; padding: 20px; font-size: 1.2rem; margin-top: 10px;">Finalizar Pedido</button>
             </div>
         </div>
 
-        <div class="summary-card">
-            <div class="checkout-card">
-                <h3 style="margin-bottom: 20px; font-family: var(--font-sans);">Resumo do Pedido</h3>
-                <div class="product-info">
-                    <div class="product-img"
-                        style="background-image: url('assets/semaglutida.png'); background-size: contain; background-repeat: no-repeat; background-position: center;">
-                    </div>
-                    <div>
-                        <p style="font-weight: 600;" id="summary-product-name">Plano Maori - Mounjaro®</p>
-                        <p style="font-size: 0.85rem; color: #718096;">Tratamento mensal + Suporte</p>
-                    </div>
-                </div>
-                <div class="price-row" id="summary-subtotal-row">
-                    <span>Subtotal</span>
-                    <span id="summary-subtotal">R$ 1.200,00</span>
-                </div>
-                <!-- Linha de desconto escondida por padrão para o Mounjaro -->
-                <div class="price-row" id="summary-discount-row" style="display: none; color: #48bb78;">
-                    <span>Desconto Maori</span>
-                    <span>- R$ 0,00</span>
-                </div>
-                <div class="price-row">
-                    <span>Entrega</span>
-                    <span style="color: #48bb78;">Grátis</span>
-                </div>
-                <div class="price-total">
-                    <span>Total</span>
-                    <span id="summary-total">R$ 1.200,00</span>
-                </div>
-
-                <div style="margin-top: 30px;">
-                    <div class="trust-badge">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        Avaliação médica em 24h
-                    </div>
-                    <div class="trust-badge">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 4.925-3.467 9.07-8.156 10.05a1.003 1.003 0 01-1.688 0C3.467 16.07 0 11.925 0 7.001c0-.68.056-1.35.166-2.002zm9.417 5.071a1 1 0 00-1.414-1.414L8 10.586 6.828 9.414a1 1 0 00-1.414 1.414l1.882 1.882a1 1 0 001.415 0l3.271-3.271z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        Seguro e Criptografado
-                    </div>
+        <aside class="order-summary">
+            <h3 style="font-family: 'Lora', serif; margin-bottom: 20px;">Seu Pedido</h3>
+            <div class="product-preview">
+                <div class="product-img"></div>
+                <div>
+                    <p style="font-weight: 700;" id="sum-prod-name">Plano Maori</p>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Tratamento + Acompanhamento</p>
                 </div>
             </div>
-        </div>
+            <div class="price-row">
+                <span>Subtotal</span>
+                <span id="sum-subtotal">R$ 0,00</span>
+            </div>
+            <div class="price-row">
+                <span>Entrega</span>
+                <span style="color: #059669; font-weight: 700;">GRÁTIS</span>
+            </div>
+            <div class="price-total">
+                <span>Total</span>
+                <span id="sum-total">R$ 0,00</span>
+            </div>
+
+            <button class="btn-premium" id="btn-finalizar">FINALIZAR PEDIDO</button>
+            <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 15px;">🔒 Checkout Seguro & Criptografado</p>
+        </aside>
     </div>
 
-    <!-- Lógica de UI - Carrega IMEDIATAMENTE antes de qualquer script externo -->
     <script>
-        (function() {
-            try {
-                const params = new URLSearchParams(window.location.search);
-                const pId = params.get('plano') || '20';
-                const pPrecoStr = params.get('preco') || '1.200';
-                const pValor = parseFloat(params.get('valor') || '1200.00');
-
-                function runUpdate() {
-                    const resumoNome = document.getElementById('summary-product-name');
-                    const resumoSubtotal = document.getElementById('summary-subtotal');
-                    const resumoTotal = document.getElementById('summary-total');
-                    const discountRow = document.getElementById('summary-discount-row');
-                    const parcelamento = document.getElementById('parcelamento');
-                    
-                    if (resumoNome) resumoNome.innerText = "Plano Maori - Mounjaro® " + pId + "mg";
-                    if (resumoSubtotal) resumoSubtotal.innerText = "R$ " + pPrecoStr + ",00";
-                    if (resumoTotal) resumoTotal.innerText = "R$ " + pPrecoStr + ",00";
-                    if (discountRow) discountRow.style.display = 'none';
-
-                    // Atualizar as opções de parcelamento dinamicamente
-                    if (parcelamento) {
-                        const p1 = (pValor).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-                        const p2 = (pValor / 2).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-                        const p3 = (pValor / 3).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-                        
-                        parcelamento.innerHTML = `
-                            <option value="1">1x de R$ ${p1} (Sem juros)</option>
-                            <option value="2">2x de R$ ${p2} (Sem juros)</option>
-                            <option value="3" selected>3x de R$ ${p3} (Sem juros)</option>
-                        `;
-                    }
-                    console.log("UI Updated: ", pId, pPrecoStr);
-                }
-
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', runUpdate);
-                } else {
-                    runUpdate();
-                }
-            } catch (e) {
-                console.error("UI Script Error:", e);
-            }
-        })();
-    </script>
-
-    <script>
-        // Supabase Initialization & Event Binding
         document.addEventListener('DOMContentLoaded', () => {
-            // Data persists here for the rest of the script
-            const urlParams = new URLSearchParams(window.location.search);
-            const planoId = urlParams.get('plano') || '20';
-            const planoValor = parseFloat(urlParams.get('valor') || '1200.00');
-            const planoPrecoFormatado = urlParams.get('preco') || '1.200';
-            const receitaStatus = urlParams.get('receita') || 'nao';
+            const params = new URLSearchParams(window.location.search);
+            const pId = params.get('plano') || '20';
+            const pPreco = params.get('preco') || '1.200';
+            const pValor = parseFloat(params.get('valor') || '1200.00');
 
-            let currentPaymentMethod = 'CREDIT_CARD';
+            // Load data from localStorage
+            const leadStr = localStorage.getItem('maori_checkout_lead');
+            if (leadStr) {
+                const lead = JSON.parse(leadStr);
+                document.getElementById('sum-contact').innerText = lead.email;
+                document.getElementById('sum-address').innerText = `${lead.endereco}, ${lead.numero} - ${lead.cidade}/${lead.estado}`;
+            }
 
-            window.setPaymentMethod = (method) => {
-                currentPaymentMethod = method;
-                document.getElementById('tab-card').classList.toggle('active', method === 'CREDIT_CARD');
-                document.getElementById('tab-pix').classList.toggle('active', method === 'PIX');
-                document.getElementById('card-form').style.display = method === 'CREDIT_CARD' ? 'block' : 'none';
-                document.getElementById('pix-area').style.display = method === 'PIX' ? 'block' : 'none';
+            // Update UI with selected plan
+            document.getElementById('sum-prod-name').innerText = `Protocolo Maori ${pId}mg`;
+            document.getElementById('sum-subtotal').innerText = `R$ ${pPreco},00`;
+            document.getElementById('sum-total').innerText = `R$ ${pPreco},00`;
+
+            const parcelamento = document.getElementById('parcelamento');
+            for (let i = 1; i <= 3; i++) {
+                const val = (pValor / i).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.innerText = `${i}x de R$ ${val} (Sem juros)`;
+                if (i === 3) opt.selected = true;
+                parcelamento.appendChild(opt);
+            }
+
+            let currentMethod = 'CREDIT_CARD';
+            window.setPaymentMethod = (m) => {
+                currentMethod = m;
+                document.getElementById('tab-card').classList.toggle('active', m === 'CREDIT_CARD');
+                document.getElementById('tab-pix').classList.toggle('active', m === 'PIX');
+                document.getElementById('card-form').style.display = m === 'CREDIT_CARD' ? 'block' : 'none';
+                document.getElementById('pix-area').style.display = m === 'PIX' ? 'block' : 'none';
             };
 
-
-        const cepInput = document.getElementById('cep');
-        const btnCep = document.getElementById('btn-cep');
-        const cepError = document.getElementById('cep-error');
-
-        async function searchCep() {
-            const cep = cepInput.value.replace(/\D/g, '');
-            if (cep.length !== 8) {
-                showError('CEP inválido');
-                return;
-            }
-
-            try {
-                btnCep.disabled = true;
-                btnCep.innerText = 'Buscando...';
-                cepError.style.display = 'none';
-
-                const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-                const data = await response.json();
-
-                if (data.erro) {
-                    showError('CEP não encontrado');
-                } else {
-                    document.getElementById('rua').value = data.logradouro;
-                    document.getElementById('bairro').value = data.bairro;
-                    document.getElementById('cidade').value = data.localidade;
-                    document.getElementById('estado').value = data.uf;
-                    document.getElementById('numero').focus();
-                }
-            } catch (error) {
-                showError('Erro ao buscar CEP');
-            } finally {
-                btnCep.disabled = false;
-                btnCep.innerText = 'Buscar';
-            }
-        }
-
-        function showError(msg) {
-            cepError.innerText = msg;
-            cepError.style.display = 'block';
-        }
-
-        btnCep.addEventListener('click', searchCep);
-
-        // Auto-search when 8 digits are typed
-        cepInput.addEventListener('keyup', (e) => {
-            const val = e.target.value.replace(/\D/g, '');
-            if (val.length === 8) searchCep();
-        });
-
-        // Mask for CEP
-        cepInput.addEventListener('input', (e) => {
-            let val = e.target.value.replace(/\D/g, '');
-            if (val.length > 5) {
-                val = val.substring(0, 5) + '-' + val.substring(5, 8);
-            }
-            e.target.value = val;
-        });
-
-        // Mask for Phone (WhatsApp)
-        const telInput = document.getElementById('checkout-tel');
-        telInput.addEventListener('input', (e) => {
-            let val = e.target.value.replace(/\D/g, '');
-            if (val.length > 11) val = val.substring(0, 11);
-            if (val.length > 10) {
-                val = `(${val.substring(0, 2)}) ${val.substring(2, 7)}-${val.substring(7, 11)}`;
-            } else if (val.length > 6) {
-                val = `(${val.substring(0, 2)}) ${val.substring(2, 6)}-${val.substring(6, 10)}`;
-            } else if (val.length > 2) {
-                val = `(${val.substring(0, 2)}) ${val.substring(2)}`;
-            } else if (val.length > 0) {
-                val = `(${val}`;
-            }
-            e.target.value = val;
-        });
-
-        // Mask for Card Number
-        const cardInput = document.getElementById('card-number');
-        cardInput.addEventListener('input', (e) => {
-            let val = e.target.value.replace(/\D/g, '');
-            if (val.length > 16) val = val.substring(0, 16);
-            val = val.replace(/(\d{4})(?=\d)/g, '$1 ');
-            e.target.value = val;
-        });
-
-        // Mask for Expiry
-        const expiryInput = document.getElementById('card-expiry');
-        expiryInput.addEventListener('input', (e) => {
-            let val = e.target.value.replace(/\D/g, '');
-            if (val.length > 4) val = val.substring(0, 4);
-            if (val.length > 2) {
-                val = `${val.substring(0, 2)}/${val.substring(2)}`;
-            }
-            e.target.value = val;
-        });
-
-        // Mask for CVV
-        const cvvInput = document.getElementById('card-cvv');
-        cvvInput.addEventListener('input', (e) => {
-            let val = e.target.value.replace(/\D/g, '');
-            if (val.length > 4) val = val.substring(0, 4); // some cards have 4 digits
-            e.target.value = val;
-        });
-
-        // Mask for CPF
-        const cpfInput = document.getElementById('checkout-cpf');
-        cpfInput.addEventListener('input', (e) => {
-            let val = e.target.value.replace(/\D/g, '');
-            if (val.length > 3) val = val.substring(0, 3) + '.' + val.substring(3);
-            if (val.length > 7) val = val.substring(0, 7) + '.' + val.substring(7);
-            if (val.length > 11) val = val.substring(0, 11) + '-' + val.substring(11);
-            if (val.length > 14) val = val.substring(0, 14);
-            e.target.value = val;
-        });
-
-        const finishBtn = document.getElementById('btn-finalizar');
-
-        function validateForm() {
-            const requiredFields = [
-                'checkout-email', 'checkout-tel', 'checkout-cpf', 'cep', 'rua', 'bairro',
-                'cidade', 'estado', 'numero'
-            ];
-            if (currentPaymentMethod === 'CREDIT_CARD') {
-                requiredFields.push('card-name', 'card-number', 'card-expiry', 'card-cvv');
-            }
-
-            let isValid = true;
-            let firstError = null;
-
-            requiredFields.forEach(id => {
+            // Masks
+            const mask = (id, fn) => {
                 const el = document.getElementById(id);
-                if (!el || !el.value || el.value.trim() === '') {
-                    if (el) el.classList.add('error');
-                    isValid = false;
-                    if (!firstError) firstError = el;
-                } else {
-                    el.classList.remove('error');
-                }
-            });
-
-            // Email validation
-            const email = document.getElementById('checkout-email');
-            if (email.value && !email.value.includes('@')) {
-                email.classList.add('error');
-                isValid = false;
-            }
-
-            // CPF validation (simple length check)
-            const cpf = document.getElementById('checkout-cpf');
-            if (cpf.value && cpf.value.length < 14) {
-                cpf.classList.add('error');
-                isValid = false;
-            }
-
-            // Termos validation
-            const termsBox = document.getElementById('accept-terms');
-            if (!termsBox.checked) {
-                document.getElementById('terms-error').style.display = 'block';
-                isValid = false;
-            } else {
-                document.getElementById('terms-error').style.display = 'none';
-            }
-
-            if (!isValid) {
-                alert('Por favor, preencha todos os campos obrigatórios corretamente e aceite os termos.');
-                if (firstError) firstError.focus();
-            }
-            return isValid;
-        }
-
-        finishBtn.addEventListener('click', async () => {
-            if (!validateForm()) return;
-
-            finishBtn.disabled = true;
-            finishBtn.innerText = 'Processando...';
-
-            const utms = window.getUtmParams ? window.getUtmParams() : {};
-            const leadData = {
-                email: document.getElementById('checkout-email').value,
-                whatsapp: document.getElementById('checkout-tel').value,
-                cpf: document.getElementById('checkout-cpf').value.replace(/\D/g, ''),
-                cep: document.getElementById('cep').value.replace(/\D/g, ''),
-                endereco: `${document.getElementById('rua').value}, ${document.getElementById('numero').value}`,
-                bairro: document.getElementById('bairro').value,
-                cidade: document.getElementById('cidade').value,
-                estado: document.getElementById('estado').value,
-                complemento: document.getElementById('complemento').value,
-                plano_escolhido: `Mounjaro ${planoId}mg`,
-                tem_receita: receitaStatus,
-                status: 'Processando Pagamento',
-                tipo_origem: 'Checkout Transparente',
-                utm_source: utms.utm_source || '',
-                utm_medium: utms.utm_medium || '',
-                utm_campaign: utms.utm_campaign || '',
-                utm_term: utms.utm_term || '',
-                utm_content: utms.utm_content || ''
+                if (el) el.addEventListener('input', e => e.target.value = fn(e.target.value));
             };
+            mask('card-number', v => v.replace(/\D/g, '').substring(0, 16).replace(/(\d{4})(?=\d)/g, '$1 '));
+            mask('card-expiry', v => v.replace(/\D/g, '').substring(0, 4).replace(/^(\d{2})(\d)/, '$1/$2'));
+            mask('card-cvv', v => v.replace(/\D/g, '').substring(0, 4));
 
-            try {
-                finishBtn.innerText = 'Validando...';
-                
-                const webhookPayload = {
+            // Finalize
+            const finishBtn = document.getElementById('btn-finalizar');
+            finishBtn.addEventListener('click', async () => {
+                const lead = JSON.parse(localStorage.getItem('maori_checkout_lead') || '{}');
+                const utms = window.getUtmParams ? window.getUtmParams() : {};
+
+                if (currentMethod === 'CREDIT_CARD') {
+                    if (!document.getElementById('card-name').value || !document.getElementById('card-number').value) {
+                        return alert('Preencha os dados do cartão.');
+                    }
+                }
+
+                finishBtn.disabled = true;
+                finishBtn.innerText = 'PROCESSANDO...';
+
+                const payload = {
                     lead_id: utms.lead_id || localStorage.getItem('lead_id') || '',
-                    billingType: currentPaymentMethod,
-                    name: currentPaymentMethod === 'CREDIT_CARD' ? document.getElementById('card-name').value : 'Cliente',
-                    email: leadData.email,
-                    cpfCnpj: leadData.cpf,
-                    whatsapp: leadData.whatsapp,
-                    product: leadData.plano_escolhido,
-                    value: planoValor,
-                    installmentCount: currentPaymentMethod === 'CREDIT_CARD' ? document.getElementById('parcelamento').value : 1,
-                    creditCard: currentPaymentMethod === 'CREDIT_CARD' ? {
-                        number: document.getElementById('card-number').value.replace(/\s+/g, ''),
-                        expiryMonth: document.getElementById('card-expiry').value.split('/')[0],
-                        expiryYear: '20' + document.getElementById('card-expiry').value.split('/')[1],
-                        cvv: document.getElementById('card-cvv').value
-                    } : null,
-                    address: {
-                        postalCode: leadData.cep,
-                        address: document.getElementById('rua').value,
-                        addressNumber: document.getElementById('numero').value,
-                        province: leadData.bairro,
-                        city: leadData.cidade,
-                        state: leadData.estado
+                    billingType: currentMethod,
+                    customer: {
+                        name: currentMethod === 'CREDIT_CARD' ? document.getElementById('card-name').value : 'Cliente',
+                        email: lead.email,
+                        cpfCnpj: lead.cpf ? lead.cpf.replace(/\D/g, '') : '',
+                        phone: lead.whatsapp ? lead.whatsapp.replace(/\D/g, '') : '',
+                        address: lead.endereco,
+                        addressNumber: lead.numero,
+                        province: lead.bairro,
+                        city: lead.cidade,
+                        state: lead.estado,
+                        postalCode: lead.cep ? lead.cep.replace(/\D/g, '') : ''
                     },
-                    utm_source: leadData.utm_source,
-                    utm_medium: leadData.utm_medium,
-                    utm_campaign: leadData.utm_campaign,
-                    utm_term: leadData.utm_term,
-                    utm_content: leadData.utm_content
+                    payment: {
+                        value: pValor,
+                        installmentCount: currentMethod === 'CREDIT_CARD' ? parseInt(document.getElementById('parcelamento').value) : 1,
+                        creditCard: currentMethod === 'CREDIT_CARD' ? {
+                            holderName: document.getElementById('card-name').value,
+                            number: document.getElementById('card-number').value.replace(/\s+/g, ''),
+                            expiryMonth: document.getElementById('card-expiry').value.split('/')[0],
+                            expiryYear: '20' + document.getElementById('card-expiry').value.split('/')[1],
+                            cvv: document.getElementById('card-cvv').value
+                        } : null
+                    },
+                    produto: `Plano Maori - ${pId}mg`,
+                    utm_source: utms.utm_source || '',
+                    utm_medium: utms.utm_medium || '',
+                    utm_campaign: utms.utm_campaign || '',
+                    utm_term: utms.utm_term || '',
+                    utm_content: utms.utm_content || ''
                 };
 
-                // Calling the webhook via fetch to handle responses (necessary for PIX rendering)
-                const response = await fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(webhookPayload)
-                });
-
-                const res = await response.json();
-                
-                if (res.success) {
-                    if (currentPaymentMethod === 'PIX' && res.pixQrCode) {
-                        // Display PIX QR Code if returned
-                        document.getElementById('pix-area').innerHTML = `
-                            <p style="font-weight: 700; color: #059669; margin-bottom: 15px;">QR Code Gerado!</p>
-                            <img src="data:image/png;base64,${res.pixQrCode}" style="max-width: 200px; margin-bottom: 15px;">
-                            <div style="background: white; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px;">
-                                <code style="font-size: 0.8rem; word-break: break-all;">${res.pixCopyPaste}</code>
-                            </div>
-                            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText('${res.pixCopyPaste}')">Copiar Código PIX</button>
-                            <p style="font-size: 0.85rem; color: #64748b; margin-top: 15px;">Após pagar, você será redirecionado automaticamente.</p>
-                        `;
-                        finishBtn.style.display = 'none';
-                    } else {
-                        window.location.href = 'obrigado.html?id=' + (res.paymentId || '');
-                    }
-                } else {
-                    throw new Error(res.error || 'Erro no processamento');
+                try {
+                    const response = await fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const res = await response.json();
+                    if(res.success) {
+                        if (currentMethod === 'PIX' && res.pixQrCode) {
+                            document.getElementById('pix-area').innerHTML = `
+                                <p style="font-weight: 700; color: #059669; margin-bottom: 15px;">QR Code Gerado!</p>
+                                <img src="data:image/png;base64,${res.pixQrCode}" style="max-width: 200px; margin-bottom: 15px;">
+                                <div style="background: white; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px;">
+                                    <code style="font-size: 0.8rem; word-break: break-all;">${res.pixCopyPaste}</code>
+                                </div>
+                                <p style="font-size: 0.85rem; color: #64748b; margin-top: 15px;">Pague agora para liberar seu tratamento.</p>
+                            `;
+                            finishBtn.style.display = 'none';
+                        } else {
+                            window.location.href = 'obrigado.html?id=' + (res.paymentId || '');
+                        }
+                    } else throw new Error(res.error || 'Erro no cartao/pix');
+                } catch(e) {
+                    const errorMsg = encodeURIComponent(e.message || 'Pagamento recusado');
+                    window.location.href = `erro-pagamento.html?motivo=${errorMsg}`;
+                } finally {
+                    finishBtn.disabled = false;
+                    finishBtn.innerText = 'FINALIZAR PEDIDO';
                 }
-
-            } catch (err) {
-                console.error(err);
-                const errorMsg = encodeURIComponent(err.message || 'Erro desconhecido');
-                const errorUrl = window.addUtmsToUrl ? window.addUtmsToUrl(`erro-pagamento.html?motivo=${errorMsg}`) : `erro-pagamento.html?motivo=${errorMsg}` + window.location.search;
-                window.location.href = errorUrl;
-            }
-        });
+            });
         });
     </script>
 </body>
-
 </html>
