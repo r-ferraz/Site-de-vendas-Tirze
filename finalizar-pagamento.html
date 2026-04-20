@@ -4,20 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maori | Finalizar Pagamento</title>
+    <title>Maori | Pagamento Seguro</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script src="utm.js"></script>
     <style>
         :root {
-            --primary: #a44716;
-            --primary-light: #c15b24;
-            --primary-dark: #7d350f;
-            --bg-page: #fff9f5;
+            --primary: #9d4615;
+            --primary-light: #bc551b;
+            --primary-dark: #7a3610;
+            --bg-page: #fdfaf7;
             --bg-card: #ffffff;
-            --text-main: #4a342b;
-            --text-muted: #8c7369;
+            --text-main: #3d2b24;
+            --text-muted: #7e6b62;
             --border-soft: #e9dccf;
-            --shadow-premium: 0 15px 45px rgba(125, 53, 15, 0.08);
+            --shadow-premium: 0 20px 40px rgba(61, 43, 36, 0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
@@ -25,303 +27,311 @@
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding-bottom: 60px;
+            padding: 0;
+            line-height: 1.6;
         }
 
         .checkout-header {
             background: white;
-            padding: 20px 0;
+            padding: 1rem 0;
             border-bottom: 1px solid var(--border-soft);
             position: sticky;
             top: 0;
             z-index: 1000;
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 1.5rem;
         }
 
         .checkout-layout {
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 40px;
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 2.5rem;
+            max-width: 1000px;
+            margin: 3rem auto 5rem;
+            padding: 0 1.5rem;
+            align-items: start;
         }
 
-        /* Summary Step Blocks */
-        .summary-block {
+        /* Nav Pills - Vertical Summary */
+        .summary-mini-card {
             background: #fdfaf7;
             border: 1px solid var(--border-soft);
             border-radius: 16px;
-            padding: 15px 20px;
-            margin-bottom: 15px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
         }
 
-        .summary-block-info span {
-            color: var(--text-muted);
-            font-size: 0.75rem;
+        .summary-mini-card .info-label {
+            font-size: 0.72rem;
             text-transform: uppercase;
+            letter-spacing: 0.8px;
             font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 4px;
             display: block;
         }
 
-        .summary-block-info p {
-            margin: 2px 0 0 0;
+        .summary-mini-card p {
+            margin: 0;
+            font-size: 0.95rem;
             font-weight: 600;
+            color: var(--text-main);
         }
 
-        .edit-link {
+        .edit-tag {
+            font-size: 0.75rem;
             color: var(--primary);
             text-decoration: none;
-            font-size: 0.8rem;
             font-weight: 700;
+            border-bottom: 1px solid transparent;
+            transition: var(--transition);
         }
 
-        /* Progress Bar (Condensed) */
-        .progress-stepper {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 40px;
-            position: relative;
-            max-width: 500px;
-            margin: 0 auto 40px;
+        .edit-tag:hover {
+            border-color: var(--primary);
         }
 
-        .progress-stepper::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--primary);
-            z-index: 1;
-            transform: translateY(-50%);
-        }
-
-        .step-pill {
-            width: 36px;
-            height: 36px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            position: relative;
-            z-index: 2;
-        }
-
-        .step-pill.current {
-            background: var(--primary);
-            box-shadow: 0 0 15px rgba(164, 71, 22, 0.4);
-        }
-
+        /* Card System */
         .card-premium {
-            background: white;
-            border-radius: 28px;
-            padding: 40px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2.5rem;
             box-shadow: var(--shadow-premium);
-            border: 1px solid rgba(164, 71, 22, 0.05);
+            border: 1px solid rgba(157, 70, 21, 0.04);
         }
 
         .card-title {
             font-family: 'Lora', serif;
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-            color: var(--primary-dark);
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            color: var(--text-main);
+            font-weight: 600;
         }
 
-        /* Payment Tabs */
+        /* Stepper Mobile */
+        .mobile-stepper {
+            display: none;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .step-dot {
+            width: 8px;
+            height: 8px;
+            background: #eee4dc;
+            border-radius: 50%;
+        }
+
+        .step-dot.active {
+            background: var(--primary);
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* Payment Form */
         .payment-tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
         }
 
-        .payment-tab {
-            flex: 1;
-            padding: 20px;
-            border: 2px solid var(--border-soft);
-            border-radius: 18px;
+        .tab-btn {
+            background: #fff;
+            border: 2px solid #eee4dc;
+            border-radius: 12px;
+            padding: 1.25rem;
             cursor: pointer;
             text-align: center;
-            transition: all 0.3s;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: var(--transition);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 8px;
-            font-weight: 700;
-            color: var(--text-muted);
         }
 
-        .payment-tab.active {
+        .tab-btn i { font-size: 1.1rem; }
+
+        .tab-btn.active {
             border-color: var(--primary);
-            background: rgba(164, 71, 22, 0.05);
+            background: rgba(157, 70, 21, 0.02);
             color: var(--primary);
         }
 
-        /* Inputs */
+        .input-group { margin-bottom: 1.5rem; }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
         .premium-input {
             width: 100%;
-            padding: 14px 20px;
-            border: 2px solid var(--border-soft);
-            border-radius: 14px;
-            font-size: 1rem;
-            margin-bottom: 20px;
-            transition: all 0.3s;
+            padding: 12px 18px;
+            border: 1.5px solid #eee4dc;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #fff;
+            box-sizing: border-box;
+            transition: var(--transition);
         }
 
         .premium-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(164, 71, 22, 0.05);
         }
 
-        /* Summary Card */
+        /* Order Summary Card */
         .order-summary {
             background: white;
-            padding: 30px;
-            border-radius: 24px;
+            padding: 2rem;
+            border-radius: 20px;
             box-shadow: var(--shadow-premium);
             position: sticky;
             top: 120px;
         }
 
-        .product-preview {
+        .prod-info {
             display: flex;
-            gap: 15px;
-            padding-bottom: 20px;
+            gap: 1rem;
+            padding-bottom: 1.5rem;
             border-bottom: 1px solid var(--border-soft);
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
 
-        .product-img {
-            width: 70px;
-            height: 70px;
-            background: #f8fafc;
-            border-radius: 12px;
+        .prod-thumb {
+            width: 60px;
+            height: 60px;
+            background: #fdfaf7;
+            border-radius: 10px;
             background-image: url('assets/semaglutida.png');
             background-size: contain;
-            background-repeat: no-repeat;
             background-position: center;
+            background-repeat: no-repeat;
         }
 
         .price-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
             color: var(--text-muted);
-            font-size: 0.95rem;
         }
 
-        .price-total {
+        .total-row {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px solid var(--bg-page);
-            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1.5px solid #fdfaf7;
+            font-size: 1.25rem;
             font-weight: 800;
-            color: var(--primary-dark);
+            color: var(--text-main);
         }
 
-        .btn-premium {
+        .btn-finish {
             width: 100%;
-            padding: 20px;
+            padding: 1.2rem;
             background: var(--primary);
-            color: white;
+            color: #fff;
             border: none;
-            border-radius: 50px;
-            font-size: 1.15rem;
+            border-radius: 60px;
             font-weight: 700;
+            font-size: 0.95rem;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 20px;
-            box-shadow: 0 10px 25px rgba(164, 71, 22, 0.3);
+            margin-top: 1.5rem;
+            box-shadow: 0 10px 20px rgba(157, 70, 21, 0.2);
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .btn-premium:hover {
-            transform: translateY(-2px);
+        .btn-finish:hover {
             background: var(--primary-dark);
+            transform: translateY(-2px);
         }
 
         #pix-area {
             text-align: center;
-            padding: 20px;
+            padding: 2rem;
             background: #fdfaf7;
             border-radius: 16px;
-            border: 1px dashed var(--border-soft);
+            border: 1.5px dashed var(--border-soft);
         }
 
         @media (max-width: 900px) {
-            .checkout-layout { grid-template-columns: 1fr; }
+            .checkout-layout { grid-template-columns: 1fr; margin-top: 1.5rem; }
             .order-summary { position: static; order: -1; }
+            .card-premium { padding: 1.8rem 1.2rem; }
+            .mobile-stepper { display: flex; }
         }
     </style>
 </head>
 
 <body>
     <header class="checkout-header">
-        <div class="container" style="display: flex; justify-content: center;">
-            <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 35px;">
+        <div class="header-inner">
+            <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 32px;">
         </div>
     </header>
 
     <div class="checkout-layout">
-        <div class="payment-section">
-            <!-- Barra de Progresso Final -->
-            <div class="progress-stepper">
-                <div class="step-pill">✓</div>
-                <div class="step-pill">✓</div>
-                <div class="step-pill">✓</div>
-                <div class="step-pill current">4</div>
-            </div>
-
-            <!-- Resumo Condensado -->
-            <div class="summary-block">
-                <div class="summary-block-info">
-                    <span>Contato</span>
-                    <p id="sum-contact">Carregando...</p>
+        <div class="main-payment">
+            <!-- Summary Blocks -->
+            <div class="summary-mini-card">
+                <div>
+                    <span class="info-label">Contato</span>
+                    <p id="sum-email">Carregando...</p>
                 </div>
-                <a href="pagamento.html" class="edit-link">EDITAR</a>
+                <a href="pagamento.html" class="edit-tag">EDITAR</a>
             </div>
-            <div class="summary-block">
-                <div class="summary-block-info">
-                    <span>Entrega</span>
+            <div class="summary-mini-card">
+                <div>
+                    <span class="info-label">Entrega</span>
                     <p id="sum-address">Carregando...</p>
                 </div>
-                <a href="pagamento.html" class="edit-link">EDITAR</a>
+                <a href="pagamento.html" class="edit-tag">EDITAR</a>
             </div>
 
             <div class="card-premium">
-                <h2 class="card-title">💳 Forma de Pagamento</h2>
+                <h2 class="card-title">Como deseja pagar?</h2>
                 
                 <div class="payment-tabs">
-                    <div class="payment-tab active" id="tab-card" onclick="setPaymentMethod('CREDIT_CARD')">
+                    <div class="tab-btn active" id="tab-card" onclick="setPaymentMethod('CREDIT_CARD')">
                         <span>Cartão de Crédito</span>
                     </div>
-                    <div class="payment-tab" id="tab-pix" onclick="setPaymentMethod('PIX')">
+                    <div class="tab-btn" id="tab-pix" onclick="setPaymentMethod('PIX')">
                         <span>PIX</span>
                     </div>
                 </div>
 
                 <div id="card-form">
                     <div class="input-group">
-                        <label>Nome no Cartão</label>
-                        <input type="text" class="premium-input" id="card-name" placeholder="Como impresso no cartão">
+                        <label>Titular do Cartão</label>
+                        <input type="text" class="premium-input" id="card-name" placeholder="Nome como no cartão">
                     </div>
                     <div class="input-group">
                         <label>Número do Cartão</label>
                         <input type="text" class="premium-input" id="card-number" placeholder="0000 0000 0000 0000">
                     </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div class="input-group">
                             <label>Validade</label>
                             <input type="text" class="premium-input" id="card-expiry" placeholder="MM/AA">
@@ -338,40 +348,40 @@
                 </div>
 
                 <div id="pix-area" style="display: none;">
-                    <p style="font-weight: 700; color: var(--primary);">🌀 Pagamento via PIX</p>
-                    <p style="font-size: 0.85rem; color: var(--text-muted);">O QR Code será gerado após clicar no botão abaixo.</p>
-                </div>
-
-                <div style="margin-top: 30px; font-size: 0.8rem; color: var(--text-muted); background: #fdfaf7; padding: 15px; border-radius: 12px; border: 1px solid var(--border-soft);">
-                    Ao finalizar, você concorda com os termos de uso e a política de privacidade da Maori Saúde.
+                    <p style="font-weight: 700; color: var(--primary);">💠 Pix Instantâneo</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">Gere o código copia e cola no próximo passo.</p>
                 </div>
             </div>
         </div>
 
         <aside class="order-summary">
-            <h3 style="font-family: 'Lora', serif; margin-bottom: 20px;">Seu Pedido</h3>
-            <div class="product-preview">
-                <div class="product-img"></div>
+            <h3 style="font-family: 'Lora', serif; margin-bottom: 1.5rem; font-size: 1.2rem;">Resumo</h3>
+            <div class="prod-info">
+                <div class="prod-thumb"></div>
                 <div>
-                    <p style="font-weight: 700;" id="sum-prod-name">Plano Maori</p>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Tratamento + Acompanhamento</p>
+                    <p style="font-weight: 700; margin: 0;" id="sum-prod">Protocolo Maori</p>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 2px 0 0 0;">Uso contínuo + Suporte</p>
                 </div>
             </div>
+            
             <div class="price-row">
                 <span>Subtotal</span>
-                <span id="sum-subtotal">R$ 0,00</span>
+                <span id="sum-price">R$ 0,00</span>
             </div>
             <div class="price-row">
-                <span>Entrega</span>
-                <span style="color: #059669; font-weight: 700;">GRÁTIS</span>
+                <span>Frete Especial</span>
+                <span style="color: #4caf50; font-weight: 700;">Grátis</span>
             </div>
-            <div class="price-total">
+            
+            <div class="total-row">
                 <span>Total</span>
                 <span id="sum-total">R$ 0,00</span>
             </div>
 
-            <button class="btn-premium" id="btn-finalizar">FINALIZAR PEDIDO</button>
-            <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 15px;">🔒 Checkout Seguro & Criptografado</p>
+            <button class="btn-finish" id="btn-finalizar">CONCLUIR PEDIDO</button>
+            <p style="text-align: center; font-size: 0.72rem; color: var(--text-muted); margin-top: 1.5rem; font-weight: 600;">
+                🔒 SSL Seguro & Dados Protegidos
+            </p>
         </aside>
     </div>
 
@@ -382,25 +392,24 @@
             const pPreco = params.get('preco') || '1.200';
             const pValor = parseFloat(params.get('valor') || '1200.00');
 
-            // Load data from localStorage
+            // Persistence
             const leadStr = localStorage.getItem('maori_checkout_lead');
             if (leadStr) {
                 const lead = JSON.parse(leadStr);
-                document.getElementById('sum-contact').innerText = lead.email;
-                document.getElementById('sum-address').innerText = `${lead.endereco}, ${lead.numero} - ${lead.cidade}/${lead.estado}`;
+                document.getElementById('sum-email').innerText = lead.email;
+                document.getElementById('sum-address').innerText = `${lead.endereco}, ${lead.numero} - ${lead.cidade}`;
             }
 
-            // Update UI with selected plan
-            document.getElementById('sum-prod-name').innerText = `Protocolo Maori ${pId}mg`;
-            document.getElementById('sum-subtotal').innerText = `R$ ${pPreco},00`;
+            // UI
+            document.getElementById('sum-prod').innerText = `Protocolo ${pId}mg`;
+            document.getElementById('sum-price').innerText = `R$ ${pPreco},00`;
             document.getElementById('sum-total').innerText = `R$ ${pPreco},00`;
 
             const parcelamento = document.getElementById('parcelamento');
             for (let i = 1; i <= 3; i++) {
                 const val = (pValor / i).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
                 const opt = document.createElement('option');
-                opt.value = i;
-                opt.innerText = `${i}x de R$ ${val} (Sem juros)`;
+                opt.value = i; opt.innerText = `${i}x de R$ ${val} (Sem juros)`;
                 if (i === 3) opt.selected = true;
                 parcelamento.appendChild(opt);
             }
@@ -414,7 +423,6 @@
                 document.getElementById('pix-area').style.display = m === 'PIX' ? 'block' : 'none';
             };
 
-            // Masks
             const mask = (id, fn) => {
                 const el = document.getElementById(id);
                 if (el) el.addEventListener('input', e => e.target.value = fn(e.target.value));
@@ -423,16 +431,13 @@
             mask('card-expiry', v => v.replace(/\D/g, '').substring(0, 4).replace(/^(\d{2})(\d)/, '$1/$2'));
             mask('card-cvv', v => v.replace(/\D/g, '').substring(0, 4));
 
-            // Finalize
-            const finishBtn = document.getElementById('btn-finalizar');
-            finishBtn.addEventListener('click', async () => {
+            document.getElementById('btn-finalizar').addEventListener('click', async (e) => {
                 const lead = JSON.parse(localStorage.getItem('maori_checkout_lead') || '{}');
                 const utms = window.getUtmParams ? window.getUtmParams() : {};
+                const finishBtn = e.target;
 
-                if (currentMethod === 'CREDIT_CARD') {
-                    if (!document.getElementById('card-name').value || !document.getElementById('card-number').value) {
-                        return alert('Preencha os dados do cartão.');
-                    }
+                if (currentMethod === 'CREDIT_CARD' && (!document.getElementById('card-name').value || !document.getElementById('card-number').value)) {
+                    return alert('Preencha os dados do cartão.');
                 }
 
                 finishBtn.disabled = true;
@@ -493,13 +498,11 @@
                         } else {
                             window.location.href = 'obrigado.html?id=' + (res.paymentId || '');
                         }
-                    } else throw new Error(res.error || 'Erro no cartao/pix');
+                    } else throw new Error(res.error || 'Cartão Recusado');
                 } catch(e) {
-                    const errorMsg = encodeURIComponent(e.message || 'Pagamento recusado');
-                    window.location.href = `erro-pagamento.html?motivo=${errorMsg}`;
-                } finally {
+                    alert(e.message);
                     finishBtn.disabled = false;
-                    finishBtn.innerText = 'FINALIZAR PEDIDO';
+                    finishBtn.innerText = 'CONCLUIR PEDIDO';
                 }
             });
         });
