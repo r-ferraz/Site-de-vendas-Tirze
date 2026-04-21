@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function saveLead(data) {
         try {
             const utms = window.getUtmParams ? window.getUtmParams() : {};
-            const response = await fetch('https://n8n.srv1586236.hstgr.cloud/webhook/novo-questionario', {
+            const response = await fetch('https://n8n.akinconsultoria.com.br/webhook/novo-questionario', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.innerText = 'Redirecionando...';
             btn.disabled = true;
 
-            fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
+            fetch('https://n8n.akinconsultoria.com.br/webhook/maori-vendas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

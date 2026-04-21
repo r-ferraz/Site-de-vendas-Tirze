@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerText = 'Redirecionando...';
         btn.disabled = true;
 
-        fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
+        fetch('https://n8n.akinconsultoria.com.br/webhook/maori-vendas', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
