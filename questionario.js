@@ -232,17 +232,15 @@ document.addEventListener('DOMContentLoaded', () => {
             window._selectedProtocol = { id, price };
             document.querySelectorAll('.protocol-item').forEach(item => item.classList.remove('active'));
             el.classList.add('active');
-        };
-
-        planDetails.innerHTML = `
+                planDetails.innerHTML = `
             <div class="checkout-compact" style="margin-top: 40px;">
-                <h3 class="section-subtitle">Qual opção se encaixa mais com você?</h3>
+                <h3 class="section-subtitle">Seu plano já foi montado agora escolha seu ritmo:</h3>
                 
                 <div class="protocol-selection">
                     <div class="protocol-item active" onclick="window.selectProtocol('20', '1.200', this)">
                         <div class="protocol-info">
-                            <h3>Tratamento 20mg</h3>
-                            <p>Acompanhamento médico + Personalizado</p>
+                            <h3>Protocolo Essencial · 20mg</h3>
+                            <p>Para quem quer começar com segurança e ritmo consistente</p>
                         </div>
                         <div class="protocol-price">
                             <span class="price-old">R$ 1.500</span>
@@ -251,8 +249,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="protocol-item" onclick="window.selectProtocol('60', '2.800', this)">
                         <div class="protocol-info">
-                            <h3>Tratamento 60mg</h3>
-                            <p>Protocolo Estendido + Suporte VIP</p>
+                            <h3>Protocolo Completo · 60mg ⭐ Mais escolhido</h3>
+                            <p>Para quem quer o resultado completo com suporte de ponta a ponta <br> ✓ 3x mais duração de tratamento</p>
                         </div>
                         <div class="protocol-price">
                             <span class="price-old">R$ 3.500</span>
@@ -266,8 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <thead>
                             <tr>
                                 <th>Dose semanal</th>
-                                <th>20mg dura</th>
-                                <th>60mg dura</th>
+                                <th>Essencial</th>
+                                <th>Completa</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -313,38 +311,51 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span>Li e aceito os termos de responsabilidade.</span>
                 </label>
 
-                <button class="btn btn-primary" style="width: 100%; height: 56px; font-size: 1.1rem; border-radius: 50px; background: #9d4615; color: white;" onclick="
-                    if(!document.getElementById('accept-terms').checked) {
-                        alert('Por favor, aceite os termos de responsabilidade.');
-                        return;
-                    }
+                <div class="checkout-footer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-top: 20px;">
+                    <button class="btn btn-primary" style="height: 64px; font-size: 1rem; border-radius: 50px; background: #9d4615; color: white; display: flex; flex-direction: column; line-height: 1.2;" onclick="window.finalCheckout('20', '1.200', this)">
+                        <span>Garantir Tratamento 20mg</span>
+                        <small style="font-size: 0.75rem; opacity: 0.9;">Essencial - Iniciar agora</small>
+                    </button>
+                    <button class="btn btn-primary" style="height: 64px; font-size: 1rem; border-radius: 50px; background: #a44716; color: white; display: flex; flex-direction: column; line-height: 1.2; box-shadow: 0 4px 15px rgba(164, 71, 22, 0.3);" onclick="window.finalCheckout('60', '2.800', this)">
+                        <span>Garantir Tratamento 60mg</span>
+                        <small style="font-size: 0.75rem; opacity: 0.9;">Completo - Mais Escolhido</small>
+                    </button>
+                </div>
+            </div>
+        `;
 
-                    const protocol = window._selectedProtocol || { id: '20' };
-                    const urls = {
-                        '20': 'https://pay.hypercash.com.br/pt/checkout/c0185f95-2fc4-4fe3-adb5-cb4fb8c966ea',
-                        '60': 'https://pay.hypercash.com.br/pt/checkout/23fa3778-2c07-44e6-a16e-3b898910c01e'
-                    };
+        window.finalCheckout = (id, price, btn) => {
+            if(!document.getElementById('accept-terms').checked) {
+                alert('Por favor, aceite os termos de responsabilidade.');
+                return;
+            }
 
-                    const lead = window._questionarioLeadData || {};
-                    const utms = window.getUtmParams ? window.getUtmParams() : {};
-                    this.innerText = 'Redirecionando...';
-                    this.disabled = true;
+            const urls = {
+                '20': 'https://pay.hypercash.com.br/pt/checkout/c0185f95-2fc4-4fe3-adb5-cb4fb8c966ea',
+                '60': 'https://pay.hypercash.com.br/pt/checkout/23fa3778-2c07-44e6-a16e-3b898910c01e'
+            };
 
-                    fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            tipo: 'Venda Iniciada - Flow Compacto',
-                            ...lead,
-                            plano_escolhido: protocol.id,
-                            preco_base: protocol.price,
-                            ...utms
-                        })
-                    }).finally(() => {
-                        const target = urls[protocol.id] || urls['20'];
-                        window.location.href = window.addUtmsToUrl ? window.addUtmsToUrl(target) : target;
-                    });
-                ">Garantir meu Plano Personalizado</button>
+            const lead = window._questionarioLeadData || {};
+            const utms = window.getUtmParams ? window.getUtmParams() : {};
+            const originalText = btn.innerHTML;
+            btn.innerText = 'Redirecionando...';
+            btn.disabled = true;
+
+            fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tipo: 'Venda Iniciada - Funil Compacto Dual',
+                    ...lead,
+                    plano_escolhido: id,
+                    preco_base: price,
+                    ...utms
+                })
+            }).finally(() => {
+                const target = urls[id] || urls['20'];
+                window.location.href = window.addUtmsToUrl ? window.addUtmsToUrl(target) : target;
+            });
+        };ton>
             </div>
         `;
     }
