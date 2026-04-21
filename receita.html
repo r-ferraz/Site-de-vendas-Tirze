@@ -674,7 +674,7 @@
                 els.btnResetUpload.style.display = 'none';
                 
                 // Redireciona mantendo os parâmetros de preço e escolha
-                const targetUrl = window.addUtmsToUrl ? window.addUtmsToUrl('oferta.html') : 'oferta.html' + window.location.search;
+                const targetUrl = window.addUtmsToUrl ? window.addUtmsToUrl('oferta-premium.html') : 'oferta-premium.html' + window.location.search;
                 setTimeout(() => { window.location.href = targetUrl; }, 3000);
             } catch (err) {
                 console.error('[UPLOAD ERROR]', err);
