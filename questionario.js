@@ -142,7 +142,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            if (q.id === 'contato') saveLead(userData);
+            // Validação de Dados de Contato
+            if (q.id === 'contato') {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(userData.email)) {
+                    alert('Por favor, insira um e-mail válido.');
+                    return;
+                }
+
+                const phoneDigits = userData.whatsapp.replace(/\D/g, '');
+                if (phoneDigits.length < 10) {
+                    alert('Por favor, insira um número de WhatsApp válido (com DDD).');
+                    return;
+                }
+                
+                saveLead(userData);
+            }
         }
 
         // Validação de Meta de Peso Real

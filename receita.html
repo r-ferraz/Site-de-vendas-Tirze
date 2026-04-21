@@ -607,6 +607,18 @@
                 return;
             }
 
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Por favor, insira um e-mail válido.');
+                return;
+            }
+
+            const phoneDigits = whatsapp.replace(/\D/g, '');
+            if (phoneDigits.length < 10) {
+                alert('Por favor, insira um número de WhatsApp válido (com DDD).');
+                return;
+            }
+
             finalSendBtn.disabled = true;
             finalSendBtn.textContent = 'Enviando...';
 

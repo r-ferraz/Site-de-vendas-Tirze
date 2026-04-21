@@ -521,6 +521,26 @@
                     }
                 });
 
+                // Validação de E-mail
+                const emailEl = document.getElementById('checkout-email');
+                if (emailEl) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(emailEl.value)) {
+                        emailEl.classList.add('error');
+                        valid = false;
+                    }
+                }
+
+                // Validação de Telefone
+                const telEl = document.getElementById('checkout-tel');
+                if (telEl) {
+                    const phoneDigits = telEl.value.replace(/\D/g, '');
+                    if (phoneDigits.length < 10) {
+                        telEl.classList.add('error');
+                        valid = false;
+                    }
+                }
+
                 if (!document.getElementById('accept-terms').checked) {
                     document.getElementById('terms-error').style.display = 'block';
                     valid = false;
