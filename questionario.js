@@ -78,32 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function saveLead(data) {
         try {
-            const labels = {
-                nome: 'Nome',
-                whatsapp: 'WhatsApp',
-                email: 'E-mail',
-                sexo: 'Sexo biológico',
-                peso: 'Peso (kg)',
-                altura: 'Altura (cm)',
-                target: 'Tem meta de peso?',
-                meta_peso: 'Meta de peso (kg)',
-                saude_historico: 'Histórico de saúde',
-                bariatrica: 'Cirurgia bariátrica?',
-                preferencia: 'Prioridade no tratamento'
-            };
-
-            let respostasHtml = '';
-            Object.entries(labels).forEach(([key, label]) => {
-                const valor = data[key];
-                if (!valor) return;
-                const display = Array.isArray(valor) ? valor.join(', ') : valor;
-                const bg = respostasHtml.split('<tr').length % 2 === 0 ? '#f9f9f9' : 'white';
-                respostasHtml += `<tr style="background:${bg}"><td style="padding:8px;color:#555;width:200px">${label}</td><td style="padding:8px;font-weight:500">${display}</td></tr>`;
-            });
-
-            window._questionarioRespostasHtml = `<table style="width:100%;border-collapse:collapse">${respostasHtml}</table>`;
-            window._questionarioLeadData = { nome: data.nome, email: data.email, whatsapp: data.whatsapp, respostas_triagem: data };
-
             const utms = window.getUtmParams ? window.getUtmParams() : {};
             const response = await fetch('https://n8n.srv1586236.hstgr.cloud/webhook/novo-questionario', {
                 method: 'POST',
@@ -126,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.lead_id) {
                 localStorage.setItem('lead_id', res.lead_id);
             }
-
         } catch (err) {
             console.error('Erro ao salvar lead:', err.message);
         }
@@ -167,40 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
         questionnaireBox.style.display = 'none';
         resultsBox.style.display = 'block';
 
-        const labels = {
-            objetivos: 'Objetivos',
-            tratamento_anterior: 'Tratamento anterior?',
-            tentativas_anteriores: 'Já tentou',
-            tempo_tentativa: 'Tempo tentando emagrecer',
-            desafios: 'Maiores desafios',
-            nome: 'Nome',
-            whatsapp: 'WhatsApp',
-            email: 'E-mail',
-            data_nasc: 'Data de nascimento',
-            sexo: 'Sexo biológico',
-            peso: 'Peso (kg)',
-            altura: 'Altura (cm)',
-            target: 'Tem meta de peso?',
-            meta_peso: 'Meta de peso (kg)',
-            saude_historico: 'Histórico de saúde',
-            bariatrica: 'Cirurgia bariátrica?',
-            preferencia: 'Prioridade no tratamento'
-        };
-        let rows = '';
-        let i = 0;
-        Object.entries(labels).forEach(([key, label]) => {
-            const valor = userData[key];
-            if (!valor) return;
-            const display = Array.isArray(valor) ? valor.join(', ') : valor;
-            const bg = i++ % 2 === 0 ? 'white' : '#f9f9f9';
-            rows += `<tr style="background:${bg}"><td style="padding:10px;color:#555;width:200px;font-weight:500">${label}</td><td style="padding:10px">${display}</td></tr>`;
-        });
-        window._questionarioRespostasHtml = `<table style="width:100%;border-collapse:collapse;font-family:Arial,sans-serif">${rows}</table>`;
-        window._questionarioLeadData = { nome: userData.nome, email: userData.email, whatsapp: userData.whatsapp, respostas_triagem: userData };
-
         const peso = parseFloat(userData.peso);
         const meta = parseFloat(userData.meta_peso) || (peso * 0.85); 
-        const altura = parseFloat(userData.altura) / 100;
+        
+        window._questionarioLeadData = { nome: userData.nome, email: userData.email, whatsapp: userData.whatsapp, respostas_triagem: userData };
 
         const chartContainer = document.getElementById('chart-container');
         chartContainer.innerHTML = '';
@@ -283,63 +226,126 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 100);
 
         const planDetails = document.getElementById('plan-details');
+        
+        window._selectedProtocol = { id: '20', price: '1.200' };
+        window.selectProtocol = (id, price, el) => {
+            window._selectedProtocol = { id, price };
+            document.querySelectorAll('.protocol-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+        };
+
         planDetails.innerHTML = `
-            <div style="background: #fffbeb; border: 1px solid #fbbf24; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: left;">
-                <div style="display: flex; align-items: flex-start; gap: 10px;">
-                    <span style="font-size: 1.2rem;">⚠️</span>
-                    <div>
-                        <h3 style="color: #92400e; font-size: 1.1rem; margin: 0 0 8px 0; font-weight: 700;">Agora, sendo direto com você</h3>
-                        <p style="color: #b45309; font-size: 0.95rem; margin: 0; line-height: 1.5;">Hoje, no mercado tradicional, você tem duas opções: <br><strong>Pagar caro por um tratamento padronizado</strong> ou <strong>seguir um protocolo Maori ajustado ao seu corpo.</strong></p>
+            <div class="checkout-compact" style="margin-top: 40px;">
+                <h3 class="section-subtitle">Qual opção se encaixa mais com você?</h3>
+                
+                <div class="protocol-selection">
+                    <div class="protocol-item active" onclick="window.selectProtocol('20', '1.200', this)">
+                        <div class="protocol-info">
+                            <h3>Tratamento 20mg</h3>
+                            <p>Acompanhamento médico + Personalizado</p>
+                        </div>
+                        <div class="protocol-price">
+                            <span class="price-old">R$ 1.500</span>
+                            <span class="price-new">R$ 1.200</span>
+                        </div>
+                    </div>
+                    <div class="protocol-item" onclick="window.selectProtocol('60', '2.800', this)">
+                        <div class="protocol-info">
+                            <h3>Tratamento 60mg</h3>
+                            <p>Protocolo Estendido + Suporte VIP</p>
+                        </div>
+                        <div class="protocol-price">
+                            <span class="price-old">R$ 3.500</span>
+                            <span class="price-new">R$ 2.800</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
-                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; display: flex; flex-direction: column;">
-                    <h3 style="font-size: 1.1rem; color: #475569; margin: 0 0 20px 0; display: flex; align-items: center; gap: 8px;">💰 No modelo tradicional</h3>
-                    <p style="font-size: 1.4rem; color: #1e293b; font-weight: 800; margin-bottom: 15px;">R$ 2.000 a R$ 3.500/mês</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dose semanal</th>
+                                <th>20mg dura</th>
+                                <th>60mg dura</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>2,5mg</strong></td><td>8 semanas</td><td>24 semanas</td></tr>
+                            <tr style="background: #fdfaf7;"><td><strong>5mg (padrão)</strong></td><td>4 semanas</td><td>12 semanas</td></tr>
+                            <tr><td><strong>7,5mg</strong></td><td>~3 semanas</td><td>8 semanas</td></tr>
+                            <tr style="background: #fdfaf7;"><td><strong>10mg</strong></td><td>2 semanas</td><td>6 semanas</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 20px; padding: 25px; display: flex; flex-direction: column;">
-                    <h3 style="font-size: 1.1rem; color: #065f46; margin: 0 0 15px 0;">🧬 Aqui na Maori</h3>
-                    <p style="font-size: 0.9rem; color: #065f46;">Você entra em um <strong>tratamento estruturado.</strong></p>
+
+                <div style="background: #fffbeb; border: 1px solid #fbbf24; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: left;">
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <span style="font-size: 1.2rem;">⚠️</span>
+                        <div>
+                            <h3 style="color: #92400e; font-size: 1.1rem; margin: 0 0 8px 0; font-weight: 700;">Agora, sendo direto com você</h3>
+                            <p style="color: #b45309; font-size: 0.95rem; margin: 0; line-height: 1.5;">Hoje, no mercado tradicional, você tem duas opções: <br><strong>Pagar caro por um tratamento padronizado</strong> ou <strong>seguir um protocolo Maori ajustado ao seu corpo.</strong></p>
+                        </div>
+                    </div>
                 </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; display: flex; flex-direction: column; text-align: left;">
+                        <h3 style="font-size: 1.1rem; color: #475569; margin: 0 0 20px 0;">💰 No modelo tradicional</h3>
+                        <p style="font-size: 1.4rem; color: #1e293b; font-weight: 800; margin-bottom: 15px;">R$ 2.000 a R$ 3.500/mês</p>
+                    </div>
+                    <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 20px; padding: 25px; display: flex; flex-direction: column; text-align: left;">
+                        <h3 style="font-size: 1.1rem; color: #065f46; margin: 0 0 15px 0;">🧬 Aqui na Maori</h3>
+                        <p style="font-size: 0.9rem; color: #065f46;">Você entra em um <strong>tratamento estruturado.</strong></p>
+                    </div>
+                </div>
+
+                <button class="terms-toggle" onclick="document.getElementById('terms-content').style.display = (document.getElementById('terms-content').style.display === 'block' ? 'none' : 'block')">
+                    📄 Ver Termos de Responsabilidade
+                </button>
+                <div id="terms-content" class="terms-content" style="display:none; padding:15px; background:#fdfaf7; border:1px solid #eee; border-radius:10px; font-size:0.8rem; margin-bottom:20px; text-align:left;">
+                    <strong>TERMO DE CIÊNCIA E RESPONSABILIDADE</strong><br><br>
+                    Ao prosseguir, você declara estar ciente de que o tratamento depende de avaliação médica individualizada e concorda com as diretrizes da Maori Saúde.
+                </div>
+
+                <label class="terms-check">
+                    <input type="checkbox" id="accept-terms">
+                    <span>Li e aceito os termos de responsabilidade.</span>
+                </label>
+
+                <button class="btn btn-primary" style="width: 100%; height: 56px; font-size: 1.1rem; border-radius: 50px; background: #9d4615; color: white;" onclick="
+                    if(!document.getElementById('accept-terms').checked) {
+                        alert('Por favor, aceite os termos de responsabilidade.');
+                        return;
+                    }
+
+                    const protocol = window._selectedProtocol || { id: '20' };
+                    const urls = {
+                        '20': 'https://pay.hypercash.com.br/pt/checkout/c0185f95-2fc4-4fe3-adb5-cb4fb8c966ea',
+                        '60': 'https://pay.hypercash.com.br/pt/checkout/23fa3778-2c07-44e6-a16e-3b898910c01e'
+                    };
+
+                    const lead = window._questionarioLeadData || {};
+                    const utms = window.getUtmParams ? window.getUtmParams() : {};
+                    this.innerText = 'Redirecionando...';
+                    this.disabled = true;
+
+                    fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tipo: 'Venda Iniciada - Flow Compacto',
+                            ...lead,
+                            plano_escolhido: protocol.id,
+                            preco_base: protocol.price,
+                            ...utms
+                        })
+                    }).finally(() => {
+                        const target = urls[protocol.id] || urls['20'];
+                        window.location.href = window.addUtmsToUrl ? window.addUtmsToUrl(target) : target;
+                    });
+                ">Garantir meu Plano Personalizado</button>
             </div>
-
-            <button class="btn btn-primary" style="width: 100%; height: 56px; font-size: 1.1rem; border-radius: 50px; background: #9d4615; color: white;" onclick="
-                const lead = window._questionarioLeadData || {};
-                const html = window._questionarioRespostasHtml || '';
-                const utms = window.getUtmParams ? window.getUtmParams() : {};
-                this.innerText = 'Enviando...';
-                this.disabled = true;
-
-                fetch('https://n8n.srv1586236.hstgr.cloud/webhook/novo-questionario', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        tipo: 'Questionário Respondido',
-                        lead_id: utms.lead_id || localStorage.getItem('lead_id') || '',
-                        nome: lead.nome || 'Cliente',
-                        email: lead.email || '',
-                        whatsapp: lead.whatsapp || '',
-                        respostas_html: html,
-                        respostas_triagem: lead.respostas_triagem || {},
-                        tipo_origem: 'Questionário',
-                        utm_source: utms.utm_source || '',
-                        utm_medium: utms.utm_medium || '',
-                        utm_campaign: utms.utm_campaign || ''
-                    })
-                })
-                .then(r => r.json())
-                .finally(() => {
-                    const userDataFinal = lead.respostas_triagem || {};
-                    const pV = userDataFinal.peso || '';
-                    const mV = userDataFinal.meta_peso || '';
-                    const query = '&peso=' + pV + '&meta=' + mV;
-                    localStorage.setItem('maori_checkout_lead', JSON.stringify(lead));
-                    const target = window.addUtmsToUrl ? window.addUtmsToUrl('pagamento.html') : 'pagamento.html' + window.location.search;
-                    window.location.href = target + query;
-                });
-            ">Garantir meu Plano Personalizado</button>
         `;
     }
 
