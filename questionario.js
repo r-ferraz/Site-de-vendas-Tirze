@@ -330,11 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
-                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; display: flex; flex-direction: column; text-align: left;">
-                        <h3 style="font-size: 1.1rem; color: #475569; margin: 0 0 20px 0;">💰 No modelo tradicional</h3>
-                        <p style="font-size: 1.4rem; color: #1e293b; font-weight: 800; margin-bottom: 15px;">R$ 2.000 a R$ 3.500/mês</p>
-                    </div>
+                <div style="margin-bottom: 30px;">
                     <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 20px; padding: 25px; display: flex; flex-direction: column; text-align: left;">
                         <h3 style="font-size: 1.1rem; color: #065f46; margin: 0 0 15px 0;">🧬 Aqui na Maori</h3>
                         <p style="font-size: 0.9rem; color: #065f46;">Você entra em um <strong>tratamento estruturado.</strong></p>
