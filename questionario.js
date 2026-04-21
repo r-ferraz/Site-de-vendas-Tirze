@@ -430,7 +430,7 @@ function showResults() {
                 const userData = lead.respostas_triagem || {};
                 const pesoVal = userData.peso || '';
                 const metaVal = userData.meta_peso || '';
-                const params = `&peso=${pesoVal}&meta=${metaVal}`;
+                const params = '&peso=' + pesoVal + '&meta=' + metaVal;
                 localStorage.setItem('maori_checkout_lead', JSON.stringify(lead));
                 const targetUrl = window.addUtmsToUrl ? window.addUtmsToUrl('pagamento.html') : 'pagamento.html' + window.location.search;
                 window.location.href = targetUrl + params;
