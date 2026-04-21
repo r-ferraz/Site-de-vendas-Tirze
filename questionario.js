@@ -414,7 +414,7 @@ function showResults() {
                     email: lead.email || '',
                     whatsapp: lead.whatsapp || '',
                     respostas_html: html,
-                    respostas_triagem: userData,
+                    respostas_triagem: lead.respostas_triagem || {},
                     tipo_origem: 'Questionário',
                     utm_source: utms.utm_source || '',
                     utm_medium: utms.utm_medium || '',
