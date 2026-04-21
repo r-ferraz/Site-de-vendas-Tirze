@@ -643,23 +643,37 @@
                 return;
             }
 
-            // Persistence
-            const leadData = {
-                email: document.getElementById('checkout-email').value,
-                whatsapp: document.getElementById('checkout-tel').value,
-                cpf: document.getElementById('checkout-cpf').value,
-                cep: document.getElementById('cep').value,
-                endereco: document.getElementById('rua').value,
-                numero: document.getElementById('numero').value,
-                bairro: document.getElementById('bairro').value,
-                cidade: document.getElementById('cidade').value,
-                estado: document.getElementById('estado').value
+            // Persistence & Redirect to Hypercash
+            const btnProsseguir = document.getElementById('btn-prosseguir');
+            btnProsseguir.disabled = true;
+            btnProsseguir.innerText = "PROCESSANDO...";
+
+            const hypercashUrls = {
+                '20': 'https://pay.hypercash.com.br/pt/checkout/c0185f95-2fc4-4fe3-adb5-cb4fb8c966ea',
+                '60': 'https://pay.hypercash.com.br/pt/checkout/23fa3778-2c07-44e6-a16e-3b898910c01e'
             };
+
+            const utms = window.getUtmParams ? window.getUtmParams() : {};
+            const payload = {
+                tipo: 'Lead Checkout',
+                ...leadData,
+                plano: selectedPlano.id,
+                valor: selectedPlano.valor,
+                ...utms
+            };
+
             localStorage.setItem('maori_checkout_lead', JSON.stringify(leadData));
 
-            const baseUrl = `finalizar-pagamento.html?plano=${selectedPlano.id}&valor=${selectedPlano.valor}&preco=${selectedPlano.preco}`;
-            const finalUrl = window.addUtmsToUrl ? window.addUtmsToUrl(baseUrl) : baseUrl;
-            window.location.href = finalUrl;
+            // Envia Lead para n8n e redireciona
+            fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).finally(() => {
+                const targetUrl = hypercashUrls[selectedPlano.id] || hypercashUrls['20'];
+                const finalUrl = window.addUtmsToUrl ? window.addUtmsToUrl(targetUrl) : targetUrl;
+                window.location.href = finalUrl;
+            });
         });
     </script>
 </body>
