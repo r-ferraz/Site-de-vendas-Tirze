@@ -143,7 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const peso = parseFloat(userData.peso);
         const meta = parseFloat(userData.meta_peso) || (peso * 0.85); 
         
-        window._questionarioLeadData = { nome: userData.nome, email: userData.email, whatsapp: userData.whatsapp, respostas_triagem: userData };
+        window._questionarioLeadData = { 
+            nome: userData.nome, 
+            email: userData.email, 
+            whatsapp: userData.whatsapp, 
+            respostas_triagem: userData 
+        };
 
         const chartContainer = document.getElementById('chart-container');
         chartContainer.innerHTML = '';
@@ -195,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bar.style.height = '0%';
             bar.style.width = '100%';
             bar.style.borderRadius = '8px 8px 0 0';
-            bar.style.background = 'var(--primary-blue)';
+            bar.style.background = '#9d4615'; // Brown
             bar.style.transition = 'height 1s cubic-bezier(0.4, 0, 0.2, 1)';
 
             barWrapper.appendChild(label);
@@ -210,6 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const w = chartContainer.clientWidth;
             const h = chartContainer.clientHeight;
+            if (!w || !h) return;
             svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
             let d = '';
             const wrappers = chartContainer.querySelectorAll('.chart-col-wrapper');
@@ -223,16 +229,53 @@ document.addEventListener('DOMContentLoaded', () => {
             path.setAttribute("d", d);
             path.style.transition = 'stroke-dashoffset 2s ease-out';
             path.style.strokeDashoffset = '0';
-        }, 100);
+        }, 300);
 
         const planDetails = document.getElementById('plan-details');
         
+        // Define global helpers
         window._selectedProtocol = { id: '20', price: '1.200' };
+        
         window.selectProtocol = (id, price, el) => {
             window._selectedProtocol = { id, price };
             document.querySelectorAll('.protocol-item').forEach(item => item.classList.remove('active'));
             el.classList.add('active');
-                planDetails.innerHTML = `
+        };
+
+        window.finalCheckout = (id, price, btn) => {
+            if(!document.getElementById('accept-terms').checked) {
+                alert('Por favor, aceite os termos de responsabilidade.');
+                return;
+            }
+
+            const urls = {
+                '20': 'https://pay.hypercash.com.br/pt/checkout/c0185f95-2fc4-4fe3-adb5-cb4fb8c966ea',
+                '60': 'https://pay.hypercash.com.br/pt/checkout/23fa3778-2c07-44e6-a16e-3b898910c01e'
+            };
+
+            const lead = window._questionarioLeadData || {};
+            const utms = window.getUtmParams ? window.getUtmParams() : {};
+            btn.innerText = 'Redirecionando...';
+            btn.disabled = true;
+
+            fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tipo: 'Venda Iniciada - Funil Compacto Dual',
+                    ...lead,
+                    plano_escolhido: id,
+                    preco_base: price,
+                    ...utms
+                })
+            }).finally(() => {
+                const target = urls[id] || urls['20'];
+                window.location.href = window.addUtmsToUrl ? window.addUtmsToUrl(target) : target;
+            });
+        };
+
+        // Render HTML
+        planDetails.innerHTML = `
             <div class="checkout-compact" style="margin-top: 40px;">
                 <h3 class="section-subtitle">Seu plano já foi montado agora escolha seu ritmo:</h3>
                 
@@ -312,51 +355,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 </label>
 
                 <div class="checkout-footer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-top: 20px;">
-                    <button class="btn btn-primary" style="height: 64px; font-size: 1rem; border-radius: 50px; background: #9d4615; color: white; display: flex; flex-direction: column; line-height: 1.2;" onclick="window.finalCheckout('20', '1.200', this)">
+                    <button class="btn btn-primary" style="height: 64px; font-size: 1rem; border-radius: 50px; background: #9d4615; color: white; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2;" onclick="window.finalCheckout('20', '1.200', this)">
                         <span>Garantir Tratamento 20mg</span>
                         <small style="font-size: 0.75rem; opacity: 0.9;">Essencial - Iniciar agora</small>
                     </button>
-                    <button class="btn btn-primary" style="height: 64px; font-size: 1rem; border-radius: 50px; background: #a44716; color: white; display: flex; flex-direction: column; line-height: 1.2; box-shadow: 0 4px 15px rgba(164, 71, 22, 0.3);" onclick="window.finalCheckout('60', '2.800', this)">
+                    <button class="btn btn-primary" style="height: 64px; font-size: 1rem; border-radius: 50px; background: #a44716; color: white; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; box-shadow: 0 4px 15px rgba(164, 71, 22, 0.3);" onclick="window.finalCheckout('60', '2.800', this)">
                         <span>Garantir Tratamento 60mg</span>
                         <small style="font-size: 0.75rem; opacity: 0.9;">Completo - Mais Escolhido</small>
                     </button>
                 </div>
             </div>
         `;
-
-        window.finalCheckout = (id, price, btn) => {
-            if(!document.getElementById('accept-terms').checked) {
-                alert('Por favor, aceite os termos de responsabilidade.');
-                return;
-            }
-
-            const urls = {
-                '20': 'https://pay.hypercash.com.br/pt/checkout/c0185f95-2fc4-4fe3-adb5-cb4fb8c966ea',
-                '60': 'https://pay.hypercash.com.br/pt/checkout/23fa3778-2c07-44e6-a16e-3b898910c01e'
-            };
-
-            const lead = window._questionarioLeadData || {};
-            const utms = window.getUtmParams ? window.getUtmParams() : {};
-            const originalText = btn.innerHTML;
-            btn.innerText = 'Redirecionando...';
-            btn.disabled = true;
-
-            fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    tipo: 'Venda Iniciada - Funil Compacto Dual',
-                    ...lead,
-                    plano_escolhido: id,
-                    preco_base: price,
-                    ...utms
-                })
-            }).finally(() => {
-                const target = urls[id] || urls['20'];
-                window.location.href = window.addUtmsToUrl ? window.addUtmsToUrl(target) : target;
-            });
-            };
-        };
     }
 
     nextBtn.addEventListener('click', nextStep);
