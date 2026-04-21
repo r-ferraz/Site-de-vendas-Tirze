@@ -353,6 +353,201 @@
     </div>
 
     <div class="container">
+                height: 200px;
+                padding: 10px;
+            }
+
+            .q-input {
+                padding: 12px;
+                font-size: 1rem;
+            }
+            .results-box h2 {
+                font-size: 1.6rem !important;
+                line-height: 1.2;
+            }
+            .section-subtitle {
+                font-size: 1.1rem !important;
+                line-height: 1.3;
+                padding: 0 10px;
+            }
+        }
+    </style>
+    <style>
+        :root {
+            --primary: #9d4615;
+            --primary-dark: #7e3811;
+            --primary-blue: #9d4615;
+            --bg-page: #fdfaf7;
+            --text-main: #2d241e;
+            --text-muted: #7e6b62;
+            --border-soft: #e9dccf;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Protocol Cards */
+        .protocol-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .protocol-item {
+            border: 1.5px solid var(--border-soft);
+            border-radius: 16px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+        }
+
+        .protocol-item:hover { border-color: var(--primary); background: #fffaf7; }
+        .protocol-item.active { border-color: var(--primary); background: #fff3eb; box-shadow: 0 4px 15px rgba(157, 70, 21, 0.1); }
+
+        .protocol-info h3 { font-size: 1.1rem; margin: 0 0 0.3rem 0; color: var(--text-main); }
+        .protocol-info p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+        .protocol-price { text-align: right; }
+        .price-old { display: block; font-size: 0.85rem; text-decoration: line-through; color: var(--text-muted); }
+        .price-new { display: block; font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+
+        /* Table Section */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+            margin-bottom: 30px;
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+        th { background: #fdfaf7; padding: 12px; font-weight: 600; border-bottom: 1px solid var(--border-soft); }
+        td { padding: 12px; border-bottom: 1px solid #f9f4ef; }
+
+        /* Terms Accordion */
+        .terms-toggle {
+            width: 100%;
+            background: none;
+            border: 1px solid var(--border-soft);
+            padding: 12px;
+            border-radius: 10px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .terms-toggle:hover { background: #fdfaf7; color: var(--primary); }
+
+        .terms-content {
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+            background: #fdfaf7;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-container {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 95%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            text-align: left;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #f1f5f9;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #64748b;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover { background: #e2e8f0; color: #1e293b; }
+        
+        .terms-check { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            font-size: 0.9rem; 
+            margin-bottom: 1.5rem; 
+            cursor: pointer; 
+            text-align: left; 
+        }
+
+        .terms-check { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; margin-bottom: 1.5rem; cursor: pointer; text-align: left; }
+        .terms-check input { width: 18px; height: 18px; accent-color: var(--primary); }
+
+        .section-subtitle {
+            font-family: 'Lora', serif;
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin: 30px 0 15px;
+            text-align: center;
+        }
+
+        .evolution-chart { min-height: 200px; }
+
+        @media (max-width: 480px) {
+            .protocol-item { padding: 1rem; }
+            .price-new { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <header
+        style="height: 80px; background: white; border-bottom: 1px solid #edf2f7; display: flex; align-items: center;">
+        <div class="container" style="display: flex; justify-content: center; width: 100%;">
+            <a href="index.html" class="logo">
+                <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 40px; width: auto;">
+            </a>
+        </div>
+    </header>
+
+    <div class="progress-bar-container">
+        <div class="progress-bar"></div>
+    </div>
+
+    <div class="container">
         <div id="questionnaire-box" class="q-container">
             <!-- Dynamic Content -->
             <div id="step-content">
@@ -365,7 +560,7 @@
         </div>
 
         <div id="results-box" class="q-container" style="display: none; max-width: 800px;">
-            <h2 class="q-title">Seu Plano Personalizado</h2>
+            <h2 id="results-title" style="font-size: 2.2rem; text-align: center; color: #2d241e; margin-bottom: 10px;">Seu Plano Personalizado</h2>
             <div id="evolution-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%; margin-top: 20px;">
                     <div style="text-align: center; padding-bottom: 10px; align-self: flex-start; margin-top: 10px;">
@@ -382,7 +577,7 @@
                 </div>
             </div>
             <div id="plan-details" style="margin-top: 30px;">
-                <!-- Plan summary -->
+                <!-- Plan summary generated by JS -->
             </div>
         </div>
     </div>

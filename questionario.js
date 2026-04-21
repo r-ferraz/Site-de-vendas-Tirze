@@ -191,86 +191,95 @@ document.addEventListener('DOMContentLoaded', () => {
             respostas_triagem: userData 
         };
 
-        const chartContainer = document.getElementById('chart-container');
-        chartContainer.innerHTML = '';
+        const resultsTitle = document.getElementById('results-title');
+        const evolutionSection = document.getElementById('evolution-section');
+        
+        if (userData.target === 'Sim') {
+            if (evolutionSection) evolutionSection.style.display = 'block';
+            if (resultsTitle) resultsTitle.style.display = 'block';
+            
+            const chartContainer = document.getElementById('chart-container');
+            chartContainer.innerHTML = '';
 
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.style.position = 'absolute';
-        svg.style.top = '0';
-        svg.style.left = '0';
-        svg.style.width = '100%';
-        svg.style.height = '100%';
-        svg.style.pointerEvents = 'none';
-        svg.style.zIndex = '10';
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.style.position = 'absolute';
+            svg.style.top = '0';
+            svg.style.left = '0';
+            svg.style.width = '100%';
+            svg.style.height = '100%';
+            svg.style.pointerEvents = 'none';
+            svg.style.zIndex = '10';
 
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("fill", "none");
-        path.setAttribute("stroke", "var(--primary-dark)"); 
-        path.setAttribute("stroke-width", "3");
-        path.setAttribute("stroke-dasharray", "6,6");
-        path.setAttribute("stroke-linecap", "round");
-        path.setAttribute("stroke-linejoin", "round");
-        svg.appendChild(path);
-        chartContainer.appendChild(svg);
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("fill", "none");
+            path.setAttribute("stroke", "var(--primary-dark)"); 
+            path.setAttribute("stroke-width", "3");
+            path.setAttribute("stroke-dasharray", "6,6");
+            path.setAttribute("stroke-linecap", "round");
+            path.setAttribute("stroke-linejoin", "round");
+            svg.appendChild(path);
+            chartContainer.appendChild(svg);
 
-        const targetHeights = [];
-        for (let j = 0; j < 5; j++) {
-            const stepRatio = j / 4; 
-            const currentProjection = meta + (peso - meta) * Math.pow(1 - stepRatio, 1.8);
-            const heightPercent = 20 + ((currentProjection - meta) / (peso - meta)) * 80;
-            targetHeights.push(heightPercent);
+            const targetHeights = [];
+            for (let j = 0; j < 5; j++) {
+                const stepRatio = j / 4; 
+                const currentProjection = meta + (peso - meta) * Math.pow(1 - stepRatio, 1.8);
+                const heightPercent = 20 + ((currentProjection - meta) / (peso - meta)) * 80;
+                targetHeights.push(heightPercent);
 
-            const barWrapper = document.createElement('div');
-            barWrapper.className = 'chart-col-wrapper';
-            barWrapper.style.width = '16%';
-            barWrapper.style.display = 'flex';
-            barWrapper.style.flexDirection = 'column';
-            barWrapper.style.alignItems = 'center';
-            barWrapper.style.justifyContent = 'flex-end';
-            barWrapper.style.height = '100%';
+                const barWrapper = document.createElement('div');
+                barWrapper.className = 'chart-col-wrapper';
+                barWrapper.style.width = '16%';
+                barWrapper.style.display = 'flex';
+                barWrapper.style.flexDirection = 'column';
+                barWrapper.style.alignItems = 'center';
+                barWrapper.style.justifyContent = 'flex-end';
+                barWrapper.style.height = '100%';
 
-            const label = document.createElement('div');
-            label.style.fontSize = '0.9rem';
-            label.style.fontWeight = 'bold';
-            label.style.color = '#555';
-            label.style.marginBottom = '5px';
-            label.innerText = `${currentProjection.toFixed(1)}kg`;
+                const label = document.createElement('div');
+                label.style.fontSize = '0.75rem';
+                label.style.fontWeight = '700';
+                label.style.color = '#555';
+                label.style.marginBottom = '5px';
+                label.innerText = `${currentProjection.toFixed(1)}kg`;
 
-            const bar = document.createElement('div');
-            bar.className = 'chart-bar';
-            bar.style.height = '0%';
-            bar.style.width = '100%';
-            bar.style.borderRadius = '8px 8px 0 0';
-            bar.style.background = '#9d4615'; // Brown
-            bar.style.transition = 'height 1s cubic-bezier(0.4, 0, 0.2, 1)';
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = '0%';
+                bar.style.width = '100%';
+                bar.style.borderRadius = '8px 8px 0 0';
+                bar.style.background = '#9d4615'; // Brown
+                bar.style.transition = 'height 1s cubic-bezier(0.4, 0, 0.2, 1)';
 
-            barWrapper.appendChild(label);
-            barWrapper.appendChild(bar);
-            chartContainer.appendChild(barWrapper);
+                barWrapper.appendChild(label);
+                barWrapper.appendChild(bar);
+                chartContainer.appendChild(barWrapper);
+
+                setTimeout(() => bar.style.height = `${heightPercent}%`, j * 150);
+            }
 
             setTimeout(() => {
-                bar.style.height = `${heightPercent}%`;
-            }, j * 200);
-        }
+                const containerW = chartContainer.clientWidth;
+                const containerH = chartContainer.clientHeight;
+                svg.setAttribute("viewBox", `0 0 ${containerW} ${containerH}`);
 
-        setTimeout(() => {
-            const w = chartContainer.clientWidth;
-            const h = chartContainer.clientHeight;
-            if (!w || !h) return;
-            svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-            let d = '';
-            const wrappers = chartContainer.querySelectorAll('.chart-col-wrapper');
-            wrappers.forEach((el, index) => {
-                const rect = el.getBoundingClientRect();
-                const containerRect = chartContainer.getBoundingClientRect();
-                const x = rect.left - containerRect.left + rect.width / 2;
-                const targetY = h - (h * targetHeights[index] / 100); 
-                d += (index === 0 ? 'M' : 'L') + ` ${x},${targetY} `;
-            });
-            path.setAttribute("d", d);
-            path.style.transition = 'stroke-dashoffset 2s ease-out';
-            path.style.strokeDashoffset = '0';
-        }, 300);
+                let points = "";
+                const wrappers = chartContainer.querySelectorAll('.chart-col-wrapper');
+                wrappers.forEach((wrp, idx) => {
+                    const bx = wrp.offsetLeft + (wrp.clientWidth / 2);
+                    const by = containerH - (containerH * (targetHeights[idx] / 100));
+                    points += (idx === 0 ? "M" : " L") + `${bx},${by}`;
+                });
+                path.setAttribute("d", points);
+                path.style.strokeDashoffset = '1000';
+                path.style.strokeDasharray = '1000';
+                path.style.transition = 'stroke-dashoffset 2s ease-out';
+                path.style.strokeDashoffset = '0';
+            }, 300);
+        } else {
+            if (evolutionSection) evolutionSection.style.display = 'none';
+            if (resultsTitle) resultsTitle.style.display = 'none';
+        }
 
         const planDetails = document.getElementById('plan-details');
         
