@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Render HTML
         planDetails.innerHTML = `
             <div class="checkout-compact" style="margin-top: 40px;">
-                <h3 class="section-subtitle">Seu plano já foi montado agora escolha seu ritmo:</h3>
+                <h3 class="section-subtitle">Seu plano já foi montado, agora escolha seu ritmo:</h3>
                 
                 <div class="protocol-selection">
                     <div class="protocol-item active" onclick="window.selectProtocol('20', '1.200', this)">
