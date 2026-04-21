@@ -331,9 +331,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
                 <div style="margin-bottom: 30px;">
-                    <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 20px; padding: 25px; display: flex; flex-direction: column; text-align: left;">
-                        <h3 style="font-size: 1.1rem; color: #065f46; margin: 0 0 15px 0;">🧬 Aqui na Maori</h3>
-                        <p style="font-size: 0.9rem; color: #065f46;">Você entra em um <strong>tratamento estruturado.</strong></p>
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; display: flex; flex-direction: column; text-align: left;">
+                        <h3 style="font-size: 1.1rem; color: #475569; margin: 0 0 15px 0;">🧬 Aqui na Maori</h3>
+                        <p style="font-size: 0.9rem; color: #64748b;">Você entra em um <strong>tratamento estruturado.</strong></p>
                     </div>
                 </div>
 
