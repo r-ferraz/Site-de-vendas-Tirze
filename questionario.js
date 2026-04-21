@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p>O paciente reconhece que a decisão de iniciar, manter ou interromper qualquer conduta terapêutica é realizada de forma livre e consciente, podendo, a qualquer momento, optar pela descontinuidade do acompanhamento.</p>
 
                             <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">11. PROTEÇÃO DE DADOS (LGPD)</h4>
-                            <p>O paciente autoriza o tratamento de seus dados pessoais e sensíveis, incluindo dados de saúde, para fins de prestação de serviços médicos, acompanhamento clínico e cumprimento de obrigações legais e regulatórias, nos termos da Lei nº 13.709/2018 (Lei Geral de Proteção de Dados).</p>
+                            <p>O paciente autoriza o tratamento de seus dados pessoais e sensíveis, incluindo dados de saúde, para fins de prestação de serviços médicos, acompanhamento clínico e cumprimento de obrigações legais e regulatórias, nos termos da Lei nº 13.709/2018 (Lei Geral de Proteção de Dados). A Maori se compromete a adotar medidas técnicas e administrativas adequadas para garantir a segurança, confidencialidade e integridade das informações.</p>
 
                             <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">12. TELEATENDIMENTO (QUANDO APLICÁVEL)</h4>
                             <p>O paciente declara estar ciente de que atendimentos poderão ocorrer por meio de telemedicina, nos termos da regulamentação vigente, reconhecendo suas limitações e concordando com esse formato quando utilizado.</p>
