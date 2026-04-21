@@ -337,10 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
 
-                <button class="terms-toggle" onclick="window.openTermsModal()">
-                    📄 Ver Termos de Responsabilidade
-                </button>
-
                 <div id="terms-modal" class="modal-overlay" onclick="if(event.target === this) window.closeTermsModal()">
                     <div class="modal-container">
                         <button class="modal-close" onclick="window.closeTermsModal()">&times;</button>
@@ -357,9 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
 
-                <label class="terms-check">
+                <label class="terms-check" style="margin-top: 20px;">
                     <input type="checkbox" id="accept-terms">
-                    <span>Li e aceito os termos de responsabilidade.</span>
+                    <span>Li e aceito os <span style="text-decoration: underline; cursor: pointer; color: var(--primary);" onclick="event.preventDefault(); window.openTermsModal();">termos de responsabilidade.</span></span>
                 </label>
 
                 <div class="checkout-footer" style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
