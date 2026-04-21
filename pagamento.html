@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maori | Checkout Seguro</title>
+    <title>Maori | Finalizar Pagamento</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script src="utm.js"></script>
@@ -29,7 +29,7 @@
 
         .checkout-header {
             background: white;
-            padding: 1.2rem 0;
+            padding: 1rem 0;
             border-bottom: 1px solid var(--border-soft);
             text-align: center;
             position: sticky;
@@ -38,29 +38,69 @@
         }
 
         .checkout-container {
-            max-width: 600px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 0 1rem 4rem;
+        }
+
+        /* Hero Offer Section */
+        .offer-hero {
+            background: linear-gradient(135deg, #9d4615, #bf5a23);
+            border-radius: 0 0 32px 32px;
+            padding: 40px 20px;
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(157, 70, 21, 0.15);
+        }
+
+        .offer-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .offer-hero h1 {
+            font-size: 2.8rem;
+            margin: 0 0 10px 0;
+            line-height: 1;
+            font-weight: 800;
+        }
+
+        .offer-hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin: 0;
         }
 
         .card-premium {
             background: white;
             border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 30px rgba(157, 70, 21, 0.05);
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(157, 70, 21, 0.05);
             border: 1px solid var(--border-soft);
             margin-bottom: 2rem;
         }
 
-        .card-title {
+        .section-title {
             font-family: 'Lora', serif;
-            font-size: 1.6rem;
-            margin-bottom: 2rem;
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
             color: var(--primary);
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        /* Protocol Selection */
+        /* Protocol Items */
         .protocol-selection {
             display: flex;
             flex-direction: column;
@@ -71,137 +111,104 @@
         .protocol-item {
             border: 1.5px solid var(--border-soft);
             border-radius: 16px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
         }
 
-        .protocol-item:hover {
-            border-color: var(--primary);
-            background: #fffaf7;
-        }
+        .protocol-item:hover { border-color: var(--primary); background: #fffaf7; }
+        .protocol-item.active { border-color: var(--primary); background: #fff3eb; box-shadow: 0 4px 15px rgba(157, 70, 21, 0.1); }
 
-        .protocol-item.active {
-            border-color: var(--primary);
-            background: #fff3eb;
-            box-shadow: 0 4px 15px rgba(157, 70, 21, 0.1);
-        }
+        .protocol-info h3 { font-size: 1.1rem; margin: 0 0 0.3rem 0; }
+        .protocol-info p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+        .protocol-price { text-align: right; }
+        .price-old { display: block; font-size: 0.85rem; text-decoration: line-through; color: var(--text-muted); }
+        .price-new { display: block; font-size: 1.3rem; font-weight: 800; color: var(--primary); }
 
-        .protocol-item.active::after {
-            content: "✓";
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background: var(--primary);
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
+        /* Chart Section */
+        .chart-container {
+            width: 100%;
+            height: 250px;
+            background: #fffcf9;
+            border-radius: 16px;
+            padding: 15px 0 0 0;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: bold;
+            align-items: flex-end;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 20px;
         }
 
-        .protocol-info h3 {
-            font-size: 1.1rem;
-            margin: 0 0 0.3rem 0;
+        .chart-col-wrapper { position: relative; z-index: 2; }
+        .chart-bar { background: var(--primary); border-radius: 8px 8px 0 0; }
+
+        /* Table Section */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
         }
 
-        .protocol-info p {
-            font-size: 0.85rem;
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+        th { background: #fdfaf7; padding: 12px; font-weight: 600; border-bottom: 1px solid var(--border-soft); }
+        td { padding: 12px; border-bottom: 1px solid #f9f4ef; }
+
+        /* Terms Accordion */
+        .terms-toggle {
+            width: 100%;
+            background: none;
+            border: 1px solid var(--border-soft);
+            padding: 12px;
+            border-radius: 10px;
             color: var(--text-muted);
-            margin: 0;
-        }
-
-        .protocol-price {
-            text-align: right;
-        }
-
-        .price-old {
-            display: block;
             font-size: 0.85rem;
-            text-decoration: line-through;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .terms-toggle:hover { background: #fdfaf7; color: var(--primary); }
+
+        .terms-content {
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+            background: #fdfaf7;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
             color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            border: 1px solid #eee4dc;
         }
 
-        .price-new {
-            display: block;
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        /* Terms & Buttons */
         .btn-premium {
             width: 100%;
             background: var(--primary);
             color: white;
             border: none;
             padding: 1.2rem;
-            border-radius: 14px;
+            border-radius: 50px;
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
             box-shadow: 0 8px 20px rgba(157, 70, 21, 0.2);
-            margin-top: 1rem;
         }
 
-        .btn-premium:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(157, 70, 21, 0.3);
-        }
+        .btn-premium:hover { background: var(--primary-dark); transform: scale(1.02); }
 
-        .btn-premium:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .terms-check { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; margin-bottom: 1.5rem; cursor: pointer; }
+        .terms-check input { width: 18px; height: 18px; accent-color: var(--primary); }
 
-        .terms-check {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            cursor: pointer;
-            margin: 1.5rem 0;
-        }
-
-        .terms-check input {
-            margin-top: 4px;
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary);
-        }
-
-        .terms-box {
-            height: 180px;
-            overflow-y: auto;
-            background: #fdfaf7;
-            border: 1px solid #eee4dc;
-            padding: 1.2rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            line-height: 1.6;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            text-align: left;
-        }
-
-        .terms-box::-webkit-scrollbar { width: 6px; }
-        .terms-box::-webkit-scrollbar-thumb { background: #eee4dc; border-radius: 10px; }
-
-        @media (max-width: 640px) {
-            .card-premium { padding: 1.8rem 1.2rem; border-radius: 16px; }
-            .checkout-container { margin: 1rem auto 3rem; }
+        @media (max-width: 480px) {
+            .offer-hero h1 { font-size: 2.2rem; }
+            .card-premium { padding: 1.5rem 1rem; }
+            .section-title { font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -211,10 +218,16 @@
         <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 32px;">
     </header>
 
+    <div class="offer-hero">
+        <div class="offer-badge">⭐ Oferta de Início de Tratamento</div>
+        <h1>20% OFF</h1>
+        <p>+ Avaliação médica inclusa</p>
+    </div>
+
     <main class="checkout-container">
+        <!-- Section 1: Protocols -->
         <div class="card-premium">
-            <h2 class="card-title">Finalize sua Inscrição</h2>
-            
+            <h2 class="section-title">Escolha o seu Protocolo</h2>
             <div class="protocol-selection">
                 <div class="protocol-item active" data-plano="20" data-valor="1200.00" data-preco="1.200" onclick="selectPlano(this)">
                     <div class="protocol-info">
@@ -226,7 +239,6 @@
                         <span class="price-new">R$ 1.200</span>
                     </div>
                 </div>
-
                 <div class="protocol-item" data-plano="60" data-valor="2800.00" data-preco="2.800" onclick="selectPlano(this)">
                     <div class="protocol-info">
                         <h3>Tratamento 60mg</h3>
@@ -238,11 +250,47 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="terms-box">
-                <strong>TERMO DE CIÊNCIA, CONSENTIMENTO E RESPONSABILIDADE</strong><br><br>
-                1. OBJETO: Prestação de serviços médicos e assistenciais...<br><br>
-                Ao prosseguir, você confirma que leu e concorda com todos os termos de responsabilidade e diretrizes clínicas da Maori Saúde. Sua saúde é nossa prioridade.
+        <!-- Section 2: Projections -->
+        <div class="card-premium">
+            <h2 class="section-title">⏱️ Sua Evolução Estimada</h2>
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%; margin-bottom: 30px;">
+                <div style="text-align: center;"><div style="font-size: 2rem;">😟</div><div style="font-size: 0.7rem; font-weight: 700; color: #999;">INÍCIO</div></div>
+                <div id="chart-container" class="chart-container"></div>
+                <div style="text-align: center;"><div style="font-size: 2rem;">😄</div><div style="font-size: 0.7rem; font-weight: 700; color: var(--primary);">RETA FINAL</div></div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dose semanal</th>
+                            <th>20mg dura</th>
+                            <th>60mg dura</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>2,5mg</strong></td><td>8 semanas</td><td>24 semanas</td></tr>
+                        <tr style="background: #fdfaf7;"><td><strong>5mg (padrão)</strong></td><td>4 semanas</td><td>12 semanas</td></tr>
+                        <tr><td><strong>7,5mg</strong></td><td>~3 semanas</td><td>8 semanas</td></tr>
+                        <tr style="background: #fdfaf7;"><td><strong>10mg</strong></td><td>2 semanas</td><td>6 semanas</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 3: Finalize -->
+        <div class="card-premium">
+            <button class="terms-toggle" onclick="document.getElementById('terms-content').style.display = (document.getElementById('terms-content').style.display === 'block' ? 'none' : 'block')">
+                📄 Ver Termos de Responsabilidade
+            </button>
+            <div id="terms-content" class="terms-content">
+                <strong>TERMO DE CIÊNCIA E RESPONSABILIDADE</strong><br><br>
+                1. OBJETO: Prestação de serviços médicos e assistenciais...<br>
+                2. PRESCRIÇÃO: As condutas dependem de avaliação individualizada...<br>
+                Ao prosseguir, você concorda com as diretrizes clínicas da Maori Saúde.
             </div>
 
             <label class="terms-check">
@@ -257,64 +305,131 @@
     </main>
 
     <script>
-        let selectedPlano = { id: '20', valor: '1200.00', preco: '1.200' };
+        const params = new URLSearchParams(window.location.search);
+        const peso = parseFloat(params.get('peso')) || 80;
+        const meta = parseFloat(params.get('meta')) || 70;
+
+        let selectedPlano = { id: '20', valor: '1200.00' };
 
         window.selectPlano = (element) => {
             document.querySelectorAll('.protocol-item').forEach(p => p.classList.remove('active'));
             element.classList.add('active');
-            selectedPlano = {
-                id: element.getAttribute('data-plano'),
-                valor: element.getAttribute('data-valor'),
-                preco: element.getAttribute('data-preco')
-            };
+            selectedPlano = { id: element.dataset.plano, valor: element.dataset.valor };
         };
 
+        // Render Chart
+        function renderChart() {
+            const chart = document.getElementById('chart-container');
+            chart.innerHTML = '';
+            
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.style.position = 'absolute';
+            svg.style.width = '100%';
+            svg.style.height = '100%';
+            svg.style.top = '0';
+            svg.style.left = '0';
+            svg.style.zIndex = '1';
+            
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("fill", "none");
+            path.setAttribute("stroke", "#9d4615");
+            path.setAttribute("stroke-width", "2");
+            path.setAttribute("stroke-dasharray", "5,5");
+            svg.appendChild(path);
+            chart.appendChild(svg);
+
+            const targetHeights = [];
+            for (let i = 0; i < 5; i++) {
+                const step = i / 4;
+                const proj = meta + (peso - meta) * Math.pow(1 - step, 1.8);
+                const h = 20 + ((proj - meta) / (peso - meta)) * 80;
+                targetHeights.push(h);
+
+                const wrap = document.createElement('div');
+                wrap.className = 'chart-col-wrapper';
+                wrap.style.width = '18%';
+                wrap.style.height = '100%';
+                wrap.style.display = 'flex';
+                wrap.style.flexDirection = 'column';
+                wrap.style.justifyContent = 'flex-end';
+                wrap.style.alignItems = 'center';
+
+                const lab = document.createElement('div');
+                lab.style.fontSize = '0.75rem';
+                lab.style.fontWeight = '700';
+                lab.style.marginBottom = '4px';
+                lab.innerText = `${proj.toFixed(1)}kg`;
+
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.width = '100%';
+                bar.style.height = '0%';
+                bar.style.transition = 'height 1s linear';
+
+                wrap.appendChild(lab);
+                wrap.appendChild(bar);
+                chart.appendChild(wrap);
+
+                setTimeout(() => bar.style.height = `${h}%`, i * 150);
+            }
+
+            setTimeout(() => {
+                const w = chart.clientWidth;
+                const h_cont = chart.clientHeight;
+                svg.setAttribute("viewBox", `0 0 ${w} ${h_cont}`);
+                let d = '';
+                const wrappers = chart.querySelectorAll('.chart-col-wrapper');
+                wrappers.forEach((el, index) => {
+                    const rect = el.getBoundingClientRect();
+                    const contRect = chart.getBoundingClientRect();
+                    const x = rect.left - contRect.left + rect.width / 2;
+                    const y = h_cont - (h_cont * targetHeights[index] / 100);
+                    d += (index === 0 ? 'M' : 'L') + ` ${x},${y} `;
+                });
+                path.setAttribute("d", d);
+            }, 300);
+        }
+
+        renderChart();
+
+        // Standard logic
         document.getElementById('btn-prosseguir').addEventListener('click', () => {
             if(!document.getElementById('accept-terms').checked) {
                 alert("Por favor, aceite os termos de responsabilidade.");
                 return;
             }
 
-            const btnProsseguir = document.getElementById('btn-prosseguir');
-            btnProsseguir.disabled = true;
-            btnProsseguir.innerText = "PROCESSANDO...";
+            const btn = document.getElementById('btn-prosseguir');
+            btn.disabled = true;
+            btn.innerText = "PROCESSANDO...";
 
-            const hypercashUrls = {
+            const urls = {
                 '20': 'https://pay.hypercash.com.br/pt/checkout/c0185f95-2fc4-4fe3-adb5-cb4fb8c966ea',
                 '60': 'https://pay.hypercash.com.br/pt/checkout/23fa3778-2c07-44e6-a16e-3b898910c01e'
             };
 
-            const utms = window.getUtmParams ? window.getUtmParams() : {};
             const savedLead = JSON.parse(localStorage.getItem('maori_checkout_lead') || '{}');
+            const utms = window.getUtmParams ? window.getUtmParams() : {};
 
-            // Captura metadados de compliance
             Promise.race([
                 fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => d.ip),
-                new Promise(resolve => setTimeout(() => resolve('0.0.0.0'), 2000))
+                new Promise(resolve => setTimeout(() => resolve('0.0.0.0'), 1500))
             ]).then(ip => {
                 const payload = {
-                    tipo: 'Lead Checkout Simplificado',
+                    tipo: 'Checkout Unificado',
                     ...savedLead,
                     plano: selectedPlano.id,
-                    valor: selectedPlano.valor,
                     ...utms,
-                    compliance: {
-                        aceite_termos: true,
-                        timestamp: new Date().toISOString(),
-                        user_agent: navigator.userAgent,
-                        ip_dispositivo: ip
-                    }
+                    compliance: { aceite_termos: true, timestamp: new Date().toISOString(), ip }
                 };
-
                 return fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
             }).finally(() => {
-                const targetCheckout = hypercashUrls[selectedPlano.id] || hypercashUrls['20'];
-                const finalUrl = window.addUtmsToUrl ? window.addUtmsToUrl(targetCheckout) : targetCheckout;
-                window.location.href = finalUrl;
+                const target = urls[selectedPlano.id] || urls['20'];
+                window.location.href = window.addUtmsToUrl ? window.addUtmsToUrl(target) : target;
             });
         });
     </script>
