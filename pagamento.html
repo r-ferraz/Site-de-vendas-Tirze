@@ -681,7 +681,7 @@
 
                 localStorage.setItem('maori_checkout_lead', JSON.stringify(leadData));
 
-                // Envia Lead para n8n e redireciona para a página de checkout embutido
+                // Envia Lead para n8n e redireciona para o checkout oficial
                 return fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -689,10 +689,10 @@
                 });
             }).finally(() => {
                 const targetCheckout = hypercashUrls[selectedPlano.id] || hypercashUrls['20'];
-                const encodedCheckout = encodeURIComponent(targetCheckout);
+                const finalUrl = window.addUtmsToUrl ? window.addUtmsToUrl(targetCheckout) : targetCheckout;
                 
-                // Redireciona para o checkout embutido com marca Maori
-                window.location.href = `checkout-seguro.html?checkout_url=${encodedCheckout}`;
+                // Redireciona diretamente para o Hypercash (necessário pois eles bloqueiam iframe)
+                window.location.href = finalUrl;
             });
         });
     </script>
