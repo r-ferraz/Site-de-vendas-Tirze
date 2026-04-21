@@ -4,189 +4,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maori | Condições Especiais</title>
+    <title>Maori | Seu Plano Personalizado</title>
     <link rel="stylesheet" href="style.css">
     <script src="utm.js"></script>
     <style>
+        :root {
+            --primary: #9d4615;
+            --primary-dark: #7e3811;
+            --bg-page: #fdfaf7;
+            --text-main: #2d241e;
+            --text-muted: #7e6b62;
+            --border-soft: #e9dccf;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         body {
-            background-color: var(--bg-offwhite);
-            color: var(--text-dark);
-            font-family: var(--font-sans);
+            background-color: var(--bg-page);
+            margin: 0;
+            padding: 0;
         }
 
-        .oferta-card {
-            max-width: 700px;
+        .q-container {
+            max-width: 600px;
             margin: 40px auto;
+            padding: 50px;
             background: white;
-            border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(0, 71, 171, 0.08);
-            overflow: hidden;
-            border: 1px solid #edf2f7;
+            border-radius: 32px;
+            box-shadow: 0 20px 60px rgba(0, 71, 171, 0.08);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
         }
 
-        .oferta-header {
-            background: linear-gradient(135deg, var(--primary-blue), #2563eb);
-            padding: 40px 30px;
-            text-align: center;
-            color: white;
+        .protocol-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 20px 0;
+            text-align: left;
         }
 
-        .oferta-body {
-            padding: 40px 30px;
-        }
-
-        .badge-destaque {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
-        .protocolo-box {
-            border: 2px solid #e2e8f0;
+        .protocol-item {
+            border: 1.5px solid var(--border-soft);
             border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-            transition: border-color 0.2s;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
         }
 
-        .protocolo-box:hover {
-            border-color: var(--primary-blue);
-        }
+        .protocol-item:hover { border-color: var(--primary); background: #fffaf7; }
+        .protocol-item.active { border-color: var(--primary); background: #fff3eb; box-shadow: 0 4px 15px rgba(157, 70, 21, 0.1); }
 
-        .price-risked {
-            text-decoration: line-through;
-            color: #94a3b8;
-            font-size: 1rem;
-        }
-
-        .price-final {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--primary-dark);
-        }
+        .protocol-info h3 { font-size: 1.1rem; margin: 0 0 0.3rem 0; color: var(--text-main); }
+        .protocol-info p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+        .protocol-price { text-align: right; }
+        .price-old { display: block; font-size: 0.85rem; text-decoration: line-through; color: var(--text-muted); }
+        .price-new { display: block; font-size: 1.3rem; font-weight: 800; color: var(--primary); }
 
         .table-container {
             width: 100%;
             overflow-x: auto;
-            margin: 30px 0;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-soft);
+            margin-bottom: 30px;
         }
 
-        table {
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+        th { background: #fdfaf7; padding: 12px; font-weight: 600; border-bottom: 1px solid var(--border-soft); }
+        td { padding: 12px; border-bottom: 1px solid #f9f4ef; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            border-collapse: collapse;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-container {
             background: white;
+            padding: 30px;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 95%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             text-align: left;
         }
 
-        th {
-            background: var(--primary-dark);
-            color: white;
-            padding: 16px;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 16px;
-            border-bottom: 1px solid #edf2f7;
-            color: #334155;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .alert-box {
-            background: #fffbeb;
-            border-left: 4px solid #f59e0b;
-            padding: 20px;
-            border-radius: 0 12px 12px 0;
-            margin: 30px 0;
-        }
-
-        .comparacao-box {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .comp-item {
-            padding: 24px;
-            border-radius: 16px;
-            height: 100%;
-        }
-
-        .comp-tradicional {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-        }
-
-        .comp-maori {
-            background: #f0fdf4;
-            border: 1px solid #86efac;
-        }
-
-        .check-list li {
-            position: relative;
-            padding-left: 30px;
-            margin-bottom: 12px;
-            list-style: none;
-            font-weight: 500;
-        }
-
-        .check-list li::before {
-            content: "✓";
+        .modal-close {
             position: absolute;
-            left: 0;
-            color: #22c55e;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        .x-list li {
-            position: relative;
-            padding-left: 30px;
-            margin-bottom: 12px;
-            list-style: none;
+            top: 15px;
+            right: 15px;
+            background: #f1f5f9;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
             color: #64748b;
+            font-size: 1.2rem;
+            transition: var(--transition);
         }
 
-        .x-list li::before {
-            content: "✕";
-            position: absolute;
-            left: 0;
-            color: #ef4444;
-            font-weight: bold;
-            font-size: 1.1rem;
+        .modal-close:hover { background: #e2e8f0; color: #1e293b; }
+        
+        .terms-check { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            font-size: 0.9rem; 
+            margin-bottom: 1.5rem; 
+            cursor: pointer; 
+            text-align: left; 
         }
 
-        @media (max-width: 600px) {
-            .comparacao-box {
-                grid-template-columns: 1fr;
-            }
+        .terms-check input { width: 18px; height: 18px; accent-color: var(--primary); }
 
-            .oferta-header {
-                padding: 30px 20px;
-            }
+        .section-subtitle {
+            font-family: 'Lora', serif;
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin: 10px 0 25px;
+            text-align: center;
+        }
 
-            .oferta-body {
+        @media (max-width: 768px) {
+            .q-container {
+                margin: 20px 10px;
                 padding: 30px 20px;
+                width: calc(100% - 20px);
+                box-sizing: border-box;
             }
         }
     </style>
 </head>
 
 <body>
-    <header
-        style="height: 80px; background: white; border-bottom: 1px solid #edf2f7; display: flex; align-items: center; position: sticky; top: 0; z-index: 100;">
+    <header style="height: 80px; background: white; border-bottom: 1px solid #edf2f7; display: flex; align-items: center;">
         <div class="container" style="display: flex; justify-content: center; width: 100%;">
             <a href="index.html" class="logo">
                 <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 40px; width: auto;">
@@ -194,94 +165,18 @@
         </div>
     </header>
 
-    <main class="container">
-        <div class="oferta-card">
-            <div class="oferta-header">
-                <div class="badge-destaque">⭐ Oferta de Início de Tratamento</div>
-                <h1 style="font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1.1; margin-bottom: 15px;">20% OFF</h1>
-                <p style="font-size: 1.2rem; opacity: 0.9;">+ Avaliação médica inclusa</p>
-            </div>
-
-            <div class="oferta-body">
-
-
-                <h2
-                    style="font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
-                    ⏱️ Duração estimada</h2>
-                <p style="color: #64748b; margin-bottom: 20px;">Referência por dose semanal aplicada:</p>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Dose semanal</th>
-                                <th>20mg dura</th>
-                                <th>60mg dura</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>2,5mg</strong></td>
-                                <td>8 semanas</td>
-                                <td>24 semanas</td>
-                            </tr>
-                            <tr style="background: #f8fafc;">
-                                <td><strong>5mg (padrão)</strong></td>
-                                <td>4 semanas</td>
-                                <td>12 semanas</td>
-                            </tr>
-                            <tr>
-                                <td><strong>7,5mg</strong></td>
-                                <td>~3 semanas</td>
-                                <td>8 semanas</td>
-                            </tr>
-                            <tr style="background: #f8fafc;">
-                                <td><strong>10mg</strong></td>
-                                <td>2 semanas</td>
-                                <td>6 semanas</td>
-                            </tr>
-                            <tr>
-                                <td><strong>15mg</strong></td>
-                                <td>~1 semana</td>
-                                <td>4 semanas</td>
-                            </tr>
-                        </tbody>
-                    </table>
+    <div class="container">
+        <div id="results-box" class="q-container" style="max-width: 800px;">
+            <h2 style="font-size: 2.2rem; text-align: center; color: #2d241e; margin-bottom: 10px;">Seu Plano Personalizado</h2>
+            <div id="plan-details">
+                <div style="text-align: center; padding: 40px;">
+                    <p style="color: #64748b;">Carregando sua oferta...</p>
                 </div>
-                <p style="font-size: 0.85rem; color: #94a3b8; text-align: right; font-style: italic; margin-bottom: 30px;">(Demais doses
-                    variam conforme ajuste médico)</p>
-
-
-
-                <button id="btn-avancar" class="btn btn-primary"
-                    style="width: 100%; padding: 22px; font-size: 1.2rem; box-shadow: 0 10px 20px rgba(0, 71, 171, 0.2); animation: popIn 0.5s ease; margin-top: 20px;">
-                    Sim, Quero Aproveitar a Oferta!
-                </button>
             </div>
         </div>
-    </main>
+    </div>
 
-    <script>
-        let planoSelecionado = {
-            id: '20',
-            valor: '1200.00',
-            preco: '1.200'
-        };
-
-
-
-        document.getElementById('btn-avancar').addEventListener('click', function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const nextBase = urlParams.get('next') || 'pagamento.html';
-            const receitaStatus = urlParams.get('receita') || 'nao'; // Pega o status do index.html
-
-            // Adicionar os dados do plano, status da receita e lead_id na URL de destino
-            const leadId = sessionStorage.getItem('lead_id') || '';
-            const baseFinalUrl = `${nextBase}?plano=${planoSelecionado.id}&valor=${planoSelecionado.valor}&preco=${planoSelecionado.preco}&receita=${receitaStatus}&lead_id=${leadId}`;
-            const finalUrl = window.addUtmsToUrl ? window.addUtmsToUrl(baseFinalUrl) : baseFinalUrl;
-            window.location.href = finalUrl;
-        });
-    </script>
+    <script src="oferta.js?v=1.0" defer></script>
 </body>
 
 </html>

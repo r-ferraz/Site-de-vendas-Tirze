@@ -71,7 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (type === 'single') {
             userData[questionId] = option;
             if (questionId === 'target' && option === 'Não') {
-                showResults();
+                saveLead(userData);
+                const targetUrl = window.addUtmsToUrl ? window.addUtmsToUrl('oferta.html') : 'oferta.html' + window.location.search;
+                setTimeout(() => { window.location.href = targetUrl; }, 800);
                 return;
             }
             nextStep();
