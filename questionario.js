@@ -137,8 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Validação de Peso Real
-            if (userData.peso && parseFloat(userData.peso) <= 0) {
-                alert('Por favor, insira um peso real (maior que 0).');
+            if (userData.peso && parseFloat(userData.peso) <= 10) {
+                alert('Por favor, insira um peso real (maior que 10kg).');
                 return;
             }
 
@@ -148,8 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Validação de Meta de Peso Real
         if (q.id === 'meta_peso') {
             const metaVal = parseFloat(document.getElementById('meta_peso').value);
-            if (metaVal <= 0) {
-                alert('Por favor, insira uma meta de peso real (maior que 0).');
+            if (metaVal <= 10) {
+                alert('Por favor, insira uma meta de peso real (maior que 10kg).');
                 return;
             }
         }
