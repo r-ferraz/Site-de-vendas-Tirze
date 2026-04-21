@@ -355,9 +355,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const target = urls[id] || urls['20'];
                 window.location.href = window.addUtmsToUrl ? window.addUtmsToUrl(target) : target;
             });
-        };ton>
-            </div>
-        `;
+            };
+        };
     }
 
     nextBtn.addEventListener('click', nextStep);
