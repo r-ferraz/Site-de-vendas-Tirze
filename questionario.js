@@ -321,51 +321,116 @@ function showResults() {
 
     const planDetails = document.getElementById('plan-details');
     planDetails.innerHTML = `
-        <div style="text-align: center; background: var(--accent-blue); padding: 20px; border-radius: 16px; margin-bottom: 20px;">
-            <h3 style="color: var(--primary-blue); font-size: 1.4rem; margin-bottom: 15px; line-height: 1.3;">Com o plano da Maori, conseguimos levar você até o seu objetivo</h3>
-            <p style="font-size: 1.1rem; margin-bottom: 5px;">De <strong>${peso.toFixed(1)}kg</strong> para <strong>${meta.toFixed(1)}kg</strong></p>
-            <p style="font-size: 0.95rem; color: #555;">Seu IMC inicial é <strong>${imc}</strong></p>
+        <!-- Warning Alert Box -->
+        <div style="background: #fffbeb; border: 1px solid #fbbf24; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: left;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <span style="font-size: 1.2rem;">⚠️</span>
+                <div>
+                    <h3 style="color: #92400e; font-size: 1.1rem; margin: 0 0 8px 0; font-weight: 700;">Agora, sendo direto com você</h3>
+                    <p style="color: #b45309; font-size: 0.95rem; margin: 0; line-height: 1.5;">Hoje, no mercado tradicional, você tem duas opções: <br><strong>Pagar caro por um tratamento padronizado</strong> ou <strong>seguir um protocolo Maori ajustado ao seu corpo.</strong></p>
+                </div>
+            </div>
         </div>
-        <div style="border: 1px solid #eee; padding: 20px; border-radius: 16px;">
-            <h3 style="margin-bottom: 15px;">O que está incluso:</h3>
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin-bottom:10px;">✅ Medicação GLP-1 (Wegovy/Ozempic)</li>
-                <li style="margin-bottom:10px;">✅ Suporte médico via <a href="https://wa.me/5511913506985?text=Ola,%20estou%20terminando%20de%20responder%20o%20questionario%20e%20tenho%20uma%20duvida" target="_blank" style="color: inherit; font-weight: 700;">WhatsApp 24/7</a></li>
-                <li style="margin-bottom:10px;">✅ Acompanhamento Nutricional</li>
-                <li style="margin-bottom:10px;">✅ Entrega garantida e discreta</li>
-            </ul>
-            <button class="btn btn-primary" style="margin-top: 20px; width: 100%;" onclick="
-                const lead = window._questionarioLeadData || {};
-                const html = window._questionarioRespostasHtml || '';
-                const utms = window.getUtmParams ? window.getUtmParams() : {};
-                fetch('https://n8n.srv1586236.hstgr.cloud/webhook/novo-questionario', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        tipo: 'Questionário Respondido',
-                        lead_id: utms.lead_id || localStorage.getItem('lead_id') || '',
-                        nome: lead.nome || 'Cliente',
-                        email: lead.email || '',
-                        whatsapp: lead.whatsapp || '',
-                        respostas_html: html,
-                        respostas_triagem: userData,
-                        tipo_origem: 'Questionário',
-                        utm_source: utms.utm_source || '',
-                        utm_medium: utms.utm_medium || '',
-                        utm_campaign: utms.utm_campaign || ''
-                    })
-                })
-                .then(r => r.json())
-                .then(res => {
-                    if (res.lead_id) localStorage.setItem('lead_id', res.lead_id);
-                })
-                .catch(e => console.warn('[n8n]', e))
-                .finally(() => {
-                    const targetUrl = window.addUtmsToUrl ? window.addUtmsToUrl('oferta.html') : 'oferta.html' + window.location.search;
-                    window.location.href = targetUrl;
-                });
-            ">Garantir meu Plano Personalizado</button>
+
+        <!-- Comparison Group -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <!-- Traditional Card -->
+            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; display: flex; flex-direction: column;">
+                <h3 style="font-size: 1.1rem; color: #475569; margin: 0 0 20px 0; display: flex; align-items: center; gap: 8px;">💰 No modelo tradicional (farmácia)</h3>
+                <div style="margin-bottom: 25px;">
+                    <p style="font-size: 0.9rem; color: #64748b; margin: 0 0 5px 0;">Você paga, em média:</p>
+                    <p style="font-size: 1.4rem; color: #1e293b; font-weight: 800; margin: 0;">R$ 2.000 a R$ 3.500 por mês</p>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 10px; color: #ef4444; font-size: 0.95rem;">
+                        <span style="font-weight: bold;">✕</span> sem ajuste fino
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; color: #ef4444; font-size: 0.95rem;">
+                        <span style="font-weight: bold;">✕</span> sem estratégia
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; color: #ef4444; font-size: 0.95rem;">
+                        <span style="font-weight: bold;">✕</span> sem acompanhamento real
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maori Card -->
+            <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 20px; padding: 25px; display: flex; flex-direction: column; position: relative;">
+                <h3 style="font-size: 1.1rem; color: #065f46; margin: 0 0 15px 0; display: flex; align-items: center; gap: 8px;">🧬 Aqui na Maori</h3>
+                <p style="font-size: 0.9rem; color: #065f46; margin-bottom: 20px; line-height: 1.4;">Você não compra "produto". Você entra em um <strong>tratamento estruturado.</strong></p>
+                
+                <div style="margin-bottom: 15px; background: white; padding: 12px 15px; border-radius: 12px; border: 1px solid #dcfce7;">
+                    <p style="font-size: 0.9rem; color: #065f46; margin: 0 auto 5px 0;"><strong>20mg</strong> (dose padrão) ≈ <strong>R$ 300 / semana</strong></p>
+                    <p style="font-size: 0.9rem; color: #065f46; margin: 0;"><strong>60mg</strong> (dose padrão) ≈ <strong>R$ 233 / semana</strong></p>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px; color: #059669; font-size: 0.95rem;">
+                        <span style="font-weight: bold;">✓</span> Menor custo por semana
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; color: #059669; font-size: 0.95rem;">
+                        <span style="font-weight: bold;">✓</span> Mais controle
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; color: #059669; font-size: 0.95rem;">
+                        <span style="font-weight: bold;">✓</span> Mais previsibilidade
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Included List -->
+        <div style="text-align: left; margin-bottom: 30px; padding: 0 5px;">
+            <h3 style="font-size: 1.1rem; color: #9d4615; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">✨ Incluso no Tratamento</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #1e293b;">
+                    <span style="color: #68BB78; font-weight: bold;">✓</span> Avaliação médica
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #1e293b;">
+                    <span style="color: #68BB78; font-weight: bold;">✓</span> Estratégia personalizada
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #1e293b;">
+                    <span style="color: #68BB78; font-weight: bold;">✓</span> Kit completo de aplicação
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #1e293b;">
+                    <span style="color: #68BB78; font-weight: bold;">✓</span> Suporte constante enfermagem
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%; height: 56px; font-size: 1.1rem; border-radius: 50px; background: #9d4615; color: white;" onclick="
+            const lead = window._questionarioLeadData || {};
+            const html = window._questionarioRespostasHtml || '';
+            const utms = window.getUtmParams ? window.getUtmParams() : {};
+            this.innerText = 'Enviando...';
+            this.disabled = true;
+
+            fetch('https://n8n.srv1586236.hstgr.cloud/webhook/novo-questionario', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tipo: 'Questionário Respondido',
+                    lead_id: utms.lead_id || localStorage.getItem('lead_id') || '',
+                    nome: lead.nome || 'Cliente',
+                    email: lead.email || '',
+                    whatsapp: lead.whatsapp || '',
+                    respostas_html: html,
+                    respostas_triagem: userData,
+                    tipo_origem: 'Questionário',
+                    utm_source: utms.utm_source || '',
+                    utm_medium: utms.utm_medium || '',
+                    utm_campaign: utms.utm_campaign || ''
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.lead_id) localStorage.setItem('lead_id', res.lead_id);
+            })
+            .catch(e => console.warn('[n8n]', e))
+            .finally(() => {
+                const targetUrl = window.addUtmsToUrl ? window.addUtmsToUrl('oferta.html') : 'oferta.html' + window.location.search;
+                window.location.href = targetUrl;
+            });
+        ">Garantir meu Plano Personalizado</button>
     `;
 }
 
