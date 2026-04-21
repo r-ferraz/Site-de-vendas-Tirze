@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <tbody>
                             <tr><td><strong>2,5mg</strong></td><td>8 semanas</td><td>24 semanas</td></tr>
                             <tr style="background: #fdfaf7;"><td><strong>5mg (padrão)</strong></td><td>4 semanas</td><td>12 semanas</td></tr>
-                            <tr><td><strong>7,5mg</strong></td><td>~3 semanas</td><td>8 semanas</td></tr>
+                            <tr><td><strong>7,5mg</strong></td><td>3 semanas</td><td>8 semanas</td></tr>
                             <tr style="background: #fdfaf7;"><td><strong>10mg</strong></td><td>2 semanas</td><td>6 semanas</td></tr>
                         </tbody>
                     </table>
@@ -330,7 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <div style="background: #fffbeb; border: 1px solid #fbbf24; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: left;">
                     <div style="display: flex; align-items: flex-start; gap: 10px;">
-                        <span style="font-size: 1.2rem;">⚠️</span>
                         <div>
                             <h3 style="color: #92400e; font-size: 1.1rem; margin: 0 0 8px 0; font-weight: 700;">Agora, sendo direto com você</h3>
                             <p style="color: #b45309; font-size: 0.95rem; margin: 0; line-height: 1.5;">Hoje, no mercado tradicional, você tem duas opções: <br><strong>Pagar caro por um tratamento padronizado</strong> ou <strong>seguir um Plano Maori ajustado ao seu corpo.</strong></p>
