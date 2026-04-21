@@ -12,6 +12,10 @@
             --progress-width: 0%;
         }
 
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body {
             background-color: var(--bg-offwhite);
             margin: 0;
@@ -101,6 +105,7 @@
             border-radius: 12px;
             font-size: 1.1rem;
             margin-bottom: 15px;
+            max-width: 100%;
         }
 
         .q-input:focus {
