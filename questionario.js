@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="protocol-selection">
                     <div class="protocol-item active" onclick="window.selectProtocol('20', '1.200', this)">
                         <div class="protocol-info">
-                            <h3>Protocolo Essencial · 20mg</h3>
+                            <h3>Plano Essencial · 20mg</h3>
                             <p>Para quem quer começar com segurança e ritmo consistente</p>
                         </div>
                         <div class="protocol-price">
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="protocol-item" onclick="window.selectProtocol('60', '2.800', this)">
                         <div class="protocol-info">
-                            <h3>Protocolo Completo · 60mg ⭐ Mais escolhido</h3>
+                            <h3>Plano Completo · 60mg ⭐ Mais escolhido</h3>
                             <p>Para quem quer o resultado completo com suporte de ponta a ponta <br> ✓ 3x mais duração de tratamento</p>
                         </div>
                         <div class="protocol-price">
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span style="font-size: 1.2rem;">⚠️</span>
                         <div>
                             <h3 style="color: #92400e; font-size: 1.1rem; margin: 0 0 8px 0; font-weight: 700;">Agora, sendo direto com você</h3>
-                            <p style="color: #b45309; font-size: 0.95rem; margin: 0; line-height: 1.5;">Hoje, no mercado tradicional, você tem duas opções: <br><strong>Pagar caro por um tratamento padronizado</strong> ou <strong>seguir um protocolo Maori ajustado ao seu corpo.</strong></p>
+                            <p style="color: #b45309; font-size: 0.95rem; margin: 0; line-height: 1.5;">Hoje, no mercado tradicional, você tem duas opções: <br><strong>Pagar caro por um tratamento padronizado</strong> ou <strong>seguir um Plano Maori ajustado ao seu corpo.</strong></p>
                         </div>
                     </div>
                 </div>
