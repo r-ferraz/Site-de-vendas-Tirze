@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (q.id === 'meta_peso') {
             const metaVal = parseFloat(document.getElementById('meta_peso').value);
             if (metaVal <= 10) {
-                alert('Por favor, insira uma meta de peso real (maior que 10kg).');
+                alert('Por favor, insira um peso real. Caso vc não saiba seu peso atual, inclua o último peso que vc se lembra');
                 return;
             }
         }
