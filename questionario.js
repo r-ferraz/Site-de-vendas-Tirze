@@ -15,6 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsBox = document.getElementById('results-box');
 
     function renderStep() {
+        if (currentStep >= questions.length) {
+            showResults();
+            return;
+        }
         const q = questions[currentStep];
 
         // Check condition
@@ -66,6 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
     window.selectOption = (questionId, option, type) => {
         if (type === 'single') {
             userData[questionId] = option;
+            if (questionId === 'target' && option === 'Não') {
+                showResults();
+                return;
+            }
             nextStep();
         } else {
             if (!userData[questionId]) userData[questionId] = [];
