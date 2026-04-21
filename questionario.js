@@ -337,12 +337,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
 
-                <button class="terms-toggle" onclick="document.getElementById('terms-content').style.display = (document.getElementById('terms-content').style.display === 'block' ? 'none' : 'block')">
+                <button class="terms-toggle" onclick="window.openTermsModal()">
                     📄 Ver Termos de Responsabilidade
                 </button>
-                <div id="terms-content" class="terms-content" style="display:none; padding:15px; background:#fdfaf7; border:1px solid #eee; border-radius:10px; font-size:0.8rem; margin-bottom:20px; text-align:left;">
-                    <strong>TERMO DE CIÊNCIA E RESPONSABILIDADE</strong><br><br>
-                    Ao prosseguir, você declara estar ciente de que o tratamento depende de avaliação médica individualizada e concorda com as diretrizes da Maori Saúde.
+
+                <div id="terms-modal" class="modal-overlay" onclick="if(event.target === this) window.closeTermsModal()">
+                    <div class="modal-container">
+                        <button class="modal-close" onclick="window.closeTermsModal()">&times;</button>
+                        <h3 style="font-family: 'Lora', serif; color: var(--primary); margin-bottom: 20px;">Termo de Ciência e Responsabilidade</h3>
+                        <div style="font-size: 0.9rem; line-height: 1.6; color: var(--text-main);">
+                            <p>Ao prosseguir com a aquisição do Plano Maori Saúde, você declara estar ciente e concordar que:</p>
+                            <ul>
+                                <li style="margin-bottom: 10px;">O tratamento proposto baseia-se em uma análise preliminar e depende de <strong>avaliação médica individualizada</strong> antes do início do uso de qualquer medicação.</li>
+                                <li style="margin-bottom: 10px;">Os resultados variam de pessoa para pessoa e dependem da adesão ao protocolo e estilo de vida.</li>
+                                <li style="margin-bottom: 10px;">A Maori Saúde atua como facilitadora de acesso a protocolos de ponta e suporte especializado.</li>
+                            </ul>
+                            <p style="margin-top: 20px; font-weight: bold; color: var(--primary-dark);">Concordo com as diretrizes e desejo prosseguir.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <label class="terms-check">
@@ -350,18 +362,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span>Li e aceito os termos de responsabilidade.</span>
                 </label>
 
-                <div class="checkout-footer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-top: 20px;">
-                    <button class="btn btn-primary" style="height: 64px; font-size: 1rem; border-radius: 50px; background: #9d4615; color: white; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2;" onclick="window.finalCheckout('20', '1.200', this)">
+                <div class="checkout-footer" style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+                    <button class="btn btn-primary" style="width: 100%; height: 68px; font-size: 1.05rem; border-radius: 50px; background: #9d4615; color: white; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; box-shadow: 0 4px 15px rgba(157, 70, 21, 0.2);" onclick="window.finalCheckout('20', '1.200', this)">
                         <span>Garantir Tratamento 20mg</span>
-                        <small style="font-size: 0.75rem; opacity: 0.9;">Essencial - Iniciar agora</small>
+                        <small style="font-size: 0.75rem; opacity: 0.9;">Plano Essencial - Iniciar agora</small>
                     </button>
-                    <button class="btn btn-primary" style="height: 64px; font-size: 1rem; border-radius: 50px; background: #a44716; color: white; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; box-shadow: 0 4px 15px rgba(164, 71, 22, 0.3);" onclick="window.finalCheckout('60', '2.800', this)">
+                    <button class="btn btn-primary" style="width: 100%; height: 68px; font-size: 1.05rem; border-radius: 50px; background: #a44716; color: white; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; box-shadow: 0 6px 20px rgba(164, 71, 22, 0.3);" onclick="window.finalCheckout('60', '2.800', this)">
                         <span>Garantir Tratamento 60mg</span>
-                        <small style="font-size: 0.75rem; opacity: 0.9;">Completo - Mais Escolhido</small>
+                        <small style="font-size: 0.75rem; opacity: 0.9;">Plano Completo - Mais Escolhido</small>
                     </button>
                 </div>
             </div>
         `;
+
+        window.openTermsModal = () => document.getElementById('terms-modal').style.display = 'flex';
+        window.closeTermsModal = () => document.getElementById('terms-modal').style.display = 'none';
     }
 
     nextBtn.addEventListener('click', nextStep);
