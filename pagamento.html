@@ -11,14 +11,11 @@
     <style>
         :root {
             --primary: #9d4615;
-            --primary-light: #bc551b;
-            --primary-dark: #7a3610;
+            --primary-dark: #7e3811;
             --bg-page: #fdfaf7;
-            --bg-card: #ffffff;
-            --text-main: #3d2b24;
+            --text-main: #2d241e;
             --text-muted: #7e6b62;
             --border-soft: #e9dccf;
-            --shadow-premium: 0 20px 40px rgba(61, 43, 36, 0.08);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -27,184 +24,52 @@
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 0;
             line-height: 1.6;
         }
 
         .checkout-header {
             background: white;
-            padding: 1rem 0;
+            padding: 1.2rem 0;
             border-bottom: 1px solid var(--border-soft);
+            text-align: center;
             position: sticky;
             top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(12px);
-            background: rgba(255, 255, 255, 0.95);
+            z-index: 100;
         }
 
         .checkout-container {
-            max-width: 680px;
-            margin: 2rem auto 4rem;
+            max-width: 600px;
+            margin: 2rem auto;
             padding: 0 1.5rem;
         }
 
-        /* Nav Items */
-        .header-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0 1.5rem;
-        }
-
-        /* Stepper */
-        .progress-stepper {
-            display: flex;
-            justify-content: space-between;
-            margin: 2.5rem auto 3.5rem;
-            position: relative;
-            max-width: 420px;
-        }
-
-        .progress-stepper::before {
-            content: '';
-            position: absolute;
-            top: 18px;
-            left: 5px;
-            right: 5px;
-            height: 2px;
-            background: #eee4dc;
-            z-index: 1;
-        }
-
-        .step-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .step-pill {
-            width: 36px;
-            height: 36px;
-            background: white;
-            border: 2px solid #eee4dc;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            transition: var(--transition);
-        }
-
-        .step-item.active .step-pill {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-            box-shadow: 0 0 15px rgba(157, 70, 21, 0.35);
-        }
-
-        .step-item.completed .step-pill {
-            background: #4caf50;
-            border-color: #4caf50;
-            color: white;
-        }
-
-        .step-label {
-            margin-top: 10px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-
-        .step-item.active .step-label {
-            color: var(--primary);
-        }
-
-        /* Card System */
         .card-premium {
-            background: var(--bg-card);
-            border-radius: 20px;
+            background: white;
+            border-radius: 24px;
             padding: 2.5rem;
-            box-shadow: var(--shadow-premium);
+            box-shadow: 0 10px 30px rgba(157, 70, 21, 0.05);
+            border: 1px solid var(--border-soft);
             margin-bottom: 2rem;
-            border: 1px solid rgba(157, 70, 21, 0.04);
-            transition: var(--transition);
         }
 
         .card-title {
             font-family: 'Lora', serif;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             margin-bottom: 2rem;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
+            color: var(--primary);
+            text-align: center;
         }
 
-        .card-title span {
-            font-size: 1.2rem;
-            filter: grayscale(1);
-            opacity: 0.4;
-        }
-
-        /* Form Controls */
-        .input-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 0.6rem;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-main);
-        }
-
-        .premium-input {
-            width: 100%;
-            padding: 12px 18px;
-            border: 1.5px solid #eee4dc;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            transition: var(--transition);
-            color: var(--text-main);
-            background: #fff;
-            box-sizing: border-box;
-        }
-
-        .premium-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(157, 70, 21, 0.04);
-        }
-
-        .premium-input::placeholder {
-            color: #bfaea5;
-        }
-
-        /* Protocol Style */
+        /* Protocol Selection */
         .protocol-selection {
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            margin-bottom: 2rem;
         }
 
         .protocol-item {
-            border: 1.5px solid #eee4dc;
+            border: 1.5px solid var(--border-soft);
             border-radius: 16px;
             padding: 1.5rem;
             cursor: pointer;
@@ -212,31 +77,46 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #fff;
+            position: relative;
         }
 
         .protocol-item:hover {
-            border-color: var(--primary-light);
-            background: #fdfaf7;
+            border-color: var(--primary);
+            background: #fffaf7;
         }
 
         .protocol-item.active {
             border-color: var(--primary);
-            background: rgba(157, 70, 21, 0.02);
-            box-shadow: 0 8px 20px rgba(157, 70, 21, 0.06);
+            background: #fff3eb;
+            box-shadow: 0 4px 15px rgba(157, 70, 21, 0.1);
+        }
+
+        .protocol-item.active::after {
+            content: "✓";
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
 
         .protocol-info h3 {
-            margin: 0 0 4px 0;
             font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-main);
+            margin: 0 0 0.3rem 0;
         }
 
         .protocol-info p {
-            margin: 0;
             font-size: 0.85rem;
             color: var(--text-muted);
+            margin: 0;
         }
 
         .protocol-price {
@@ -244,128 +124,69 @@
         }
 
         .price-old {
-            font-size: 0.8rem;
-            text-decoration: line-through;
-            color: #bfaea5;
             display: block;
+            font-size: 0.85rem;
+            text-decoration: line-through;
+            color: var(--text-muted);
         }
 
         .price-new {
-            font-size: 1.25rem;
+            display: block;
+            font-size: 1.3rem;
             font-weight: 800;
             color: var(--primary);
         }
 
-        /* Action Section */
-        .checkout-actions {
-            margin-top: 3rem;
-            text-align: center;
-        }
-
+        /* Terms & Buttons */
         .btn-premium {
             width: 100%;
-            padding: 1.2rem;
             background: var(--primary);
             color: white;
             border: none;
-            border-radius: 60px;
-            font-size: 1rem;
+            padding: 1.2rem;
+            border-radius: 14px;
+            font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
-            box-shadow: 0 10px 20px rgba(157, 70, 21, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            box-shadow: 0 8px 20px rgba(157, 70, 21, 0.2);
+            margin-top: 1rem;
         }
 
         .btn-premium:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(157, 70, 21, 0.25);
+            box-shadow: 0 12px 25px rgba(157, 70, 21, 0.3);
         }
 
-        .btn-premium:active {
-            transform: translateY(0);
+        .btn-premium:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .terms-check {
-            margin-top: 2rem;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 0.85rem;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.9rem;
             color: var(--text-muted);
             cursor: pointer;
+            margin: 1.5rem 0;
         }
 
         .terms-check input {
-            cursor: pointer;
+            margin-top: 4px;
             width: 18px;
             height: 18px;
             accent-color: var(--primary);
         }
 
-        /* Search Button */
-        .btn-search {
-            height: 46px;
-            padding: 0 20px;
-            background: #f4ece4;
-            color: var(--text-main);
-            border: none;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-
-        .btn-search:hover {
-            background: #e9dccf;
-        }
-
-        /* Responsive */
-        @media (max-width: 640px) {
-            .input-grid {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-            
-            .card-premium {
-                padding: 1.8rem 1.2rem;
-                border-radius: 16px;
-            }
-
-            .checkout-container {
-                margin: 1rem auto 3rem;
-            }
-            
-            .step-label {
-                display: none;
-            }
-            
-            .progress-stepper {
-                max-width: 280px;
-                margin-bottom: 2rem;
-            }
-        }
-
-        /* Error States */
-        .error-field {
-            border-color: #ea5455 !important;
-            background: #fffcfc !important;
-        }
-
         .terms-box {
-            height: 160px;
+            height: 180px;
             overflow-y: auto;
             background: #fdfaf7;
-            border: 1.5px solid #eee4dc;
+            border: 1px solid #eee4dc;
             padding: 1.2rem;
             border-radius: 12px;
             font-size: 0.8rem;
@@ -375,116 +196,25 @@
             text-align: left;
         }
 
-        .terms-box::-webkit-scrollbar {
-            width: 6px;
-        }
+        .terms-box::-webkit-scrollbar { width: 6px; }
+        .terms-box::-webkit-scrollbar-thumb { background: #eee4dc; border-radius: 10px; }
 
-        .terms-box::-webkit-scrollbar-thumb {
-            background: #eee4dc;
-            border-radius: 10px;
-        }
-
-        .error-shake {
-            animation: shake 0.4s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px); }
-            75% { transform: translateX(8px); }
+        @media (max-width: 640px) {
+            .card-premium { padding: 1.8rem 1.2rem; border-radius: 16px; }
+            .checkout-container { margin: 1rem auto 3rem; }
         }
     </style>
 </head>
 
 <body>
     <header class="checkout-header">
-        <div class="header-inner">
-            <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 32px;">
-        </div>
+        <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 32px;">
     </header>
 
     <main class="checkout-container">
-        <!-- Progress -->
-        <div class="progress-stepper">
-            <div class="step-item active">
-                <div class="step-pill">1</div>
-                <div class="step-label">Contato</div>
-            </div>
-            <div class="step-item">
-                <div class="step-pill">2</div>
-                <div class="step-label">Entrega</div>
-            </div>
-            <div class="step-item">
-                <div class="step-pill">3</div>
-                <div class="step-label">Protocolo</div>
-            </div>
-            <div class="step-item">
-                <div class="step-pill" style="opacity: 0.4">4</div>
-                <div class="step-label">Finalizar</div>
-            </div>
-        </div>
-
-        <!-- Section 1: Contact -->
         <div class="card-premium">
-            <h2 class="card-title"><span>01</span> Seus Dados</h2>
-            <div class="input-group">
-                <label>E-mail institucional ou pessoal</label>
-                <input type="email" class="premium-input" placeholder="seu@email.com" id="checkout-email">
-            </div>
-            <div class="input-grid">
-                <div class="input-group">
-                    <label>WhatsApp</label>
-                    <input type="tel" class="premium-input" placeholder="(00) 00000-0000" id="checkout-tel">
-                </div>
-                <div class="input-group">
-                    <label>CPF</label>
-                    <input type="text" class="premium-input" placeholder="000.000.000-00" id="checkout-cpf">
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 2: Address -->
-        <div class="card-premium">
-            <h2 class="card-title"><span>02</span> Local de Entrega</h2>
-            <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: flex-end; margin-bottom: 1.5rem;">
-                <div class="input-group" style="margin-bottom: 0;">
-                    <label>CEP</label>
-                    <input type="text" class="premium-input" placeholder="00000-000" id="cep">
-                </div>
-                <button class="btn-search" id="btn-cep">PESQUISAR</button>
-            </div>
+            <h2 class="card-title">Finalize sua Inscrição</h2>
             
-            <div class="input-group">
-                <label>Endereço</label>
-                <input type="text" class="premium-input" id="rua" placeholder="Rua, Avenida, Praça...">
-            </div>
-            
-            <div class="input-grid">
-                <div class="input-group">
-                    <label>Número</label>
-                    <input type="text" class="premium-input" id="numero" placeholder="Ex: 123">
-                </div>
-                <div class="input-group">
-                    <label>Bairro</label>
-                    <input type="text" class="premium-input" id="bairro" placeholder="Bairro">
-                </div>
-            </div>
-            
-            <div class="input-grid">
-                <div class="input-group">
-                    <label>Cidade</label>
-                    <input type="text" class="premium-input" id="cidade" placeholder="Cidade">
-                </div>
-                <div class="input-group">
-                    <label>UF</label>
-                    <input type="text" class="premium-input" id="estado" maxlength="2" placeholder="Estado">
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 3: Protocol -->
-        <div class="card-premium">
-            <h2 class="card-title"><span>03</span> Escolha o Protocolo</h2>
             <div class="protocol-selection">
                 <div class="protocol-item active" data-plano="20" data-valor="1200.00" data-preco="1.200" onclick="selectPlano(this)">
                     <div class="protocol-info">
@@ -509,70 +239,20 @@
                 </div>
             </div>
 
-            <div class="checkout-actions">
-                <div class="terms-box">
-                    <strong>TERMO DE CIÊNCIA, CONSENTIMENTO E RESPONSABILIDADE</strong><br><br>
-                    Pelo presente instrumento, o paciente declara que leu, compreendeu e concorda integralmente com as condições abaixo, ao iniciar ou dar continuidade ao acompanhamento junto à Maori:<br><br>
-                    <strong>1. OBJETO</strong><br>
-                    O presente termo tem como objeto a prestação de serviços de natureza médica e assistencial, consistentes em avaliação, acompanhamento e definição de condutas clínicas individualizadas, baseadas em critérios técnicos, científicos e na individualidade biológica do paciente.<br><br>
-                    <strong>2. NATUREZA DA ATIVIDADE</strong><br>
-                    A Maori atua exclusivamente como clínica médica, não exercendo atividades de comércio, dispensação, armazenamento or distribuição de medicamentos, em conformidade com a legislação vigente e normas éticas aplicáveis à prática médica.<br><br>
-                    <strong>3. PRESCRIÇÃO MÉDICA</strong><br>
-                    O paciente declara estar ciente de que:<br>
-                    I. Eventuais prescrições decorrem de avaliação clínica individualizada<br>
-                    II. São realizadas por profissionais legalmente habilitados<br>
-                    III. Não garantem resultado específico, estando sujeitas à resposta individual do organismo<br><br>
-                    <strong>4. FORNECIMENTO POR TERCEIROS</strong><br>
-                    O paciente reconhece e concorda que:<br>
-                    I. A eventual manipulação ou fornecimento de substâncias prescritas será realizada por farmácias ou laboratórios parceiros, devidamente regularizados perante os órgãos competentes<br>
-                    II. Tais estabelecimentos são integralmente responsáveis pela produção, controle de qualidade, armazenamento e dispensação dos produtos<br>
-                    III. A Maori não possui ingerência sobre os processos internos desses terceiros.<br><br>
-                    <strong>5. CONFORMIDADE REGULATÓRIA</strong><br>
-                    Todo o fluxo clínico e de prescrição observa rigorosamente:<br>
-                    I. Normas da Agência Nacional de Vigilância Sanitária (ANVISA)<br>
-                    II. Código de Ética Médica<br>
-                    III. Demais legislações sanitárias e regulatórias aplicáveis.<br><br>
-                    <strong>6. RESPONSABILIDADES DO PACIENTE</strong><br>
-                    O paciente se compromete a:<br>
-                    I. Fornecer informações verídicas, completas e atualizadas sobre seu estado de saúde<br>
-                    II. Informar o uso de medicamentos, suplementos ou tratamentos paralelos<br>
-                    III. Seguir corretamente as orientações médicas<br>
-                    IV. Não utilizar substâncias prescritas de forma diversa da recomendada.<br><br>
-                    <strong>7. LIMITAÇÃO DE RESPONSABILIDADE</strong><br>
-                    A Maori não se responsabiliza por:<br>
-                    I. Uso inadequado ou em desacordo com a prescrição médica<br>
-                    II. Aquisição de substâncias por canais não indicados<br>
-                    III. Intercorrências decorrentes de omissão de informações pelo paciente<br>
-                    IV. Atos, falhas ou produtos fornecidos por terceiros (farmácias ou laboratórios).<br><br>
-                    <strong>8. AUSÊNCIA DE GARANTIA DE RESULTADOS</strong><br>
-                    O paciente declara estar ciente de que os resultados clínicos podem variar conforme fatores individuais, não havendo garantia de resultado específico, uma vez que a resposta terapêutica depende de múltiplas variáveis biológicas e comportamentais.<br><br>
-                    <strong>9. CONSENTIMENTO LIVRE E ESCLARECIDO</strong><br>
-                    O paciente declara que:<br>
-                    I. Recebeu informações claras sobre a natureza do acompanhamento<br>
-                    II. Teve a oportunidade de esclarecer dúvidas<br>
-                    III. Está ciente dos benefícios, riscos e limitações do tratamento.<br><br>
-                    <strong>10. AUTONOMIA E DECISÃO</strong><br>
-                    O paciente reconhece que a decisão de iniciar, manter ou interromper qualquer conduta terapêutica é realizada de forma livre e consciente, podendo, a qualquer momento, optar pela descontinuidade do acompanhamento.<br><br>
-                    <strong>11. PROTEÇÃO DE DADOS (LGPD)</strong><br>
-                    O paciente autoriza o tratamento de seus dados pessoais e sensíveis, incluindo dados de saúde, para fins de prestação de serviços médicos, acompanhamento clínico e cumprimento de obrigações legais e regulatórias, nos termos da Lei nº 13.709/2018 (Lei Geral de Proteção de Dados).<br>
-                    A Maori se compromete a adotar medidas técnicas e administrativas adequadas para garantir a segurança, confidencialidade e integridade das informações.<br><br>
-                    <strong>12. TELEATENDIMENTO (QUANDO APLICÁVEL)</strong><br>
-                    O paciente declara estar ciente de que atendimentos poderão ocorrer por meio de telemedicina, nos termos da regulamentação vigente, reconhecendo suas limitações e concordando com esse formato quando utilizado.<br><br>
-                    <strong>13. VIGÊNCIA</strong><br>
-                    O presente termo passa a vigorar a partir do aceite do paciente, sendo aplicável durante todo o período de acompanhamento junto à Maori.<br><br>
-                    <strong>14. FORO</strong><br>
-                    Para dirimir quaisquer dúvidas ou controvérsias oriundas deste termo, as partes elegem o foro da Comarca de Santo André/SP, com renúncia a qualquer outro, por mais privilegiado que seja.<br><br>
-                    <strong>15. ACEITE</strong><br>
-                    Ao prosseguir com o atendimento, o paciente declara que leu, compreendeu e aceita integralmente os termos acima.
-                </div>
-                <label class="terms-check">
-                    <input type="checkbox" id="accept-terms">
-                    Li e aceito os termos de responsabilidade.
-                </label>
-                <button id="btn-prosseguir" class="btn-premium">
-                    PROSSEGUIR PARA O PAGAMENTO
-                </button>
+            <div class="terms-box">
+                <strong>TERMO DE CIÊNCIA, CONSENTIMENTO E RESPONSABILIDADE</strong><br><br>
+                1. OBJETO: Prestação de serviços médicos e assistenciais...<br><br>
+                Ao prosseguir, você confirma que leu e concorda com todos os termos de responsabilidade e diretrizes clínicas da Maori Saúde. Sua saúde é nossa prioridade.
             </div>
+
+            <label class="terms-check">
+                <input type="checkbox" id="accept-terms">
+                <span>Li e aceito os termos de responsabilidade.</span>
+            </label>
+
+            <button id="btn-prosseguir" class="btn-premium">
+                PROSSEGUIR PARA O PAGAMENTO
+            </button>
         </div>
     </main>
 
@@ -589,61 +269,12 @@
             };
         };
 
-        // ViaCEP integration
-        const btnCep = document.getElementById('btn-cep');
-        btnCep.addEventListener('click', async () => {
-            const cep = document.getElementById('cep').value.replace(/\D/g, '');
-            if(cep.length !== 8) return;
-            btnCep.innerText = "...";
-            try {
-                const resp = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-                const data = await resp.json();
-                if(!data.erro) {
-                    document.getElementById('rua').value = data.logradouro || '';
-                    document.getElementById('bairro').value = data.bairro || '';
-                    document.getElementById('cidade').value = data.localidade || '';
-                    document.getElementById('estado').value = data.uf || '';
-                    document.getElementById('numero').focus();
-                }
-            } catch(e) {}
-            btnCep.innerText = "PESQUISAR";
-        });
-
-        // Masks
-        const mask = (id, fn) => {
-            const el = document.getElementById(id);
-            if (el) el.addEventListener('input', e => e.target.value = fn(e.target.value));
-        };
-        mask('checkout-tel', v => v.replace(/\D/g, '').substring(0, 11).replace(/^(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d)/, "$1-$2"));
-        mask('checkout-cpf', v => v.replace(/\D/g, '').substring(0, 11).replace(/^(\d{3})(\d)/, "$1.$2").replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3").replace(/\.(\d{3})(\d)/, ".$1-$2"));
-        mask('cep', v => v.replace(/\D/g, '').substring(0, 8).replace(/^(\d{5})(\d)/, "$1-$2"));
-
-        // Redirect & Logic
         document.getElementById('btn-prosseguir').addEventListener('click', () => {
-            const fields = ['checkout-email', 'checkout-tel', 'checkout-cpf', 'cep', 'rua', 'numero', 'bairro', 'cidade', 'estado'];
-            let valid = true;
-            
-            fields.forEach(id => {
-                const el = document.getElementById(id);
-                if(!el.value) { 
-                    el.classList.add('error-field'); 
-                    el.classList.add('error-shake');
-                    setTimeout(() => el.classList.remove('error-shake'), 400);
-                    valid = false; 
-                } else el.classList.remove('error-field');
-            });
-
             if(!document.getElementById('accept-terms').checked) {
                 alert("Por favor, aceite os termos de responsabilidade.");
                 return;
             }
 
-            if(!valid) {
-                alert("Por favor, preencha todos os campos obrigatórios.");
-                return;
-            }
-
-            // Persistence & Metadata Capture
             const btnProsseguir = document.getElementById('btn-prosseguir');
             btnProsseguir.disabled = true;
             btnProsseguir.innerText = "PROCESSANDO...";
@@ -653,21 +284,17 @@
                 '60': 'https://pay.hypercash.com.br/pt/checkout/23fa3778-2c07-44e6-a16e-3b898910c01e'
             };
 
-            let clientIp = '0.0.0.0';
-            
-            // Captura de IP com Timeout de 2 segundos para não travar o cliente
-            const fetchIp = Promise.race([
+            const utms = window.getUtmParams ? window.getUtmParams() : {};
+            const savedLead = JSON.parse(localStorage.getItem('maori_checkout_lead') || '{}');
+
+            // Captura metadados de compliance
+            Promise.race([
                 fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => d.ip),
                 new Promise(resolve => setTimeout(() => resolve('0.0.0.0'), 2000))
-            ]);
-
-            const utms = window.getUtmParams ? window.getUtmParams() : {};
-
-            fetchIp.then(ip => {
-                clientIp = ip;
+            ]).then(ip => {
                 const payload = {
-                    tipo: 'Lead Checkout',
-                    ...leadData,
+                    tipo: 'Lead Checkout Simplificado',
+                    ...savedLead,
                     plano: selectedPlano.id,
                     valor: selectedPlano.valor,
                     ...utms,
@@ -675,13 +302,10 @@
                         aceite_termos: true,
                         timestamp: new Date().toISOString(),
                         user_agent: navigator.userAgent,
-                        ip_dispositivo: clientIp
+                        ip_dispositivo: ip
                     }
                 };
 
-                localStorage.setItem('maori_checkout_lead', JSON.stringify(leadData));
-
-                // Envia Lead para n8n e redireciona para o checkout oficial
                 return fetch('https://n8n.srv1586236.hstgr.cloud/webhook/maori-vendas', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -690,11 +314,10 @@
             }).finally(() => {
                 const targetCheckout = hypercashUrls[selectedPlano.id] || hypercashUrls['20'];
                 const finalUrl = window.addUtmsToUrl ? window.addUtmsToUrl(targetCheckout) : targetCheckout;
-                
-                // Redireciona diretamente para o Hypercash (necessário pois eles bloqueiam iframe)
                 window.location.href = finalUrl;
             });
         });
     </script>
 </body>
+
 </html>
