@@ -348,15 +348,86 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="terms-modal" class="modal-overlay" onclick="if(event.target === this) window.closeTermsModal()">
                     <div class="modal-container">
                         <button class="modal-close" onclick="window.closeTermsModal()">&times;</button>
-                        <h3 style="font-family: 'Lora', serif; color: var(--primary); margin-bottom: 20px;">Termo de Ciência e Responsabilidade</h3>
-                        <div style="font-size: 0.9rem; line-height: 1.6; color: var(--text-main);">
-                            <p>Ao prosseguir com a aquisição do Plano Maori Saúde, você declara estar ciente e concordar que:</p>
-                            <ul>
-                                <li style="margin-bottom: 10px;">O tratamento proposto baseia-se em uma análise preliminar e depende de <strong>avaliação médica individualizada</strong> antes do início do uso de qualquer medicação.</li>
-                                <li style="margin-bottom: 10px;">Os resultados variam de pessoa para pessoa e dependem da adesão ao protocolo e estilo de vida.</li>
-                                <li style="margin-bottom: 10px;">A Maori Saúde atua como facilitadora de acesso a protocolos de ponta e suporte especializado.</li>
+                        <h3 style="font-family: 'Lora', serif; color: var(--primary); margin-bottom: 20px;">TERMO DE CIÊNCIA, CONSENTIMENTO E RESPONSABILIDADE</h3>
+                        <div style="font-size: 0.85rem; line-height: 1.6; color: var(--text-main); padding-right: 10px;">
+                            <p>Pelo presente instrumento, o paciente declara que leu, compreendeu e concorda integralmente com as condições abaixo, ao iniciar ou dar continuidade ao acompanhamento junto à Maori:</p>
+                            
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">1. OBJETO</h4>
+                            <p>O presente termo tem como objeto a prestação de serviços de natureza médica e assistencial, consistentes em avaliação, acompanhamento e definição de condutas clínicas individualizadas, baseadas em critérios técnicos, científicos e na individualidade biológica do paciente.</p>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">2. NATUREZA DA ATIVIDADE</h4>
+                            <p>A Maori atua exclusivamente como clínica médica, não exercendo atividades de comércio, dispensação, armazenamento ou distribuição de medicamentos, em conformidade com a legislação vigente e normas éticas aplicáveis à prática médica.</p>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">3. PRESCRIÇÃO MÉDICA</h4>
+                            <p>O paciente declara estar ciente de que:</p>
+                            <ul style="padding-left: 20px;">
+                                <li>I. Eventuais prescrições decorrem de avaliação clínica individualizada</li>
+                                <li>II. São realizadas por profissionais legalmente habilitados</li>
+                                <li>III. Não garantem resultado específico, estando sujeitas à resposta individual do organismo</li>
                             </ul>
-                            <p style="margin-top: 20px; font-weight: bold; color: var(--primary-dark);">Concordo com as diretrizes e desejo prosseguir.</p>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">4. FORNECIMENTO POR TERCEIROS</h4>
+                            <p>O paciente reconhece e concorda que:</p>
+                            <ul style="padding-left: 20px;">
+                                <li>I. A eventual manipulação ou fornecimento de substâncias prescritas será realizada por farmácias ou laboratórios parceiros, devidamente regularizados perante os órgãos competentes</li>
+                                <li>II. Tais estabelecimentos são integralmente responsáveis pela produção, controle de qualidade, armazenamento e dispensação dos produtos</li>
+                                <li>III. A Maori não possui ingerência sobre os processos internos desses terceiros</li>
+                            </ul>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">5. CONFORMIDADE REGULATÓRIA</h4>
+                            <p>Todo o fluxo clínico e de prescrição observa rigorosamente:</p>
+                            <ul style="padding-left: 20px;">
+                                <li>I. Normas da Agência Nacional de Vigilância Sanitária (ANVISA)</li>
+                                <li>II. Código de Ética Médica</li>
+                                <li>III. Demais legislações sanitárias e regulatórias aplicáveis</li>
+                            </ul>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">6. RESPONSABILIDADES DO PACIENTE</h4>
+                            <p>O paciente se compromete a:</p>
+                            <ul style="padding-left: 20px;">
+                                <li>I. Fornecer informações verídicas, completas e atualizadas sobre seu estado de saúde</li>
+                                <li>II. Informar o uso de medicamentos, suplementos ou tratamentos paralelos</li>
+                                <li>III. Seguir corretamente as orientações médicas</li>
+                                <li>IV. Não utilizar substâncias prescritas de forma diversa da recomendada</li>
+                            </ul>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">7. LIMITAÇÃO DE RESPONSABILIDADE</h4>
+                            <p>A Maori não se responsabiliza por:</p>
+                            <ul style="padding-left: 20px;">
+                                <li>I. Uso inadequado ou em desacordo com a prescrição médica</li>
+                                <li>II. Aquisição de substâncias por canais não indicados</li>
+                                <li>III. Intercorrências decorrentes de omissão de informações pelo paciente</li>
+                                <li>IV. Atos, falhas ou produtos fornecidos por terceiros (farmácias ou laboratórios)</li>
+                            </ul>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">8. AUSÊNCIA DE GARANTIA DE RESULTADOS</h4>
+                            <p>O paciente declara estar ciente de que os resultados clínicos podem variar conforme fatores individuais, não havendo garantia de resultado específico, uma vez que a resposta terapêutica depende de múltiplas variáveis biológicas e comportamentais.</p>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">9. CONSENTIMENTO LIVRE E ESCLARECIDO</h4>
+                            <p>O paciente declara que:</p>
+                            <ul style="padding-left: 20px;">
+                                <li>I. Recebeu informações claras sobre a natureza do acompanhamento</li>
+                                <li>II. Teve a oportunidade de esclarecer dúvidas</li>
+                                <li>III. Está ciente dos benefícios, riscos e limitações do tratamento</li>
+                            </ul>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">10. AUTONOMIA E DECISÃO</h4>
+                            <p>O paciente reconhece que a decisão de iniciar, manter ou interromper qualquer conduta terapêutica é realizada de forma livre e consciente, podendo, a qualquer momento, optar pela descontinuidade do acompanhamento.</p>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">11. PROTEÇÃO DE DADOS (LGPD)</h4>
+                            <p>O paciente autoriza o tratamento de seus dados pessoais e sensíveis, incluindo dados de saúde, para fins de prestação de serviços médicos, acompanhamento clínico e cumprimento de obrigações legais e regulatórias, nos termos da Lei nº 13.709/2018 (Lei Geral de Proteção de Dados).</p>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">12. TELEATENDIMENTO (QUANDO APLICÁVEL)</h4>
+                            <p>O paciente declara estar ciente de que atendimentos poderão ocorrer por meio de telemedicina, nos termos da regulamentação vigente, reconhecendo suas limitações e concordando com esse formato quando utilizado.</p>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">13. VIGÊNCIA</h4>
+                            <p>O presente termo passa a vigorar a partir do aceite do paciente, sendo aplicável durante todo o período de acompanhamento junto à Maori.</p>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">14. FORO</h4>
+                            <p>Para dirimir quaisquer dúvidas ou controvérsias oriundas deste termo, as partes elegem o foro da Comarca de Santo André/SP, com renúncia a qualquer outro, por mais privilegiado que seja.</p>
+
+                            <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">15. ACEITE</h4>
+                            <p>Ao prosseguir com o atendimento, o paciente declara que leu, compreendeu e aceita integralmente os termos acima.</p>
                         </div>
                     </div>
                 </div>
