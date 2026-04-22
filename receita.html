@@ -683,7 +683,7 @@
                     const fileName = `${Date.now()}_${name.replace(/\s+/g, '_')}.pdf`;
                     
                     const { error: uploadError } = await supabase.storage
-                        .from('receitas')
+                        .from('prescriptions')
                         .upload(fileName, fileToUpload, {
                             cacheControl: '3600',
                             upsert: false
@@ -691,7 +691,7 @@
 
                     if (!uploadError) {
                         const { data: urlData } = supabase.storage
-                            .from('receitas')
+                            .from('prescriptions')
                             .getPublicUrl(fileName);
                         publicUrl = urlData.publicUrl;
                         console.log('[STORAGE] Sucesso:', publicUrl);
