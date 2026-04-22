@@ -4,7 +4,6 @@ window.akinQuestions = [
         id: 'objetivos',
         type: 'multiple',
         question: 'O que você mais deseja alcançar com a perda de peso?',
-        description: 'Selecione todas as opções que se aplicam',
         options: [
             'Melhorar minha saúde geral',
             'Prevenir problemas de saúde',
