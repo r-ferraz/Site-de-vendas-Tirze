@@ -45,7 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             });
         } else if (q.type === 'input') {
-            html += `<input type="${q.inputType}" id="${q.id}" class="q-input" placeholder="${q.placeholder || ''}" value="${userData[q.id] || ''}">`;
+            html += `
+                <div class="input-group">
+                    <input type="${q.inputType}" id="${q.id}" class="q-input" style="width: 100%; display: block;" placeholder="${q.placeholder || ''}" value="${userData[q.id] || ''}">
+                </div>
+            `;
         } else if (q.type === 'input_group') {
             q.inputs.forEach(input => {
                 html += `
