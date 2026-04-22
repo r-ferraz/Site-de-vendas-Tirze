@@ -105,6 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     desafios: Array.isArray(data.desafios) ? data.desafios.join(', ') : (data.desafios || ''),
                     tempo_tentativa: data.tempo_tentativa || '',
                     sexo: data.sexo || '',
+                    // Full readable summary of ALL questions
+                    resumo_completo: (window.akinQuestions || []).map(q => {
+                        const val = data[q.id];
+                        if (!val) return null;
+                        const label = Array.isArray(val) ? val.join(', ') : val;
+                        return `${q.question}\nResposta: ${label}`;
+                    }).filter(x => x).join('\n\n'),
                     respostas_triagem: data,
                     tipo_origem: 'Questionário',
                     utm_source: utms.utm_source || '',
