@@ -742,8 +742,11 @@
                 
                 setTimeout(() => { 
                     window.location.href = targetUrl; 
-                }, 800); // 0.8s para ser quase instantâneo
+                }, 800);
 
+            } catch (err) {
+                console.error('[CRITICAL FLOW ERROR]', err);
+                window.location.href = 'oferta-premium.html' + window.location.search;
             }
         });
 
