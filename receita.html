@@ -1,776 +1,487 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maori | Enviar Receita</title>
-    <!-- Version: 3.2.0 - Force update cache -->
-    <link rel="stylesheet" href="style.css">
-    <script src="utm.js"></script>
+    <script src="utm.js" onerror="console.warn('utm.js não encontrado')"></script>
     <style>
-        body {
-            background-color: var(--bg-offwhite);
+        :root {
+            --primary-blue: #0047AB;
+            --text-dark: #1a202c;
+            --text-muted: #718096;
+            --border-color: #E2E8F0;
+            --bg-offwhite: #f7fafc;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-offwhite); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+        header {
+            height: 80px; background: white;
+            border-bottom: 1px solid #edf2f7;
+            display: flex; align-items: center; justify-content: center;
         }
 
+        .container { max-width: 700px; margin: 0 auto; padding: 0 20px; }
+
         .upload-container {
-            max-width: 600px;
-            margin: 60px auto;
-            padding: 40px;
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 20px 60px rgba(0, 71, 171, 0.08);
-            text-align: center;
+            max-width: 600px; margin: 60px auto; padding: 40px;
+            background: white; border-radius: 32px;
+            box-shadow: 0 20px 60px rgba(0,71,171,0.08); text-align: center;
         }
 
         .upload-box {
-            background: #EBF8FF;
-            border: 2px dashed #3182CE;
-            border-radius: 16px;
-            padding: 50px 20px;
-            margin: 30px 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
+            background: #EBF8FF; border: 2px dashed #3182CE;
+            border-radius: 16px; padding: 50px 20px; margin: 30px 0;
+            cursor: pointer; transition: all 0.3s ease;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 15px;
         }
-
         .upload-box:hover {
-            border-color: #38A169;
-            background: #E6FFFA;
+            border-color: #38A169; background: #E6FFFA;
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.1);
         }
 
-        .upload-icon {
-            font-size: 3.5rem;
-            color: #48BB78;
-            margin-bottom: -5px;
-            background: white;
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        .btn {
+            padding: 14px 28px; border-radius: 50px;
+            font-size: 1rem; font-weight: 700; cursor: pointer;
+            border: none; transition: all 0.2s ease;
         }
-
-        .btn-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-top: 30px;
+        .btn-primary {
+            background: var(--primary-blue); color: white;
         }
+        .btn-primary:hover { background: #003a8c; transform: translateY(-1px); }
+        .btn-primary:disabled { background: #a0aec0; cursor: not-allowed; transform: none; }
 
-        /* Improved Preview Styling */
+        .q-input {
+            width: 100%; padding: 12px 16px;
+            border: 1px solid #E2E8F0; border-radius: 12px;
+            font-size: 1rem; transition: border-color 0.2s; margin-bottom: 15px;
+        }
+        .q-input:focus { outline: none; border-color: var(--primary-blue); }
+
         .preview-container {
-            display: none;
-            margin-top: 20px;
-            width: 100%;
-            background: #f8fafc;
-            padding: 24px;
-            border-radius: 20px;
-            border: 2px solid var(--primary-blue);
-            text-align: center;
+            display: none; margin-top: 20px; width: 100%;
+            background: #f8fafc; padding: 24px;
+            border-radius: 20px; border: 2px solid var(--primary-blue);
         }
 
         .file-info {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            background: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            font-weight: 600;
-            color: var(--text-dark);
-            word-break: break-all;
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; margin-bottom: 15px; background: white;
+            padding: 10px 20px; border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            font-weight: 600; color: var(--text-dark); word-break: break-all;
         }
 
         .preview-image {
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        #camera-view {
-            width: 100%;
-            border-radius: 20px;
-            display: none;
-            margin-bottom: 20px;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 40px;
-            border-radius: 24px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            text-align: left;
-            position: relative;
-            animation: modalFadeIn 0.3s ease-out;
-        }
-
-        @keyframes modalFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: var(--text-dark);
-            text-align: center;
-        }
-
-        .modal-phrase {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 25px;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 20px;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-muted);
-        }
-
-        .q-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #E2E8F0;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-            margin-bottom: 15px;
-        }
-
-        .q-input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-        }
-
-        .status-msg {
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            display: none;
-        }
-
-        .status-msg.error {
-            background: #fee2e2;
-            color: #991b1b;
-            display: block;
-        }
-
-        .status-msg.info {
-            background: #e0f2fe;
-            color: #075985;
-            display: block;
-        }
-
-        /* Transcription Styles */
-        .transcription-box {
-            background: #f8fafc;
-            border: 2px solid #E2E8F0;
-            border-radius: 16px;
-            padding: 24px;
-            margin-top: 20px;
-            text-align: left;
-            display: none;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .transcription-title {
-            color: var(--primary-blue);
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .med-item {
-            border-left: 3px solid var(--primary-blue);
-            padding-left: 15px;
-            margin-bottom: 15px;
-        }
-
-        .med-name {
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .med-desc {
-            color: var(--text-muted);
-            font-size: 0.9rem;
+            max-width: 100%; max-height: 300px;
+            border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
         .processing-box {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-            padding: 20px;
+            display: none; margin-top: 20px;
+            text-align: center; padding: 20px;
         }
-
         .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border-left-color: var(--primary-blue);
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px auto;
+            border: 4px solid rgba(0,0,0,0.1); width: 36px; height: 36px;
+            border-radius: 50%; border-left-color: var(--primary-blue);
+            animation: spin 1s linear infinite; margin: 0 auto 15px auto;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .status-bar {
+            margin: 10px 0; padding: 12px 16px; border-radius: 10px;
+            font-size: 0.9rem; display: none; text-align: left;
+        }
+        .status-bar.info { background: #e0f2fe; color: #075985; display: block; }
+        .status-bar.error { background: #fee2e2; color: #991b1b; display: block; }
+        .status-bar.success { background: #dcfce7; color: #166534; display: block; }
+
+        .lead-section {
+            display: none; margin-top: 30px; text-align: left;
+            border-top: 1px solid #edf2f7; padding-top: 30px;
         }
 
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+        #success-message { display: none; text-align: center; padding: 20px 0; }
     </style>
 </head>
-
 <body>
-    <header
-        style="height: 80px; background: white; border-bottom: 1px solid #edf2f7; display: flex; align-items: center; justify-content: center;">
-        <div class="container" style="display: flex; justify-content: center;">
-            <a href="index.html" class="logo">
-                <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height: 40px; width: auto;">
-            </a>
+
+<header>
+    <div class="container" style="display:flex; justify-content:center;">
+        <a href="index.html">
+            <img src="assets/Asset 10.svg" alt="Maori Saúde" style="height:40px; width:auto;"
+                 onerror="this.style.display='none'">
+        </a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="upload-container">
+        <h1 style="font-size:2rem; margin-bottom:10px;">Enviar sua Receita</h1>
+        <p style="color:#718096;">Faça o upload do seu PDF ou tire uma foto legível da sua receita médica.</p>
+
+        <input type="file" id="file-input" accept="image/*,application/pdf" style="display:none;">
+
+        <div class="upload-box" id="drop-zone">
+            <div style="font-size:3rem;">📄</div>
+            <div style="font-weight:700; color:var(--text-dark); font-size:1.1rem;">
+                Clique para escolher um arquivo ou tire uma foto
+            </div>
+            <div style="font-size:0.9rem; color:#718096; max-width:80%; line-height:1.4;">
+                PDF ou imagem da receita médica. (Máx 8MB)
+            </div>
+            <button type="button" onclick="document.getElementById('file-input').click()" class="btn btn-primary" style="margin-top:15px;">
+                📎 Selecionar Arquivo
+            </button>
         </div>
-    </header>
 
-    <div class="container">
-        <div class="upload-container">
-            <h1 style="font-size: 2rem; margin-bottom: 10px;">Enviar sua Receita</h1>
-            <p style="color: #718096;">Faça o upload do seu PDF ou tire uma foto legível da sua receita médica para
-                começarmos a transcrição.</p>
+        <div id="status-bar" class="status-bar"></div>
 
-            <!-- Removed Main Action Buttons as requested -->
-
-            <input type="file" id="file-input" accept="image/*,application/pdf" style="display: none;">
-            <div class="upload-box" id="drop-zone">
-                <div class="upload-icon">📄</div>
-                <div style="font-weight: 700; color: var(--text-dark); font-size: 1.1rem;">Clique para escolher um
-                    arquivo ou tire uma foto</div>
-                <div style="font-size: 0.9rem; color: #718096; max-width: 80%; line-height: 1.4;">Você pode enviar uma
-                    foto legível ou um documento PDF da sua receita médica. (Máx 10MB)</div>
-                <button type="button" onclick="document.getElementById('file-input').click()"
-                    style="margin-top:15px; background:#0047AB; color:white; border:none; padding:12px 28px; border-radius:50px; font-size:1rem; font-weight:700; cursor:pointer;">
-                    📎 Selecionar Arquivo
-                </button>
+        <div class="preview-container" id="preview-box">
+            <div class="file-info">
+                <span id="file-icon">✅</span>
+                <span id="file-name-label">Documento Recebido</span>
             </div>
 
-            <div id="status-display" class="status-msg"></div>
-
-            <!-- Integrated Content Flow (Transcription -> Form -> Success) -->
-            <div class="preview-container" id="preview-box">
-                <div class="file-info">
-                    <span id="file-icon">✅</span>
-                    <span id="file-name-label">Documento Recebido</span>
-                </div>
-
-                <!-- Loading State Area -->
-                <div id="processing-box" class="processing-box">
-                    <div class="spinner"></div>
-                    <div style="font-weight: 600; color: var(--text-dark);">Processando e transcrevendo sua receita...
-                    </div>
-                    <div style="font-size: 0.85rem; color: #718096; margin-top: 5px;">Aguarde um momento.</div>
-                </div>
-
-                <!-- Fake Transcript Result Area -->
-                <div id="transcription-result" class="transcription-box">
-                    <div class="transcription-title">Receita Transcrita</div>
-                    <div class="med-item">
-                        <div class="med-name">💊 Amoxicilina 500mg</div>
-                        <div class="med-desc">Tomar 1 cápsula a cada 8 horas, durante 7 dias.</div>
-                    </div>
-                </div>
-
-                <!-- Integrated Lead Form (Appears after Transcription) -->
-                <div id="lead-section" style="display: none; margin-top: 30px; text-align: left; border-top: 1px solid #edf2f7; padding-top: 30px;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 20px; color: var(--text-dark); text-align: center;">Quase lá! Informe seus dados para finalizar</h3>
-                    
-                    <div id="lead-form">
-                        <div class="input-group">
-                            <label style="display:block; margin-bottom:5px; font-weight:500;">Nome Completo</label>
-                            <input type="text" id="lead-name" class="q-input" placeholder="Seu nome completo">
-                        </div>
-                        <div class="input-group">
-                            <label style="display:block; margin-bottom:5px; font-weight:500;">E-mail</label>
-                            <input type="email" id="lead-email" class="q-input" placeholder="seu@email.com">
-                        </div>
-                        <div class="input-group">
-                            <label style="display:block; margin-bottom:5px; font-weight:500;">WhatsApp</label>
-                            <input type="tel" id="lead-whatsapp" class="q-input" placeholder="(00) 00000-0000">
-                        </div>
-                        <button class="btn btn-primary" id="final-send-btn"
-                            style="width: 100%; margin-top: 10px;">Enviar para o médico</button>
-                    </div>
-
-                    <div id="success-message" style="display: none; text-align: center; padding: 20px 0;">
-                        <div style="font-size: 4rem; color: #48BB78; margin-bottom: 20px;">✅</div>
-                        <h3 style="font-size: 1.5rem; color: var(--text-dark); margin-bottom: 15px;">Receita Enviada com Sucesso!</h3>
-                        <p style="color: var(--text-muted); margin-bottom: 25px;">Seu documento foi salvo com segurança em nosso sistema (Bucket: prescriptions). A transcrição realizada pela IA também foi arquivada para análise do médico.</p>
-                        <p style="font-size: 0.9rem; color: var(--primary-blue);">Redirecionando...</p>
-                    </div>
-                </div>
-
-                <!-- Hidden Previews -->
-                <img id="image-preview" class="preview-image" style="display: none; margin-bottom: 20px;">
-                <div id="pdf-preview-container" style="display: none; margin-top: 15px; margin-bottom: 20px;">
-                    <iframe id="pdf-frame"
-                        style="width: 100%; height: 400px; border: none; border-radius: 12px;"></iframe>
-                </div>
-
-                <button class="btn" id="btn-reset-upload"
-                    style="background: none; border: 1px solid #E2E8F0; border-radius: 50px; color: #4a5568; font-size: 0.9rem; margin-top: 25px; padding: 10px 20px;"
-                    onclick="resetFile()">Remover e Enviar Outro</button>
+            <div id="processing-box" class="processing-box">
+                <div class="spinner"></div>
+                <div style="font-weight:600; color:var(--text-dark);" id="processing-msg">Preparando documento...</div>
+                <div style="font-size:0.85rem; color:#718096; margin-top:5px;">Aguarde um momento.</div>
             </div>
 
-            <!-- Formulário Invisível para Bypass de CORS -->
-            <iframe id="hidden_iframe" name="hidden_iframe" style="display:none;"></iframe>
-            <form id="bypass_form" target="hidden_iframe" method="POST" action="https://n8n.akinconsultoria.com.br/webhook/nova-receita" enctype="multipart/form-data" style="display:none;">
-                <input type="hidden" name="nome" id="form_nome">
-                <input type="hidden" name="email" id="form_email">
-                <input type="hidden" name="whatsapp" id="form_whatsapp">
-                <input type="hidden" name="transcricao" id="form_transcricao">
-                <input type="hidden" name="lead_id" id="form_lead_id">
-                <input type="file" name="arquivo_receita" id="form_arquivo">
-            </form>
-
-            <div
-                style="margin-top: 30px; display: flex; align-items: center; justify-content: center; gap: 8px; color: #48BB78; font-size: 0.9rem;">
-                🔒 Seus dados estão seguros e criptografados
+            <img id="image-preview" class="preview-image" style="display:none; margin-bottom:20px;">
+            <div id="pdf-preview-container" style="display:none; margin-bottom:20px;">
+                <iframe id="pdf-frame" style="width:100%; height:350px; border:none; border-radius:12px;"></iframe>
             </div>
+
+            <div class="lead-section" id="lead-section">
+                <h3 style="font-size:1.25rem; margin-bottom:20px; color:var(--text-dark); text-align:center;">
+                    Quase lá! Informe seus dados para finalizar
+                </h3>
+
+                <div id="lead-form">
+                    <div class="input-group">
+                        <label style="display:block; margin-bottom:5px; font-weight:500;">Nome Completo</label>
+                        <input type="text" id="lead-name" class="q-input" placeholder="Seu nome completo">
+                    </div>
+                    <div class="input-group">
+                        <label style="display:block; margin-bottom:5px; font-weight:500;">E-mail</label>
+                        <input type="email" id="lead-email" class="q-input" placeholder="seu@email.com">
+                    </div>
+                    <div class="input-group">
+                        <label style="display:block; margin-bottom:5px; font-weight:500;">WhatsApp</label>
+                        <input type="tel" id="lead-whatsapp" class="q-input" placeholder="(00) 00000-0000">
+                    </div>
+                    <button class="btn btn-primary" id="final-send-btn" style="width:100%; margin-top:10px;">
+                        Enviar para o médico
+                    </button>
+                </div>
+
+                <div id="success-message">
+                    <div style="font-size:4rem; color:#48BB78; margin-bottom:20px;">✅</div>
+                    <h3 style="font-size:1.5rem; color:var(--text-dark); margin-bottom:15px;">Receita Enviada com Sucesso!</h3>
+                    <p style="color:var(--text-muted); margin-bottom:25px;">Seu documento foi recebido com segurança.</p>
+                    <p style="font-size:0.9rem; color:var(--primary-blue);">Redirecionando...</p>
+                </div>
+            </div>
+
+            <button class="btn" id="btn-reset"
+                style="background:none; border:1px solid #E2E8F0; border-radius:50px; color:#4a5568; font-size:0.9rem; margin-top:25px; padding:10px 20px; display:none;"
+                onclick="resetFile()">
+                Remover e Enviar Outro
+            </button>
+        </div>
+
+        <div style="margin-top:30px; display:flex; align-items:center; justify-content:center; gap:8px; color:#48BB78; font-size:0.9rem;">
+            🔒 Seus dados estão seguros e criptografados
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script>
-        console.log('HealthTrack Engine: Online (receita v3.4 - carimbo interno)');
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 
-        // --- Função que aplica a Marca D'água Profissional no PDF ---
-        async function stampFile(file, name, email, whatsapp) {
-            const lib = window.PDFLib || PDFLib;
-            if (!lib) throw new Error('Biblioteca PDFLib não carregada. Verifique sua conexão.');
+<script>
+// ─── CONFIG ───────────────────────────────────────────────
+const SUPABASE_URL = 'https://pzewkvmaewnijwhxkqaj.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZXdrdm1hZXduaWp3aHhrcWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjk0ODQsImV4cCI6MjA4ODc0NTQ4NH0.a42vFvm5vUcZ3euBUoNW_QuWM9MKPW2W7ZvcCyl_P4Y';
+const WEBHOOK_URL = 'https://n8n.akinconsultoria.com.br/webhook/receita-maori';
 
-            let pdfDoc;
-            const arrayBuffer = await file.arrayBuffer();
+// ─── ESTADO ───────────────────────────────────────────────
+let selectedFile = null;
+let supabaseClient = null;
 
-            if (file.type === 'application/pdf') {
-                pdfDoc = await lib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-            } else {
-                // Se for imagem, primeiro converte para PDF interno
-                console.log('[STAMP] Convertendo imagem para PDF base...');
-                const tempPdf = await lib.PDFDocument.create();
-                const image = file.type === 'image/png' ? 
-                    await tempPdf.embedPng(arrayBuffer) : 
-                    await tempPdf.embedJpg(arrayBuffer);
-                const page = tempPdf.addPage([image.width, image.height]);
-                page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });
-                pdfDoc = tempPdf;
+// ─── INIT ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    } catch(e) {
+        console.warn('Supabase não inicializado:', e);
+    }
+
+    // File input
+    document.getElementById('file-input').addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
+    });
+
+    // Drag & Drop
+    const dropZone = document.getElementById('drop-zone');
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = '#0047AB'; });
+    dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = '#3182CE'; });
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = '#3182CE';
+        if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+    });
+
+    // Enviar
+    document.getElementById('final-send-btn').addEventListener('click', handleSend);
+});
+
+// ─── HELPERS ──────────────────────────────────────────────
+function showStatus(msg, type = 'info') {
+    const el = document.getElementById('status-bar');
+    el.textContent = msg;
+    el.className = 'status-bar ' + type;
+}
+
+function setProcessingMsg(msg) {
+    document.getElementById('processing-msg').textContent = msg;
+}
+
+function resetFile() {
+    selectedFile = null;
+    document.getElementById('file-input').value = '';
+    document.getElementById('drop-zone').style.display = 'flex';
+    document.getElementById('preview-box').style.display = 'none';
+    document.getElementById('lead-section').style.display = 'none';
+    document.getElementById('lead-form').style.display = 'block';
+    document.getElementById('success-message').style.display = 'none';
+    document.getElementById('btn-reset').style.display = 'none';
+    document.getElementById('status-bar').style.display = 'none';
+}
+
+// ─── HANDLE FILE ──────────────────────────────────────────
+function handleFile(file) {
+    if (file.size > 8 * 1024 * 1024) {
+        alert('⚠️ Arquivo muito grande! Máximo 8MB.');
+        return;
+    }
+
+    selectedFile = file;
+
+    document.getElementById('drop-zone').style.display = 'none';
+    document.getElementById('preview-box').style.display = 'block';
+    document.getElementById('processing-box').style.display = 'block';
+    document.getElementById('lead-section').style.display = 'none';
+    document.getElementById('btn-reset').style.display = 'none';
+    document.getElementById('file-name-label').textContent = file.name;
+
+    if (file.type === 'application/pdf') {
+        document.getElementById('file-icon').textContent = '📕';
+        document.getElementById('image-preview').style.display = 'none';
+        document.getElementById('pdf-preview-container').style.display = 'block';
+        document.getElementById('pdf-frame').src = URL.createObjectURL(file);
+    } else {
+        document.getElementById('file-icon').textContent = '🖼️';
+        document.getElementById('pdf-preview-container').style.display = 'none';
+        document.getElementById('image-preview').style.display = 'block';
+        const reader = new FileReader();
+        reader.onload = (e) => { document.getElementById('image-preview').src = e.target.result; };
+        reader.readAsDataURL(file);
+    }
+
+    // Mostra formulário após 1s
+    setTimeout(() => {
+        document.getElementById('processing-box').style.display = 'none';
+        document.getElementById('lead-section').style.display = 'block';
+        document.getElementById('btn-reset').style.display = 'inline-block';
+        document.getElementById('lead-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 1000);
+}
+
+// ─── STAMP PDF ────────────────────────────────────────────
+async function stampFile(file, name, email, whatsapp) {
+    const lib = window.PDFLib || PDFLib;
+    if (!lib) throw new Error('PDFLib não carregado.');
+
+    const arrayBuffer = await file.arrayBuffer();
+    let pdfDoc;
+
+    setProcessingMsg('📄 Aplicando carimbo...');
+
+    if (file.type === 'application/pdf') {
+        pdfDoc = await lib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+    } else {
+        setProcessingMsg('🖼️ Convertendo imagem para PDF...');
+        const tempPdf = await lib.PDFDocument.create();
+        const image = file.type === 'image/png'
+            ? await tempPdf.embedPng(arrayBuffer)
+            : await tempPdf.embedJpg(arrayBuffer);
+        const page = tempPdf.addPage([image.width, image.height]);
+        page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });
+        pdfDoc = tempPdf;
+    }
+
+    const pages = pdfDoc.getPages();
+    const font = await pdfDoc.embedFont(lib.StandardFonts.HelveticaBold);
+    const stampText = `Receita enviada por: ${name} | E-mail: ${email} | WhatsApp: ${whatsapp}`;
+
+    pages.forEach(page => {
+        const { width } = page.getSize();
+        const fontSize = Math.max(7, Math.min(9, width / 70));
+
+        page.drawRectangle({ x: 0, y: 0, width, height: 25, color: lib.rgb(1, 1, 0), opacity: 0.5 });
+
+        const textWidth = font.widthOfTextAtSize(stampText, fontSize);
+        page.drawText(stampText, {
+            x: (width / 2) - (textWidth / 2), y: 8,
+            size: fontSize, font, color: lib.rgb(0, 0, 0)
+        });
+    });
+
+    const pdfBytes = await pdfDoc.save();
+    const fileName = `${name.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+    return new File([pdfBytes], fileName, { type: 'application/pdf' });
+}
+
+// ─── ENVIAR ───────────────────────────────────────────────
+async function handleSend() {
+    const name = document.getElementById('lead-name').value.trim();
+    const email = document.getElementById('lead-email').value.trim();
+    const whatsapp = document.getElementById('lead-whatsapp').value.trim();
+
+    if (!name || !email || !whatsapp) {
+        alert('Informe Nome, E-mail e WhatsApp para continuar.');
+        return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Por favor, insira um e-mail válido.');
+        return;
+    }
+    if (whatsapp.replace(/\D/g, '').length < 10) {
+        alert('Por favor, insira um WhatsApp válido com DDD.');
+        return;
+    }
+    if (!selectedFile) {
+        alert('Selecione um arquivo antes de enviar.');
+        return;
+    }
+
+    const btn = document.getElementById('final-send-btn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Enviando...';
+
+    document.getElementById('processing-box').style.display = 'block';
+    setProcessingMsg('Iniciando...');
+    showStatus('⏳ Processando seu documento...', 'info');
+
+    try {
+        // 1. Aplicar carimbo
+        const stampedFile = await stampFile(selectedFile, name, email, whatsapp);
+
+        // 2. Converter para base64
+        setProcessingMsg('📤 Preparando envio...');
+        const base64 = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(stampedFile);
+        });
+
+        // 3. Upload Supabase (em background, não bloqueia)
+        let publicUrl = '';
+        if (supabaseClient) {
+            try {
+                setProcessingMsg('📂 Salvando no sistema...');
+                const fileName = `${Date.now()}_${name.replace(/\s+/g, '_')}.pdf`;
+                const { error } = await supabaseClient.storage
+                    .from('prescriptions')
+                    .upload(fileName, stampedFile, { cacheControl: '3600', upsert: false });
+
+                if (!error) {
+                    const { data: urlData } = supabaseClient.storage.from('prescriptions').getPublicUrl(fileName);
+                    publicUrl = urlData.publicUrl;
+                }
+            } catch(e) {
+                console.warn('Storage error (não crítico):', e);
             }
+        }
 
-            const pages = pdfDoc.getPages();
-            const font = await pdfDoc.embedFont(lib.StandardFonts.HelveticaBold);
-            const stampText = `Receita enviada por: ${name} | E-mail: ${email} | WhatsApp: ${whatsapp}`;
-            
-            pages.forEach(page => {
-                const { width } = page.getSize();
-                const fontSize = Math.max(7, width / 70); // Responsivo
-                
-                // Retângulo Amarelo (Barra do Rodapé)
-                page.drawRectangle({
-                    x: 0, y: 0,
-                    width: width, height: 25,
-                    color: lib.rgb(1, 1, 0),
-                    opacity: 0.5,
-                });
+        // 4. Enviar para o n8n via fetch com base64
+        setProcessingMsg('🚀 Enviando para o médico...');
+        showStatus('🚀 Enviando...', 'info');
 
-                // Texto Centralizado
-                const textWidth = font.widthOfTextAtSize(stampText, fontSize);
-                page.drawText(stampText, {
-                    x: (width / 2) - (textWidth / 2),
-                    y: 8,
-                    size: fontSize,
-                    font: font,
-                    color: lib.rgb(0, 0, 0),
-                });
+        const payload = {
+            nome: name,
+            email: email,
+            whatsapp: whatsapp,
+            arquivo_base64: base64,
+            arquivo_nome: stampedFile.name,
+            arquivo_url: publicUrl,
+            tipo_origem: 'Receita'
+        };
+
+        // Tenta fetch, se falhar CORS usa o formulário invisible
+        let enviado = false;
+        try {
+            const resp = await fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
-
-            const pdfBytes = await pdfDoc.save();
-            const fileName = file.name.split('.')[0] + '_stamped.pdf';
-            return new File([pdfBytes], fileName, { type: 'application/pdf' });
+            if (resp.ok || resp.status === 200) enviado = true;
+        } catch(corsErr) {
+            console.warn('Fetch bloqueado por CORS, usando bypass form...');
         }
 
+        // Fallback: formulário multipart se CORS bloqueou
+        if (!enviado) {
+            const formData = new FormData();
+            formData.append('nome', name);
+            formData.append('email', email);
+            formData.append('whatsapp', whatsapp);
+            formData.append('arquivo_base64', base64);
+            formData.append('arquivo_nome', stampedFile.name);
+            formData.append('arquivo_url', publicUrl);
+            formData.append('tipo_origem', 'Receita');
 
-        document.addEventListener('DOMContentLoaded', () => {
-        
-        // Elementos Globais
-        const els = {
-            fileInput: document.getElementById('file-input'),
-            dropZone: document.getElementById('drop-zone'),
-            previewBox: document.getElementById('preview-box'),
-            imagePreview: document.getElementById('image-preview'),
-            statusDisplay: document.getElementById('status-display'),
-            pdfFrame: document.getElementById('pdf-frame'),
-            pdfPreviewContainer: document.getElementById('pdf-preview-container'),
-            leadSection: document.getElementById('lead-section'),
-            transcriptionResult: document.getElementById('transcription-result'),
-            processingBox: document.getElementById('processing-box'),
-            btnResetUpload: document.getElementById('btn-reset-upload'),
-            fileNameLabel: document.getElementById('file-name-label')
-        };
-
-        // Supabase Configuration
-        const SUPABASE_URL = 'https://pzewkvmaewnijwhxkqaj.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZXdrdm1hZXduaWp3aHhrcWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjk0ODQsImV4cCI6MjA4ODc0NTQ4NH0.a42vFvm5vUcZ3euBUoNW_QuWM9MKPW2W7ZvcCyl_P4Y';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        let selectedFile = null;
-
-        // --- INICIALIZAÇÃO ---
-        window.addEventListener('load', () => {
-            console.log('Site carregado v3.2.0');
-        });
-
-        // Captura de erro global para ajudar o usuário
-        window.onerror = function(msg, url, line) {
-            alert('Aviso do Site: ' + msg + '\nLinha: ' + line);
-            return false;
-        };
-
-        function showStatus(msg, type = 'info') {
-            if (!els.statusDisplay) return;
-            els.statusDisplay.innerText = msg;
-            els.statusDisplay.className = 'status-msg ' + type;
-            els.statusDisplay.style.display = 'block';
+            // Dispara sem await para não travar
+            fetch(WEBHOOK_URL, { method: 'POST', body: formData }).catch(() => {});
         }
 
-        els.fileInput.addEventListener('change', function (e) {
-            console.log('Arquivo selecionado');
-            if (e.target.files && e.target.files[0]) {
-                const file = e.target.files[0];
-                // Limite de 8MB para garantir estabilidade no envio por e-mail via n8n
-                if (file.size > 8 * 1024 * 1024) {
-                    alert('⚠️ Arquivo muito grande! Por favor, escolha um arquivo com menos de 8MB para que possamos enviar por e-mail com segurança.');
-                    els.fileInput.value = '';
-                    return;
-                }
-                handleFile(file);
-            }
-        });
-
-        function handleFile(file) {
-            console.log('Processando:', file.name);
-            if (!file) return;
-            selectedFile = file;
-
-            // Interface Reset
-            els.dropZone.style.display = 'none';
-            els.previewBox.style.display = 'block';
-            els.leadSection.style.display = 'none';
-            els.transcriptionResult.style.display = 'none';
-            els.processingBox.style.display = 'block';
-            els.btnResetUpload.style.display = 'none';
-            els.fileNameLabel.textContent = file.name;
-
-            // Tipo de arquivo
-            if (file.type === 'application/pdf') {
-                els.imagePreview.style.display = 'none';
-                els.pdfPreviewContainer.style.display = 'block';
-                els.pdfFrame.src = URL.createObjectURL(file);
-                document.getElementById('file-icon').textContent = '📕';
-            } else if (file.type.startsWith('image/')) {
-                els.pdfPreviewContainer.style.display = 'none';
-                els.imagePreview.style.display = 'block';
-                document.getElementById('file-icon').textContent = '🖼️';
-                const reader = new FileReader();
-                reader.onload = (e) => { els.imagePreview.src = e.target.result; }
-                reader.readAsDataURL(file);
-            }
-
-            requestTranscription(file);
+        // 5. Salvar lead no Supabase
+        if (supabaseClient) {
+            supabaseClient.from('leads').insert({
+                nome: name, email, whatsapp,
+                tipo_origem: 'Receita',
+                status: 'Novo',
+                arquivo_url: publicUrl
+            }).then(() => console.log('[SUPABASE] Lead salvo'))
+              .catch(e => console.warn('[SUPABASE]', e));
         }
 
-        async function requestTranscription(file) {
-            const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY';
-            
-            if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY') {
-                console.log('Modo manual (sem chave)');
-                setTimeout(() => {
-                    els.processingBox.style.display = 'none';
-                    els.transcriptionResult.style.display = 'block';
-                    els.leadSection.style.display = 'block';
-                    els.btnResetUpload.style.display = 'inline-block';
-                    
-                    els.transcriptionResult.innerHTML = `
-                        <div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                            <div style="color: #c53030; font-weight: 700; margin-bottom: 5px;">📍 Arquivo Recebido com Sucesso</div>
-                            <p style="font-size: 0.9rem; color: #742a2a;">Recebemos sua imagem. <b>Por favor, informe seus dados logo abaixo</b> para finalizarmos seu atendimento.</p>
-                        </div>
-                    `;
-                    els.leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 1000);
-                return;
-            }
+        // 6. Sucesso
+        document.getElementById('processing-box').style.display = 'none';
+        document.getElementById('lead-form').style.display = 'none';
+        document.getElementById('success-message').style.display = 'block';
+        showStatus('✅ Enviado com sucesso!', 'success');
 
-            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        setTimeout(() => {
+            const targetUrl = (window.addUtmsToUrl ? window.addUtmsToUrl('oferta-premium.html') : 'oferta-premium.html') + window.location.search;
+            window.location.href = targetUrl;
+        }, 1500);
 
-            try {
-                const reader = new FileReader();
-                const base64Promise = new Promise((resolve) => {
-                    reader.onload = () => resolve(reader.result.split(',')[1]);
-                    reader.readAsDataURL(file);
-                });
-                const base64Data = await base64Promise;
-                
-                const prompt = `Analise esta foto de receita médica e extraia:
-                1. Quais os medicamentos prescritos?
-                2. Qual a dosagem e instrução de uso de cada um?
-                3. Responda em Português de forma clara e profissional.`;
-
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: file.type, data: base64Data } }] }]
-                    })
-                });
-
-                const data = await response.json();
-                if (data.error) throw new Error(data.error.message);
-                
-                const aiText = data.candidates[0].content.parts[0].text;
-                window.lastTranscriptionText = aiText;
-
-                els.processingBox.style.display = 'none';
-                els.transcriptionResult.style.display = 'block';
-                els.leadSection.style.display = 'block';
-                els.btnResetUpload.style.display = 'inline-block';
-
-                els.transcriptionResult.innerHTML = `
-                    <div style="background: #f0fff4; border: 1px solid #c6f6d5; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                        <div style="color: #2f855a; font-weight: 700; margin-bottom: 10px;">✅ Leitura da IA Concluída</div>
-                        <div style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.6; color: #1a202c;">${aiText.replace(/\*/g, '')}</div>
-                    </div>
-                `;
-                els.leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-            } catch (err) {
-                console.error('Erro na IA:', err);
-                els.processingBox.style.display = 'none';
-                els.transcriptionResult.style.display = 'block';
-                els.leadSection.style.display = 'block';
-                els.btnResetUpload.style.display = 'inline-block';
-                els.transcriptionResult.innerHTML = `
-                    <div style="background: #fffaf0; border: 1px solid #fbd38d; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                        <div style="color: #c05621; font-weight: 700; margin-bottom: 5px;">⚠️ Análise por Equipe Médica</div>
-                        <p style="font-size: 0.9rem; color: #7b341e;">Não foi possível ler automaticamente agora. Prossiga com seus dados abaixo para análise manual.</p>
-                    </div>
-                `;
-                els.leadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-
-        const finalSendBtn = document.getElementById('final-send-btn');
-        finalSendBtn.addEventListener('click', async function () {
-            const name = document.getElementById('lead-name').value;
-            const email = document.getElementById('lead-email').value;
-            const whatsapp = document.getElementById('lead-whatsapp').value;
-
-            if (!name || !email || !whatsapp) {
-                alert('Informe Nome, E-mail e WhatsApp para continuar.');
-                return;
-            }
-
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert('Por favor, insira um e-mail válido.');
-                return;
-            }
-
-            const phoneDigits = whatsapp.replace(/\D/g, '');
-            if (phoneDigits.length < 10) {
-                alert('Por favor, insira um número de WhatsApp válido (com DDD).');
-                return;
-            }
-
-            finalSendBtn.disabled = true;
-            finalSendBtn.textContent = 'Iniciando...';
-            showStatus('⏳ Iniciando processamento...', 'info');
-
-            try {
-                const isTest = window.location.search.includes('test=true');
-                const webhookPath = isTest ? 'webhook-test/nova-receita' : 'webhook/nova-receita';
-                const webhookUrl = `https://n8n.akinconsultoria.com.br/${webhookPath}`;
-
-                // 1. Preparação e Carimbo no Navegador
-                els.statusDisplay.textContent = '📄 Preparando e Carimbando...';
-                if (!selectedFile.type.includes('pdf')) {
-                    els.statusDisplay.textContent = '🖼️ Convertendo foto em PDF...';
-                }
-                
-                const fileToUpload = await stampFile(selectedFile, name, email, whatsapp);
-                els.statusDisplay.textContent = '✅ Documento pronto.';
-
-                // 2. Popular o Formulário Invisível
-                const bypassForm = document.getElementById('bypass_form');
-                bypassForm.action = webhookUrl; // Garante o caminho correto (teste ou prod)
-
-                document.getElementById('form_nome').value = name;
-                document.getElementById('form_email').value = email;
-                document.getElementById('form_whatsapp').value = whatsapp;
-                document.getElementById('form_transcricao').value = window.lastTranscriptionText || '';
-                
-                const utms = window.getUtmParams ? window.getUtmParams() : {};
-                document.getElementById('form_lead_id').value = utms.lead_id || localStorage.getItem('lead_id') || '';
-
-                // Inserir o arquivo binário no input file do formulário
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(fileToUpload);
-                document.getElementById('form_arquivo').files = dataTransfer.files;
-
-                // 3. Upload para o Supabase Storage
-                let publicUrl = '';
-                try {
-                    els.statusDisplay.textContent = '📂 Processando documento...';
-                    const fileName = `${Date.now()}_${name.replace(/\s+/g, '_')}.pdf`;
-                    
-                    const { error: uploadError } = await supabase.storage
-                        .from('prescriptions')
-                        .upload(fileName, fileToUpload, {
-                            cacheControl: '3600',
-                            upsert: false
-                        });
-
-                    if (!uploadError) {
-                        const { data: urlData } = supabase.storage
-                            .from('prescriptions')
-                            .getPublicUrl(fileName);
-                        publicUrl = urlData.publicUrl;
-                        console.log('[STORAGE] Sucesso:', publicUrl);
-                    } else {
-                        console.warn('[STORAGE ERROR]', uploadError.message);
-                    }
-                } catch (supaErr) {
-                    console.error('[STORAGE EXCEPTION]', supaErr);
-                    // Não trava o fluxo se o storage falhar
-                }
-
-                // 4. Salvar no Supabase Leads (Em segundo plano, não bloqueia o redirect)
-                const saveLeadTask = (async () => {
-                    try {
-                        const leadId = document.getElementById('form_lead_id').value;
-                        const supabasePayload = {
-                            nome: name,
-                            email: email,
-                            whatsapp: whatsapp,
-                            tipo_origem: 'Receita',
-                            status: 'Novo',
-                            arquivo_url: publicUrl,
-                            metadata: {
-                                transcricao: window.lastTranscriptionText || '',
-                                lead_id: leadId
-                            }
-                        };
-
-                        if (leadId && leadId.length > 20) {
-                            await supabase.from('leads').upsert({ id: leadId, ...supabasePayload }, { onConflict: 'id' });
-                        } else {
-                            await supabase.from('leads').insert(supabasePayload);
-                        }
-                        console.log('[SUPABASE] Sincronização concluída.');
-                    } catch (e) {
-                        console.error('[SUPABASE SILENT ERROR]', e);
-                    }
-                })();
-
-                // 5. Disparar Envio e Redirecionar (IMEDIATO)
-                els.statusDisplay.textContent = '🚀 Concluído! Redirecionando...';
-                bypassForm.submit();
-
-                // Mostra sucesso e redireciona (Fluxo rápido)
-                document.getElementById('lead-form').style.display = 'none';
-                document.getElementById('success-message').style.display = 'block';
-                
-                const targetUrl = window.addUtmsToUrl ? window.addUtmsToUrl('oferta-premium.html') : 'oferta-premium.html' + window.location.search;
-                
-                setTimeout(() => { 
-                    window.location.href = targetUrl; 
-                }, 800);
-
-            } catch (err) {
-                console.error('[CRITICAL FLOW ERROR]', err);
-                window.location.href = 'oferta-premium.html' + window.location.search;
-            }
-        });
-
-        function resetFile() {
-            selectedFile = null;
-            els.fileInput.value = '';
-            els.dropZone.style.display = 'flex';
-            els.previewBox.style.display = 'none';
-            els.leadSection.style.display = 'none';
-            els.transcriptionResult.style.display = 'none';
-            document.getElementById('lead-form').style.display = 'block';
-            document.getElementById('success-message').style.display = 'none';
-        }
-
-        els.dropZone.addEventListener('dragover', (e) => { e.preventDefault(); els.dropZone.style.borderColor = '#0047AB'; });
-        els.dropZone.addEventListener('dragleave', () => { els.dropZone.style.borderColor = '#CBD5E0'; });
-        els.dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            els.dropZone.style.borderColor = '#CBD5E0';
-            handleFile(e.dataTransfer.files[0]);
-        });
-
-        }); // END DOMContentLoaded
-    </script>
+    } catch(err) {
+        console.error('[ERRO CRÍTICO]', err);
+        document.getElementById('processing-box').style.display = 'none';
+        showStatus('❌ Erro: ' + err.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Tentar novamente';
+    }
+}
+</script>
 </body>
 </html>
