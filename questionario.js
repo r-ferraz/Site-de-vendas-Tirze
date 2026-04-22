@@ -93,11 +93,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    tipo: 'Novo Lead - Avaliação Gratuita',
+                    tipo: data.tipo || 'Novo Lead - Avaliação Gratuita',
                     lead_id: utms.lead_id || localStorage.getItem('lead_id') || '',
                     nome: data.nome,
                     whatsapp: data.whatsapp,
                     email: data.email,
+                    // Flatten key answers for easier n8n mapping
+                    peso: data.peso || '',
+                    meta_peso: data.meta_peso || '',
+                    objetivos: Array.isArray(data.objetivos) ? data.objetivos.join(', ') : (data.objetivos || ''),
+                    desafios: Array.isArray(data.desafios) ? data.desafios.join(', ') : (data.desafios || ''),
+                    tempo_tentativa: data.tempo_tentativa || '',
+                    sexo: data.sexo || '',
                     respostas_triagem: data,
                     tipo_origem: 'Questionário',
                     utm_source: utms.utm_source || '',
@@ -178,6 +185,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showResults() {
+        // Envia os dados finais (incluindo peso, meta, etc)
+        saveLead({ ...userData, tipo: 'Questionário Concluído - Dados Totais' });
+
         questionnaireBox.style.display = 'none';
         resultsBox.style.display = 'block';
 
