@@ -483,7 +483,14 @@
         els.fileInput.addEventListener('change', function (e) {
             console.log('Arquivo selecionado');
             if (e.target.files && e.target.files[0]) {
-                handleFile(e.target.files[0]);
+                const file = e.target.files[0];
+                // Limite de 8MB para garantir estabilidade no envio por e-mail via n8n
+                if (file.size > 8 * 1024 * 1024) {
+                    alert('⚠️ Arquivo muito grande! Por favor, escolha um arquivo com menos de 8MB para que possamos enviar por e-mail com segurança.');
+                    els.fileInput.value = '';
+                    return;
+                }
+                handleFile(file);
             }
         });
 
@@ -670,7 +677,7 @@
                         transcricao: window.lastTranscriptionText || '',
                         arquivo_base64: base64File,
                         arquivo: base64File,
-                        arquivo_nome: selectedFile.name,
+                        arquivo_nome: fileName,
                         tipo_origem: 'Receita',
                         utm_source: utms.utm_source || '',
                         utm_medium: utms.utm_medium || '',
