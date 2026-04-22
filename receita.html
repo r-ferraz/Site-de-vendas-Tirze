@@ -702,64 +702,48 @@
                     // Não trava o fluxo se o storage falhar
                 }
 
-                // 4. Salvar no Supabase Leads (Com o Link do Arquivo)
-                try {
-                    const leadId = document.getElementById('form_lead_id').value;
-                    const supabasePayload = {
-                        nome: name,
-                        email: email,
-                        whatsapp: whatsapp,
-                        tipo_origem: 'Receita',
-                        status: 'Novo',
-                        arquivo_url: publicUrl,
-                        metadata: {
-                            transcricao: window.lastTranscriptionText || '',
-                            lead_id: leadId
-                        }
-                    };
+                // 4. Salvar no Supabase Leads (Em segundo plano, não bloqueia o redirect)
+                const saveLeadTask = (async () => {
+                    try {
+                        const leadId = document.getElementById('form_lead_id').value;
+                        const supabasePayload = {
+                            nome: name,
+                            email: email,
+                            whatsapp: whatsapp,
+                            tipo_origem: 'Receita',
+                            status: 'Novo',
+                            arquivo_url: publicUrl,
+                            metadata: {
+                                transcricao: window.lastTranscriptionText || '',
+                                lead_id: leadId
+                            }
+                        };
 
-                    // Se temos um ID válido (UUID), usamos o upsert. Senão, fazemos um insert simples.
-                    if (leadId && leadId.length > 20) {
-                         const { error: supaErrResult } = await supabase.from('leads').upsert({
-                            id: leadId,
-                            ...supabasePayload
-                        }, { onConflict: 'id' });
-                        if (supaErrResult) console.error('[SUPABASE UPSERT ERROR]', supaErrResult);
-                    } else {
-                        const { error: supaErrResult } = await supabase.from('leads').insert(supabasePayload);
-                        if (supaErrResult) {
-                            console.error('[SUPABASE INSERT ERROR]', supaErrResult);
-                            // Notifica mas não trava o redirect
+                        if (leadId && leadId.length > 20) {
+                            await supabase.from('leads').upsert({ id: leadId, ...supabasePayload }, { onConflict: 'id' });
+                        } else {
+                            await supabase.from('leads').insert(supabasePayload);
                         }
+                        console.log('[SUPABASE] Sincronização concluída.');
+                    } catch (e) {
+                        console.error('[SUPABASE SILENT ERROR]', e);
                     }
-                    console.log('[SUPABASE] Lead registrado com sucesso.');
-                } catch (supaErr) {
-                    console.error('[DATABASE EXCEPTION]', supaErr);
-                }
+                })();
 
-                // 5. Disparar Envio (CORS Bypass via Form Submit - Para o Médico)
-                els.statusDisplay.textContent = '📤 Enviando para o médico (Modo Seguro)...';
+                // 5. Disparar Envio e Redirecionar (IMEDIATO)
+                els.statusDisplay.textContent = '🚀 Concluído! Redirecionando...';
                 bypassForm.submit();
 
-                // 6. Sucesso e Redirecionamento
-                setTimeout(() => {
-                    document.getElementById('lead-form').style.display = 'none';
-                    document.getElementById('success-message').style.display = 'block';
-                    els.btnResetUpload.style.display = 'none';
-                    
-                    const targetUrl = window.addUtmsToUrl ? window.addUtmsToUrl('oferta-premium.html') : 'oferta-premium.html' + window.location.search;
-                    
-                    // Redireciona em 1.5 segundos (mais rápido e fluido)
-                    setTimeout(() => { 
-                        window.location.href = targetUrl; 
-                    }, 1500);
-                }, 1000);
+                // Mostra sucesso e redireciona (Fluxo rápido)
+                document.getElementById('lead-form').style.display = 'none';
+                document.getElementById('success-message').style.display = 'block';
+                
+                const targetUrl = window.addUtmsToUrl ? window.addUtmsToUrl('oferta-premium.html') : 'oferta-premium.html' + window.location.search;
+                
+                setTimeout(() => { 
+                    window.location.href = targetUrl; 
+                }, 800); // 0.8s para ser quase instantâneo
 
-            } catch (err) {
-                console.error('[PROCESSO ERROR]', err);
-                alert('Ocorreu um erro ao processar. Por favor, tente novamente ou fale com o suporte.');
-                finalSendBtn.disabled = false;
-                finalSendBtn.textContent = 'Enviar para o médico';
             }
         });
 
