@@ -404,6 +404,24 @@ async function handleSend() {
                 if (!error) {
                     const { data: urlData } = supabaseClient.storage.from('prescriptions').getPublicUrl(fileName);
                     publicUrl = urlData.publicUrl;
+
+                    // Acionar webhook do n8n com a URL do arquivo
+                    try {
+                        await fetch('https://n8n.akinconsultoria.com.br/webhook/receita-maori', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                nome: name,
+                                email: email,
+                                whatsapp: whatsapp,
+                                arquivo_url: publicUrl,
+                                tipo_origem: 'Receita'
+                            })
+                        });
+                        console.log('[WEBHOOK] Acionado com sucesso');
+                    } catch(webhookErr) {
+                        console.warn('[WEBHOOK] Erro (não crítico):', webhookErr);
+                    }
                 }
             } catch(e) {
                 console.warn('Storage error (não crítico):', e);
