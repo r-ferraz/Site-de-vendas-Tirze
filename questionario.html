@@ -173,6 +173,14 @@
                 padding: 12px;
                 font-size: 1rem;
                 width: 100%;
+                background-color: white !important; /* Force white background */
+                -webkit-appearance: none;           /* Remove native iOS styles */
+                appearance: none;
+            }
+            /* Ensure date input looks like text input on mobile focus */
+            .q-input:focus {
+                border-color: var(--primary-blue) !important;
+                background-color: white !important;
             }
             .q-container {
                 overflow-x: hidden;
