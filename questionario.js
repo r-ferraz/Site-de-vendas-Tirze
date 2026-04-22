@@ -109,14 +109,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     desafios: Array.isArray(data.desafios) ? data.desafios.join(', ') : (data.desafios || ''),
                     tempo_tentativa: data.tempo_tentativa || '',
                     sexo: data.sexo || '',
-                    // Full readable summary of ALL questions
                     resumo_completo: (window.akinQuestions || []).map(q => {
                         const val = data[q.id];
                         if (!val) return null;
                         const label = Array.isArray(val) ? val.join(', ') : val;
-                        return `${q.question}\nResposta: ${label}`;
-                    }).filter(x => x).join('\n\n'),
-                    respostas_triagem: data,
+                        return `${q.id.toUpperCase()}: ${label}`;
+                    }).filter(x => x).join('\n'),
+                    respostas: data,
+                    origem: 'Questionário'
+                })
                     tipo_origem: 'Questionário',
                     utm_source: utms.utm_source || '',
                     utm_medium: utms.utm_medium || '',
@@ -173,8 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Por favor, insira um número de WhatsApp válido (com DDD).');
                     return;
                 }
-                
-                saveLead(userData);
+                saveLead({ ...userData, tipo: 'Novo Lead Rápido - ' + userData.nome });
             }
         }
 
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showResults() {
         // Envia os dados finais (incluindo peso, meta, etc)
-        saveLead({ ...userData, tipo: 'Questionário Concluído - Dados Totais' });
+        saveLead({ ...userData, tipo: 'Questionário Respondido - ' + userData.nome });
 
         questionnaireBox.style.display = 'none';
         resultsBox.style.display = 'block';
