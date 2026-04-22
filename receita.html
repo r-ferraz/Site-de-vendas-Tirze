@@ -391,17 +391,20 @@
             if (isPDF) {
                 // Carimba cada página do PDF com um rodapé
                 const arrayBuffer = await file.arrayBuffer();
-                const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+                const lib = window.PDFLib || PDFLib;
+                if (!lib) throw new Error('Biblioteca PDFLib não encontrada');
+                
+                const pdfDoc = await lib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
                 const pages = pdfDoc.getPages();
-                const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+                const font = await pdfDoc.embedFont(lib.StandardFonts.Helvetica);
                 const fontSize = 8;
-                const color = PDFLib.rgb(0.4, 0.4, 0.4);
+                const color = lib.rgb(0.4, 0.4, 0.4);
 
                 pages.forEach(page => {
                     const { width } = page.getSize();
                     page.drawRectangle({
                         x: 0, y: 0, width, height: 22,
-                        color: PDFLib.rgb(0.95, 0.95, 0.95),
+                        color: lib.rgb(0.95, 0.95, 0.95),
                     });
                     page.drawText(stamp, {
                         x: 12, y: 7,
@@ -655,7 +658,7 @@
                 });
 
                 const utms = window.getUtmParams ? window.getUtmParams() : {};
-                const response = await fetch('https://n8n.akinconsultoria.com.br/webhook/nova-receita', {
+                const response = await fetch('https://n8n.akinconsultoria.com.br/webhook/triagem-maori', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
