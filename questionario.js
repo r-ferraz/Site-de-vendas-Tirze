@@ -116,8 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         return `${q.id.toUpperCase()}: ${label}`;
                     }).filter(x => x).join('\n'),
                     respostas: data,
-                    origem: 'Questionário'
-                })
+                    origem: 'Questionário',
                     tipo_origem: 'Questionário',
                     utm_source: utms.utm_source || '',
                     utm_medium: utms.utm_medium || '',
