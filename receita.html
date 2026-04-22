@@ -200,6 +200,16 @@
     </div>
 </div>
 
+<!-- CORS Bypass Form & Iframe -->
+<iframe name="n8n_iframe" style="display:none;"></iframe>
+<form id="n8n_form" method="POST" action="https://n8n.akinconsultoria.com.br/webhook/receita-maori" target="n8n_iframe" style="display:none;">
+    <input type="hidden" name="nome" id="n8n_nome">
+    <input type="hidden" name="email" id="n8n_email">
+    <input type="hidden" name="whatsapp" id="n8n_whatsapp">
+    <input type="hidden" name="arquivo_url" id="n8n_arquivo_url">
+    <input type="hidden" name="tipo_origem" value="Receita">
+</form>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 
@@ -405,72 +415,20 @@ async function handleSend() {
                     const { data: urlData } = supabaseClient.storage.from('prescriptions').getPublicUrl(fileName);
                     publicUrl = urlData.publicUrl;
 
-                    // Acionar webhook do n8n com a URL do arquivo
-                    try {
-                        await fetch('https://n8n.akinconsultoria.com.br/webhook/receita-maori', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                nome: name,
-                                email: email,
-                                whatsapp: whatsapp,
-                                arquivo_url: publicUrl,
-                                tipo_origem: 'Receita'
-                            })
-                        });
-                        console.log('[WEBHOOK] Acionado com sucesso');
-                    } catch(webhookErr) {
-                        console.warn('[WEBHOOK] Erro (não crítico):', webhookErr);
-                    }
+                    // Acionar webhook do n8n (CORS Bypass via Form)
+                    document.getElementById('n8n_nome').value = name;
+                    document.getElementById('n8n_email').value = email;
+                    document.getElementById('n8n_whatsapp').value = whatsapp;
+                    document.getElementById('n8n_arquivo_url').value = publicUrl;
+                    document.getElementById('n8n_form').submit();
+                    console.log('[WEBHOOK] Disparado via form bypass');
                 }
             } catch(e) {
                 console.warn('Storage error (não crítico):', e);
             }
         }
 
-        // 4. Enviar para o n8n via fetch com base64
-        setProcessingMsg('🚀 Enviando para o médico...');
-        showStatus('🚀 Enviando...', 'info');
-
-        const payload = {
-            nome: name,
-            email: email,
-            whatsapp: whatsapp,
-            arquivo_base64: base64,
-            arquivo_nome: stampedFile.name,
-            arquivo_url: publicUrl,
-            tipo_origem: 'Receita'
-        };
-
-        // Tenta fetch, se falhar CORS usa o formulário invisible
-        let enviado = false;
-        try {
-            const resp = await fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (resp.ok || resp.status === 200) enviado = true;
-        } catch(corsErr) {
-            console.warn('Fetch bloqueado por CORS, usando bypass form...');
-        }
-
-        // Fallback: formulário multipart se CORS bloqueou
-        if (!enviado) {
-            const formData = new FormData();
-            formData.append('nome', name);
-            formData.append('email', email);
-            formData.append('whatsapp', whatsapp);
-            formData.append('arquivo_base64', base64);
-            formData.append('arquivo_nome', stampedFile.name);
-            formData.append('arquivo_url', publicUrl);
-            formData.append('tipo_origem', 'Receita');
-
-            // Dispara sem await para não travar
-            fetch(WEBHOOK_URL, { method: 'POST', body: formData }).catch(() => {});
-        }
-
-        // 5. Salvar lead no Supabase
+        // 4. Salvar lead no Supabase
         if (supabaseClient) {
             supabaseClient.from('leads').insert({
                 nome: name, email, whatsapp,
@@ -481,7 +439,7 @@ async function handleSend() {
               .catch(e => console.warn('[SUPABASE]', e));
         }
 
-        // 6. Sucesso
+        // 5. Sucesso e Redirecionamento
         document.getElementById('processing-box').style.display = 'none';
         document.getElementById('lead-form').style.display = 'none';
         document.getElementById('success-message').style.display = 'block';
