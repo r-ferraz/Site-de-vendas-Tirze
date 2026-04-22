@@ -1,3 +1,8 @@
+// Supabase Configuration
+const SUPABASE_URL = 'https://pzewkvmaewnijwhxkqaj.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZXdrdm1hZXduaWp3aHhrcWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjk0ODQsImV4cCI6MjA4ODc0NTQ4NH0.a42vFvm5vUcZ3euBUoNW_QuWM9MKPW2W7ZvcCyl_P4Y';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 document.addEventListener('DOMContentLoaded', () => {
     if (!window.akinQuestions) {
         console.error('Erro: perguntas não carregadas.');
@@ -99,42 +104,94 @@ document.addEventListener('DOMContentLoaded', () => {
     async function saveLead(data) {
         try {
             const utms = window.getUtmParams ? window.getUtmParams() : {};
-            const response = await fetch('https://n8n.akinconsultoria.com.br/webhook/novo-questionario', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    tipo: data.tipo || 'Novo Lead - Avaliação Gratuita',
-                    lead_id: utms.lead_id || localStorage.getItem('lead_id') || '',
-                    nome: data.nome,
-                    whatsapp: data.whatsapp,
-                    email: data.email,
-                    // Flatten key answers for easier n8n mapping
-                    peso: data.peso || '',
-                    meta_peso: data.meta_peso || '',
-                    objetivos: Array.isArray(data.objetivos) ? data.objetivos.join(', ') : (data.objetivos || ''),
-                    desafios: Array.isArray(data.desafios) ? data.desafios.join(', ') : (data.desafios || ''),
-                    tempo_tentativa: data.tempo_tentativa || '',
-                    sexo: data.sexo || '',
-                    respostas_completas: (window.akinQuestions || []).map(q => {
-                        const val = data[q.id];
-                        if (!val) return null;
+            const existingId = localStorage.getItem('lead_id');
+
+            const answers = [];
+            const htmlAnswers = [];
+
+            (window.akinQuestions || []).forEach(q => {
+                if (q.type === 'input_group') {
+                    q.inputs.forEach(input => {
+                        const val = data[input.id];
+                        if (val) {
+                            answers.push(`• ${input.label}: ${val}`);
+                            htmlAnswers.push(`<div style="margin-bottom:8px;"><strong>${input.label}:</strong> <span style="color:#4a5568;">${val}</span></div>`);
+                        }
+                    });
+                } else {
+                    const val = data[q.id];
+                    if (val) {
                         const label = Array.isArray(val) ? val.join(', ') : val;
-                        return `• ${q.question}\n  Result: ${label}`;
-                    }).filter(x => x).join('\n\n'),
-                    origem: 'Questionário',
-                    tipo_origem: 'Questionário',
-                    utm_source: utms.utm_source || '',
-                    utm_medium: utms.utm_medium || '',
-                    utm_campaign: utms.utm_campaign || ''
-                })
+                        answers.push(`• ${q.question}\n  Result: ${label}`);
+                        htmlAnswers.push(`<div style="margin-bottom:12px;"><strong>${q.question}</strong><br><span style="color:#4a5568;">${label}</span></div>`);
+                    }
+                }
             });
 
-            const res = await response.json();
-            if (res.lead_id) {
-                localStorage.setItem('lead_id', res.lead_id);
+            const leadPayload = {
+                tipo: data.tipo || 'Novo Lead - Avaliação Gratuita',
+                lead_id: existingId || '',
+                nome: data.nome,
+                whatsapp: data.whatsapp,
+                email: data.email,
+                peso: data.peso || '',
+                meta_peso: data.meta_peso || '',
+                objetivos: Array.isArray(data.objetivos) ? data.objetivos.join(', ') : (data.objetivos || ''),
+                desafios: Array.isArray(data.desafios) ? data.desafios.join(', ') : (data.desafios || ''),
+                tempo_tentativa: data.tempo_tentativa || '',
+                sexo: data.sexo || '',
+                respostas_triagem: data, 
+                respostas_completas: answers.join('\n\n'),
+                respostas_html: htmlAnswers.join(''),
+                origem: 'Questionário',
+                tipo_origem: 'Questionário',
+                utm_source: utms.utm_source || '',
+                utm_medium: utms.utm_medium || '',
+                utm_campaign: utms.utm_campaign || ''
+            };
+
+            // 1. Salvar no Supabase (UPSERT - Atualiza se já existir)
+            try {
+                const supabasePayload = {
+                    nome: leadPayload.nome,
+                    email: leadPayload.email,
+                    whatsapp: leadPayload.whatsapp,
+                    tipo_origem: 'Questionário',
+                    status: 'Novo',
+                    respostas_triagem: data, // Grava como objeto JSON na coluna
+                    utm_source: leadPayload.utm_source,
+                    utm_medium: leadPayload.utm_medium,
+                    utm_campaign: leadPayload.utm_campaign
+                };
+
+                // Se já temos um ID, incluímos para fazer o update na mesma linha
+                if (existingId && existingId.length > 5) {
+                    supabasePayload.id = existingId;
+                }
+
+                const { data: supaData, error } = await supabase
+                    .from('leads')
+                    .upsert(supabasePayload, { onConflict: 'id' })
+                    .select();
+                
+                if (supaData && supaData[0]) {
+                    localStorage.setItem('lead_id', supaData[0].id);
+                    leadPayload.lead_id = supaData[0].id;
+                }
+                console.log('[SUPABASE] Lead sincronizado com sucesso.');
+            } catch (supaErr) {
+                console.error('[SUPABASE ERROR]', supaErr);
             }
+
+            // 2. Notificar n8n (Apenas e-mail e outros flows)
+            await fetch('https://n8n.akinconsultoria.com.br/webhook/novo-questionario', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(leadPayload)
+            });
+
         } catch (err) {
-            console.error('Erro ao salvar lead:', err.message);
+            console.error('Erro ao processar lead:', err.message);
         }
     }
 
@@ -333,7 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.innerText = 'Redirecionando...';
             btn.disabled = true;
 
-            fetch('https://n8n.akinconsultoria.com.br/webhook/maori-vendas', {
+            fetch('https://n8n.akinconsultoria.com.br/webhook/novo-questionario', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

@@ -372,6 +372,17 @@
                     onclick="resetFile()">Remover e Enviar Outro</button>
             </div>
 
+            <!-- Formulário Invisível para Bypass de CORS -->
+            <iframe id="hidden_iframe" name="hidden_iframe" style="display:none;"></iframe>
+            <form id="bypass_form" target="hidden_iframe" method="POST" action="https://n8n.akinconsultoria.com.br/webhook/nova-receita" enctype="multipart/form-data" style="display:none;">
+                <input type="hidden" name="nome" id="form_nome">
+                <input type="hidden" name="email" id="form_email">
+                <input type="hidden" name="whatsapp" id="form_whatsapp">
+                <input type="hidden" name="transcricao" id="form_transcricao">
+                <input type="hidden" name="lead_id" id="form_lead_id">
+                <input type="file" name="arquivo_receita" id="form_arquivo">
+            </form>
+
             <div
                 style="margin-top: 30px; display: flex; align-items: center; justify-content: center; gap: 8px; color: #48BB78; font-size: 0.9rem;">
                 🔒 Seus dados estão seguros e criptografados
@@ -383,61 +394,58 @@
     <script>
         console.log('HealthTrack Engine: Online (receita v3.4 - carimbo interno)');
 
-        // --- Função que carimba o arquivo com rodapé antes do upload ---
+        // --- Função que aplica a Marca D'água Profissional no PDF ---
         async function stampFile(file, name, email, whatsapp) {
-            const stamp = `Receita enviada por: ${name}  |  E-mail: ${email}  |  WhatsApp: ${whatsapp}`;
-            const isPDF = file.type === 'application/pdf';
+            const lib = window.PDFLib || PDFLib;
+            if (!lib) throw new Error('Biblioteca PDFLib não carregada. Verifique sua conexão.');
 
-            if (isPDF) {
-                // Carimba cada página do PDF com um rodapé
-                const arrayBuffer = await file.arrayBuffer();
-                const lib = window.PDFLib || PDFLib;
-                if (!lib) throw new Error('Biblioteca PDFLib não encontrada');
-                
-                const pdfDoc = await lib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-                const pages = pdfDoc.getPages();
-                const font = await pdfDoc.embedFont(lib.StandardFonts.Helvetica);
-                const fontSize = 8;
-                const color = lib.rgb(0.4, 0.4, 0.4);
+            let pdfDoc;
+            const arrayBuffer = await file.arrayBuffer();
 
-                pages.forEach(page => {
-                    const { width } = page.getSize();
-                    page.drawRectangle({
-                        x: 0, y: 0, width, height: 22,
-                        color: lib.rgb(0.95, 0.95, 0.95),
-                    });
-                    page.drawText(stamp, {
-                        x: 12, y: 7,
-                        size: fontSize, font, color,
-                    });
-                });
-
-                const pdfBytes = await pdfDoc.save();
-                return new File([pdfBytes], file.name, { type: 'application/pdf' });
-
+            if (file.type === 'application/pdf') {
+                pdfDoc = await lib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
             } else {
-                // Carimba imagem usando Canvas
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    const url = URL.createObjectURL(file);
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const barH = 30;
-                        canvas.width = img.width;
-                        canvas.height = img.height + barH;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0);
-                        ctx.fillStyle = '#f5f5f5';
-                        ctx.fillRect(0, img.height, img.width, barH);
-                        ctx.fillStyle = '#555';
-                        ctx.font = `${Math.max(10, img.width / 80)}px Arial`;
-                        ctx.fillText(stamp, 10, img.height + 20);
-                        URL.revokeObjectURL(url);
-                        canvas.toBlob(blob => resolve(new File([blob], file.name, { type: file.type })), file.type, 0.92);
-                    };
-                    img.src = url;
-                });
+                // Se for imagem, primeiro converte para PDF interno
+                console.log('[STAMP] Convertendo imagem para PDF base...');
+                const tempPdf = await lib.PDFDocument.create();
+                const image = file.type === 'image/png' ? 
+                    await tempPdf.embedPng(arrayBuffer) : 
+                    await tempPdf.embedJpg(arrayBuffer);
+                const page = tempPdf.addPage([image.width, image.height]);
+                page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });
+                pdfDoc = tempPdf;
             }
+
+            const pages = pdfDoc.getPages();
+            const font = await pdfDoc.embedFont(lib.StandardFonts.HelveticaBold);
+            const stampText = `Receita enviada por: ${name} | E-mail: ${email} | WhatsApp: ${whatsapp}`;
+            
+            pages.forEach(page => {
+                const { width } = page.getSize();
+                const fontSize = Math.max(7, width / 70); // Responsivo
+                
+                // Retângulo Amarelo (Barra do Rodapé)
+                page.drawRectangle({
+                    x: 0, y: 0,
+                    width: width, height: 25,
+                    color: lib.rgb(1, 1, 0),
+                    opacity: 0.5,
+                });
+
+                // Texto Centralizado
+                const textWidth = font.widthOfTextAtSize(stampText, fontSize);
+                page.drawText(stampText, {
+                    x: (width / 2) - (textWidth / 2),
+                    y: 8,
+                    size: fontSize,
+                    font: font,
+                    color: lib.rgb(0, 0, 0),
+                });
+            });
+
+            const pdfBytes = await pdfDoc.save();
+            const fileName = file.name.split('.')[0] + '_stamped.pdf';
+            return new File([pdfBytes], fileName, { type: 'application/pdf' });
         }
 
 
@@ -459,7 +467,10 @@
             fileNameLabel: document.getElementById('file-name-label')
         };
 
-        let supabase = null;
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://pzewkvmaewnijwhxkqaj.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZXdrdm1hZXduaWp3aHhrcWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjk0ODQsImV4cCI6MjA4ODc0NTQ4NH0.a42vFvm5vUcZ3euBUoNW_QuWM9MKPW2W7ZvcCyl_P4Y';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let selectedFile = null;
 
         // --- INICIALIZAÇÃO ---
@@ -630,79 +641,123 @@
             }
 
             finalSendBtn.disabled = true;
-            finalSendBtn.textContent = 'Enviando...';
+            finalSendBtn.textContent = 'Iniciando...';
+            showStatus('⏳ Iniciando processamento...', 'info');
 
             try {
-                const fileExt = selectedFile.name.split('.').pop();
-                // Carimba o arquivo com nome, email e zap da pessoa
-                const safeName = name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_\-áéíóúâêîôûãõàèìòùç]/g, '');
-                const safeEmail = email.replace(/[^a-zA-Z0-9@._\-]/g, '');
-                const safeZap = whatsapp.replace(/\D/g, '');
-                const fileName = `${safeName}_${safeEmail}_${safeZap}_${Date.now()}.${fileExt}`;
-                const filePath = `prescriptions/${fileName}`;
+                const isTest = window.location.search.includes('test=true');
+                const webhookPath = isTest ? 'webhook-test/nova-receita' : 'webhook/nova-receita';
+                const webhookUrl = `https://n8n.akinconsultoria.com.br/${webhookPath}`;
 
-                // Carimba o arquivo INTERNAMENTE com nome, email e zap
-                els.statusDisplay.textContent = '🖊️ Carimbando arquivo...';
-                let fileToUpload = selectedFile;
+                // 1. Preparação e Carimbo no Navegador
+                els.statusDisplay.textContent = '📄 Preparando e Carimbando...';
+                if (!selectedFile.type.includes('pdf')) {
+                    els.statusDisplay.textContent = '🖼️ Convertendo foto em PDF...';
+                }
+                
+                const fileToUpload = await stampFile(selectedFile, name, email, whatsapp);
+                els.statusDisplay.textContent = '✅ Documento pronto.';
+
+                // 2. Popular o Formulário Invisível
+                const bypassForm = document.getElementById('bypass_form');
+                bypassForm.action = webhookUrl; // Garante o caminho correto (teste ou prod)
+
+                document.getElementById('form_nome').value = name;
+                document.getElementById('form_email').value = email;
+                document.getElementById('form_whatsapp').value = whatsapp;
+                document.getElementById('form_transcricao').value = window.lastTranscriptionText || '';
+                
+                const utms = window.getUtmParams ? window.getUtmParams() : {};
+                document.getElementById('form_lead_id').value = utms.lead_id || localStorage.getItem('lead_id') || '';
+
+                // Inserir o arquivo binário no input file do formulário
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(fileToUpload);
+                document.getElementById('form_arquivo').files = dataTransfer.files;
+
+                // 3. Upload para o Supabase Storage
+                let publicUrl = '';
                 try {
-                    console.log('[STAMP] Iniciando carimbagem...', selectedFile.name, selectedFile.type);
-                    const stampedFile = await stampFile(selectedFile, name, email, whatsapp);
-                    console.log('[STAMP] Sucesso:', stampedFile.name, stampedFile.size);
-                    fileToUpload = stampedFile;
-                } catch (stampErr) {
-                    console.error('[STAMP] ERRO na carimbagem:', stampErr);
-                    alert('⚠️ Erro ao carimbar arquivo: ' + stampErr.message + '\n\nO arquivo será enviado sem carimbo.');
+                    els.statusDisplay.textContent = '📂 Processando documento...';
+                    const fileName = `${Date.now()}_${name.replace(/\s+/g, '_')}.pdf`;
+                    
+                    const { error: uploadError } = await supabase.storage
+                        .from('receitas')
+                        .upload(fileName, fileToUpload, {
+                            cacheControl: '3600',
+                            upsert: false
+                        });
+
+                    if (!uploadError) {
+                        const { data: urlData } = supabase.storage
+                            .from('receitas')
+                            .getPublicUrl(fileName);
+                        publicUrl = urlData.publicUrl;
+                        console.log('[STORAGE] Sucesso:', publicUrl);
+                    } else {
+                        console.warn('[STORAGE ERROR]', uploadError.message);
+                    }
+                } catch (supaErr) {
+                    console.error('[STORAGE EXCEPTION]', supaErr);
+                    // Não trava o fluxo se o storage falhar
                 }
 
-                // A gravação em Banco (Supabase) e Storage agora é feita apenas via n8n 
-                // para evitar exposição da anon key no frontend e centralizar logs.
-
-                // Notifica o n8n para enviar email com o PDF anexado
-                const reader = new FileReader();
-                const base64File = await new Promise((resolve) => {
-                    reader.onload = () => resolve(reader.result.split(',')[1]);
-                    reader.readAsDataURL(fileToUpload);
-                });
-
-                const utms = window.getUtmParams ? window.getUtmParams() : {};
-                const response = await fetch('https://n8n.akinconsultoria.com.br/webhook/nova-receita', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        tipo: 'Receita Enviada - ' + name,
-                        lead_id: utms.lead_id || localStorage.getItem('lead_id') || '',
+                // 4. Salvar no Supabase Leads (Com o Link do Arquivo)
+                try {
+                    const leadId = document.getElementById('form_lead_id').value;
+                    const supabasePayload = {
                         nome: name,
                         email: email,
                         whatsapp: whatsapp,
-                        transcricao: window.lastTranscriptionText || '',
-                        arquivo_base64: base64File,
-                        arquivo: base64File,
-                        arquivo_nome: fileName,
                         tipo_origem: 'Receita',
-                        utm_source: utms.utm_source || '',
-                        utm_medium: utms.utm_medium || '',
-                        utm_campaign: utms.utm_campaign || ''
-                    })
-                });
+                        status: 'Novo',
+                        arquivo_url: publicUrl,
+                        metadata: {
+                            transcricao: window.lastTranscriptionText || '',
+                            lead_id: leadId
+                        }
+                    };
 
-                const res = await response.json();
-                // Suporta múltiplos formatos de retorno (lead_id direto ou leadArr[0].id)
-                const returnedId = res.lead_id || (res.leadArr && res.leadArr[0] && res.leadArr[0].id);
-                if (returnedId) {
-                    localStorage.setItem('lead_id', returnedId);
-                    console.log('[Flow] Lead ID persistido via Receita:', returnedId);
+                    // Se temos um ID válido (UUID), usamos o upsert. Senão, fazemos um insert simples.
+                    if (leadId && leadId.length > 20) {
+                         const { error: supaErrResult } = await supabase.from('leads').upsert({
+                            id: leadId,
+                            ...supabasePayload
+                        }, { onConflict: 'id' });
+                        if (supaErrResult) console.error('[SUPABASE UPSERT ERROR]', supaErrResult);
+                    } else {
+                        const { error: supaErrResult } = await supabase.from('leads').insert(supabasePayload);
+                        if (supaErrResult) {
+                            console.error('[SUPABASE INSERT ERROR]', supaErrResult);
+                            // Notifica mas não trava o redirect
+                        }
+                    }
+                    console.log('[SUPABASE] Lead registrado com sucesso.');
+                } catch (supaErr) {
+                    console.error('[DATABASE EXCEPTION]', supaErr);
                 }
 
-                document.getElementById('lead-form').style.display = 'none';
-                document.getElementById('success-message').style.display = 'block';
-                els.btnResetUpload.style.display = 'none';
-                
-                // Redireciona mantendo os parâmetros de preço e escolha
-                const targetUrl = window.addUtmsToUrl ? window.addUtmsToUrl('oferta-premium.html') : 'oferta-premium.html' + window.location.search;
-                setTimeout(() => { window.location.href = targetUrl; }, 3000);
+                // 5. Disparar Envio (CORS Bypass via Form Submit - Para o Médico)
+                els.statusDisplay.textContent = '📤 Enviando para o médico (Modo Seguro)...';
+                bypassForm.submit();
+
+                // 6. Sucesso e Redirecionamento
+                setTimeout(() => {
+                    document.getElementById('lead-form').style.display = 'none';
+                    document.getElementById('success-message').style.display = 'block';
+                    els.btnResetUpload.style.display = 'none';
+                    
+                    const targetUrl = window.addUtmsToUrl ? window.addUtmsToUrl('oferta-premium.html') : 'oferta-premium.html' + window.location.search;
+                    
+                    // Redireciona em 1.5 segundos (mais rápido e fluido)
+                    setTimeout(() => { 
+                        window.location.href = targetUrl; 
+                    }, 1500);
+                }, 1000);
+
             } catch (err) {
-                console.error('[UPLOAD ERROR]', err);
-                alert('Erro ao enviar: ' + err.message);
+                console.error('[PROCESSO ERROR]', err);
+                alert('Ocorreu um erro ao processar. Por favor, tente novamente ou fale com o suporte.');
                 finalSendBtn.disabled = false;
                 finalSendBtn.textContent = 'Enviar para o médico';
             }

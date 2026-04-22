@@ -1,0 +1,49 @@
+{
+  "name": "Maori - Receita Form Bypass v1.45",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "receita-form",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-form",
+      "name": "Webhook Form",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst binary = $input.first().binary || {};\n\n// Renomeia o arquivo para 'data' para o Gmail\nreturn [{\n    json: input,\n    binary: {\n        data: binary.arquivo_receita || Object.values(binary)[0]\n    }\n}];"
+      },
+      "id": "parse-form",
+      "name": "Parse Form Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "sendTo": "relatorios1@akinconsultoria.com",
+        "subject": "=📄 Nova Receita (Form) - {{ $json.nome }}",
+        "message": "=Recebemos uma nova receita de {{ $json.nome }}.\nEmail: {{ $json.email }}\nWhatsApp: {{ $json.whatsapp }}\n\nO PDF carimbado está em anexo.",
+        "appendAttahments": true,
+        "options": {
+          "attachmentsBinary": "data"
+        }
+      },
+      "id": "gmail-form",
+      "name": "Gmail Form",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [440, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Form": { "main": [[{ "node": "Parse Form Data", "type": "main", "index": 0 }]] },
+    "Parse Form Data": { "main": [[{ "node": "Gmail Form", "type": "main", "index": 0 }]] }
+  }
+}

@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerText = 'Redirecionando...';
         btn.disabled = true;
 
-        fetch('https://n8n.akinconsultoria.com.br/webhook/maori-vendas', {
+        fetch('https://n8n.akinconsultoria.com.br/webhook/novo-questionario', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

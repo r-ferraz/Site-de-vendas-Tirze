@@ -1,5 +1,5 @@
 {
-  "name": "Maori - Flow 3 - Questionário",
+  "name": "My workflow 7",
   "nodes": [
     {
       "parameters": {
@@ -10,42 +10,54 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "webhook-questionario",
+      "id": "ef5f7fa1-e8b1-460a-b277-90c1c70567d7",
       "name": "Webhook Questionário",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [0, 300]
+      "position": [
+        460,
+        460
+      ]
     },
     {
       "parameters": {
         "jsCode": "// Extrair dados do questionário\nconst input = $input.first().json;\nconst data = input.body || input;\n\nreturn [{ json: data }];"
       },
-      "id": "extrair-questionario",
+      "id": "169d6b91-984d-42d8-8cf3-2729ac0d9c9d",
       "name": "Extrair Dados",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [220, 300]
+      "position": [
+        680,
+        460
+      ]
     },
     {
       "parameters": {
         "jsCode": "// Decidir se faz INSERT ou UPDATE\nconst data = $input.first().json;\nconst leadId = data.lead_id;\n\n// Se já tem lead_id, pode ser que o lead já exista (veio da receita antes)\n// Nesse caso faremos upsert/update. Senão, insert novo.\nreturn [{\n  json: {\n    ...data,\n    hasExistingLead: !!(leadId && leadId.length > 10)\n  }\n}];"
       },
-      "id": "verificar-lead",
+      "id": "408d9ea5-7433-4662-9951-d718240015f7",
       "name": "Verificar Lead",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [440, 300]
+      "position": [
+        900,
+        460
+      ]
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.SUPABASE_URL }}/rest/v1/leads",
+        "url": "=https://pzewkvmaewnijwhxkqaj.supabase.co/rest/v1/leads",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            { "name": "Prefer", "value": "return=representation" }
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
           ]
         },
         "sendBody": true,
@@ -53,55 +65,124 @@
         "jsonBody": "={\n  \"nome\": \"{{ $json.nome }}\",\n  \"email\": \"{{ $json.email }}\",\n  \"whatsapp\": \"{{ $json.whatsapp }}\",\n  \"tipo_origem\": \"Questionário\",\n  \"status\": \"Novo\",\n  \"respostas_triagem\": {{ JSON.stringify($json.respostas_triagem || {}) }},\n  \"utm_source\": \"{{ $json.utm_source || '' }}\",\n  \"utm_medium\": \"{{ $json.utm_medium || '' }}\",\n  \"utm_campaign\": \"{{ $json.utm_campaign || '' }}\"\n}",
         "options": {}
       },
-      "id": "salvar-lead-questionario",
+      "id": "5aacd824-2939-4d2b-a9b2-a27e797b0989",
       "name": "Salvar Lead",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [660, 300],
+      "position": [
+        1120,
+        460
+      ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "SUPABASE_CREDENTIAL_ID",
-          "name": "Supabase Service Role"
+          "id": "LC8sDOppUy88leE6",
+          "name": "Supabase - Relatórios1 - Maori Vendas"
         }
       }
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://n8n.akinconsultoria.com.br/webhook/email-clinica",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"tipo\": \"Novo Questionário\",\n  \"nome\": \"{{ $('Extrair Dados').first().json.nome }}\",\n  \"email\": \"{{ $('Extrair Dados').first().json.email }}\",\n  \"whatsapp\": \"{{ $('Extrair Dados').first().json.whatsapp }}\",\n  \"respostas_html\": \"{{ $('Extrair Dados').first().json.respostas_html || '' }}\"\n}",
-        "options": { "timeout": 5000 }
-      },
-      "id": "email-clinica-questionario",
-      "name": "Email Clínica",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [880, 400],
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
         "jsCode": "// Retornar lead_id para o frontend\nconst leadData = $('Salvar Lead').first().json;\nconst lead = Array.isArray(leadData) ? leadData[0] : leadData;\n\nreturn [{\n  json: {\n    success: true,\n    lead_id: lead ? lead.id : '',\n    message: 'Questionário salvo com sucesso'\n  }\n}];"
       },
-      "id": "responder-questionario",
+      "id": "38c488ab-e3eb-4313-a5fb-b0aaa0f52720",
       "name": "Responder",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1100, 300]
+      "position": [
+        1560,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "felipetavares1996@gmail.com",
+        "subject": "=Novo Questionário - {{ $('Extrair Dados').first().json.nome }}",
+        "message": "=<h2>Novo Questionário Recebido</h2> <p><strong>Nome:</strong> {{ $('Extrair Dados').first().json.nome }}</p> <p><strong>Email:</strong> {{ $('Extrair Dados').first().json.email }}</p> <p><strong>WhatsApp:</strong> {{ $('Extrair Dados').first().json.whatsapp }}</p> <p><strong>Respostas:</strong></p> {{ $('Extrair Dados').first().json.respostas_html || 'Sem respostas detalhadas' }}",
+        "options": {}
+      },
+      "id": "635523e4-9a63-4fa9-a66c-1e774165aa85",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1320,
+        460
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6u2Km5zqWzHgTjSx",
+          "name": "Gmail account"
+        }
+      }
     }
   ],
+  "pinData": {},
   "connections": {
-    "Webhook Questionário": { "main": [[{ "node": "Extrair Dados", "type": "main", "index": 0 }]] },
-    "Extrair Dados": { "main": [[{ "node": "Verificar Lead", "type": "main", "index": 0 }]] },
-    "Verificar Lead": { "main": [[{ "node": "Salvar Lead", "type": "main", "index": 0 }]] },
+    "Webhook Questionário": {
+      "main": [
+        [
+          {
+            "node": "Extrair Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrair Dados": {
+      "main": [
+        [
+          {
+            "node": "Verificar Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar Lead": {
+      "main": [
+        [
+          {
+            "node": "Salvar Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Salvar Lead": {
-      "main": [[
-        { "node": "Email Clínica", "type": "main", "index": 0 },
-        { "node": "Responder", "type": "main", "index": 0 }
-      ]]
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Responder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "settings": { "executionOrder": "v1" }
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5e20a3ce-b776-4138-8ffc-1a2c8900907d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fdc0b7bb8588bb91c41669ce02d5d1341b1d405d1bd8776fcc821ad701343537"
+  },
+  "id": "iaKKgcOJmk9Qw8OL",
+  "tags": []
 }

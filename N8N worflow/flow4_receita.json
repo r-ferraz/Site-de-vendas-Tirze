@@ -1,14 +1,12 @@
 {
-  "name": "Maori - Flow 4 - Receita",
+  "name": "Maori - Receita com Marca Dagua",
   "nodes": [
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "nova-receita",
+        "path": "receita-maori",
         "responseMode": "lastNode",
-        "options": {
-          "allowedOrigins": "*"
-        }
+        "options": { "allowedOrigins": "*" }
       },
       "id": "webhook-receita",
       "name": "Webhook Receita",
@@ -18,9 +16,9 @@
     },
     {
       "parameters": {
-        "jsCode": "// Extrair dados da receita\nconst input = $input.first().json;\nconst data = input.body || input;\n\nreturn [{ json: data }];"
+        "jsCode": "const input = $input.first().json;\nconst binaryParts = $input.first().binary || {};\n\n// Se vier via FormData (binário direto)\nif (binaryParts.arquivo_receita) {\n    return [{\n        json: input,\n        binary: {\n            data: binaryParts.arquivo_receita\n        }\n    }];\n}\n\n// Suporte para o modo texto antigo (fallback)\nlet data = input.body || input;\nif (typeof data === 'string') {\n  try { data = JSON.parse(data); } catch(e) {}\n}\n\nreturn [{ json: data, binary: binaryParts }];"
       },
-      "id": "extrair-receita",
+      "id": "extrair-dados",
       "name": "Extrair Dados",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -28,116 +26,54 @@
     },
     {
       "parameters": {
-        "jsCode": "// Salvar arquivo no Supabase Storage via API\nconst data = $input.first().json;\n\n// Se o arquivo veio como base64, preparar para upload\nconst hasFile = data.arquivo_base64 && data.arquivo_base64.length > 100;\n\nreturn [{\n  json: {\n    ...data,\n    hasFile,\n    arquivo_url: data.arquivo_url || ''\n  }\n}];"
+        "language": "python",
+        "pythonCode": "import base64\nimport io\nfrom pypdf import PdfReader, PdfWriter\nfrom reportlab.pdfgen import canvas\nfrom reportlab.lib.pagesizes import A4\nfrom reportlab.lib.colors import Color\n\nitem = _input.first().json\n\n# Decodificar PDF base64\npdf_bytes = base64.b64decode(item['arquivo_base64'])\n\n# Dados do cliente\nnome = item.get('nome', '')\nemail = item.get('email', '')\ntelefone = item.get('whatsapp', '')\nmarca_texto = f'Receita enviada por: {nome} | E-mail: {email} | WhatsApp: {telefone}'\n\n# Criar rodape com marca dagua\npacket = io.BytesIO()\ncan = canvas.Canvas(packet, pagesize=A4)\nwidth, height = A4\n\n# Fundo amarelo no rodape\ncan.setFillColor(Color(1, 1, 0, alpha=0.5))\ncan.rect(0, 0, width, 25, fill=True, stroke=False)\n\n# Texto do rodape\ncan.setFillColor(Color(0, 0, 0, alpha=1))\ncan.setFont('Helvetica', 8)\ncan.drawCentredString(width/2, 8, marca_texto)\ncan.save()\n\npacket.seek(0)\nwatermark_pdf = PdfReader(packet)\n\n# Aplicar em todas as paginas\nreader = PdfReader(io.BytesIO(pdf_bytes))\nwriter = PdfWriter()\n\nfor page in reader.pages:\n    page.merge_page(watermark_pdf.pages[0])\n    writer.add_page(page)\n\n# Exportar PDF final\noutput = io.BytesIO()\nwriter.write(output)\noutput.seek(0)\n\npdf_final_base64 = base64.b64encode(output.read()).decode('utf-8')\n\nreturn [{\n    'json': {\n        'nome': nome,\n        'email': email,\n        'whatsapp': telefone\n    },\n    'binary': {\n        'data': {\n            'data': pdf_final_base64,\n            'mimeType': 'application/pdf',\n            'fileName': f'receita_{nome.replace(\" \", \"_\")}.pdf'\n        }\n    }\n}]"
       },
-      "id": "preparar-arquivo",
-      "name": "Preparar Arquivo",
+      "id": "marca-dagua",
+      "name": "Marca Dagua PDF",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [440, 300]
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "={{ $env.SUPABASE_URL }}/rest/v1/leads",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            { "name": "Prefer", "value": "return=representation" }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"nome\": \"{{ $json.nome }}\",\n  \"email\": \"{{ $json.email }}\",\n  \"whatsapp\": \"{{ $json.whatsapp }}\",\n  \"arquivo_url\": \"{{ $json.arquivo_url || '' }}\",\n  \"tipo_origem\": \"Receita\",\n  \"status\": \"Novo\",\n  \"tem_receita\": \"sim\",\n  \"utm_source\": \"{{ $json.utm_source || '' }}\",\n  \"utm_medium\": \"{{ $json.utm_medium || '' }}\",\n  \"utm_campaign\": \"{{ $json.utm_campaign || '' }}\"\n}",
-        "options": {}
+        "sendTo": "relatorios1@akinconsultoria.com",
+        "subject": "=📄 Nova Receita - {{ $json.nome }}",
+        "emailType": "html",
+        "message": "=<!DOCTYPE html>\n<html>\n<body style=\"font-family:sans-serif;color:#333;\">\n  <div style=\"max-width:600px;margin:20px auto;border:1px solid #eee;border-radius:12px;overflow:hidden;\">\n    <div style=\"background:#0047AB;color:white;padding:25px;text-align:center;\">\n      <h2 style=\"margin:0\">📄 Nova Receita Recebida</h2>\n    </div>\n    <div style=\"padding:30px;\">\n      <p><b style=\"color:#0047AB\">👤 Nome:</b> {{ $json.nome }}</p>\n      <p><b style=\"color:#0047AB\">📧 E-mail:</b> {{ $json.email }}</p>\n      <p><b style=\"color:#0047AB\">📱 WhatsApp:</b> {{ $json.whatsapp }}</p>\n      <p style=\"margin-top:20px;\">O documento enviado pelo paciente está em anexo com o <b>rodapé</b> contendo os dados confirmados.</p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {
+          "attachmentsBinary": [{ "property": "data" }]
+        }
       },
-      "id": "salvar-lead-receita",
-      "name": "Salvar Lead",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "gmail-receita",
+      "name": "Gmail Receita",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
       "position": [660, 300],
       "credentials": {
-        "httpHeaderAuth": {
-          "id": "SUPABASE_CREDENTIAL_ID",
-          "name": "Supabase Service Role"
+        "gmailOAuth2": {
+          "id": "GMAIL_CREDENTIAL_ID",
+          "name": "Gmail account 2"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "// Salvar transcrição se disponível\nconst data = $('Extrair Dados').first().json;\nconst leadData = $('Salvar Lead').first().json;\nconst lead = Array.isArray(leadData) ? leadData[0] : leadData;\n\nreturn [{\n  json: {\n    lead_id: lead ? lead.id : '',\n    nome: data.nome,\n    email: data.email,\n    whatsapp: data.whatsapp,\n    arquivo_url: data.arquivo_url || '',\n    transcricao: data.transcricao || '',\n    hasTranscription: !!(data.transcricao && data.transcricao.length > 10)\n  }\n}];"
+        "jsCode": "return [{ json: { success: true, message: 'Receita recebida com sucesso' } }];"
       },
-      "id": "preparar-transcricao",
-      "name": "Preparar Transcrição",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [880, 300]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "={{ $env.SUPABASE_URL }}/rest/v1/transcription_results",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"lead_id\": \"{{ $json.lead_id }}\",\n  \"full_text\": \"{{ $json.transcricao }}\",\n  \"status\": \"processed\"\n}",
-        "options": {}
-      },
-      "id": "salvar-transcricao",
-      "name": "Salvar Transcrição",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [1100, 400],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "SUPABASE_CREDENTIAL_ID",
-          "name": "Supabase Service Role"
-        }
-      },
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://n8n.akinconsultoria.com.br/webhook/email-clinica",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"tipo\": \"Nova Receita Enviada\",\n  \"nome\": \"{{ $json.nome }}\",\n  \"email\": \"{{ $json.email }}\",\n  \"whatsapp\": \"{{ $json.whatsapp }}\",\n  \"arquivo_url\": \"{{ $json.arquivo_url }}\",\n  \"transcricao\": \"{{ $json.transcricao || 'Sem transcrição automática' }}\"\n}",
-        "options": { "timeout": 5000 }
-      },
-      "id": "email-clinica-receita",
-      "name": "Email Clínica",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [1100, 200],
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "jsCode": "// Retornar lead_id para o frontend\nconst data = $('Preparar Transcrição').first().json;\n\nreturn [{\n  json: {\n    success: true,\n    lead_id: data.lead_id,\n    message: 'Receita recebida com sucesso'\n  }\n}];"
-      },
-      "id": "responder-receita",
+      "id": "responder",
       "name": "Responder",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1320, 300]
+      "position": [880, 300]
     }
   ],
   "connections": {
     "Webhook Receita": { "main": [[{ "node": "Extrair Dados", "type": "main", "index": 0 }]] },
-    "Extrair Dados": { "main": [[{ "node": "Preparar Arquivo", "type": "main", "index": 0 }]] },
-    "Preparar Arquivo": { "main": [[{ "node": "Salvar Lead", "type": "main", "index": 0 }]] },
-    "Salvar Lead": { "main": [[{ "node": "Preparar Transcrição", "type": "main", "index": 0 }]] },
-    "Preparar Transcrição": {
-      "main": [[
-        { "node": "Email Clínica", "type": "main", "index": 0 },
-        { "node": "Salvar Transcrição", "type": "main", "index": 0 },
-        { "node": "Responder", "type": "main", "index": 0 }
-      ]]
-    }
+    "Extrair Dados": { "main": [[
+      { "node": "Gmail Receita", "type": "main", "index": 0 },
+      { "node": "Responder", "type": "main", "index": 0 }
+    ]] }
   },
   "settings": { "executionOrder": "v1" }
 }
