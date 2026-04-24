@@ -199,11 +199,11 @@ document.addEventListener('DOMContentLoaded', () => {
             </label>
 
             <div class="checkout-footer" style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button class="btn btn-primary" style="width: 100%; height: 68px; font-size: 1.05rem; border-radius: 50px; background: #9d4615; color: white; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; box-shadow: 0 4px 15px rgba(157, 70, 21, 0.2);" onclick="window.finalCheckout('20', '1.200', this)">
+                <button class="btn btn-primary" style="width: 100%; height: 68px; font-size: 1.05rem; border-radius: 50px; background: #9d4615; color: white; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; box-shadow: 0 4px 15px rgba(157, 70, 21, 0.3);" onclick="window.finalCheckout('20', '1.200', this)">
                     <span>Garantir Tratamento 20mg</span>
                     <small style="font-size: 0.75rem; opacity: 0.9;">Plano Essencial - Iniciar agora</small>
                 </button>
-                <button class="btn btn-primary" style="width: 100%; height: 68px; font-size: 1.05rem; border-radius: 50px; background: #a44716; color: white; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; box-shadow: 0 6px 20px rgba(164, 71, 22, 0.3);" onclick="window.finalCheckout('60', '2.800', this)">
+                <button class="btn btn-primary" style="width: 100%; height: 68px; font-size: 1.05rem; border-radius: 50px; background: #9d4615; color: white; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; box-shadow: 0 4px 15px rgba(157, 70, 21, 0.3);" onclick="window.finalCheckout('60', '2.800', this)">
                     <span>Garantir Tratamento 60mg</span>
                     <small style="font-size: 0.75rem; opacity: 0.9;">Plano Completo - Mais Escolhido</small>
                 </button>
