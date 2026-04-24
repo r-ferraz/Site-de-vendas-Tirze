@@ -12,7 +12,9 @@
             --progress-width: 0%;
         }
 
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
         }
 
@@ -143,7 +145,8 @@
 
         @media (max-width: 768px) {
             .q-container {
-                margin: 100px 10px 20px 10px; /* 100px to clear the fixed header */
+                margin: 100px 10px 20px 10px;
+                /* 100px to clear the fixed header */
                 padding: 30px 20px;
                 min-height: auto;
                 box-sizing: border-box;
@@ -173,22 +176,28 @@
                 padding: 12px;
                 font-size: 1rem;
                 width: 100%;
-                background-color: white !important; /* Force white background */
-                -webkit-appearance: none;           /* Remove native iOS styles */
+                background-color: white !important;
+                /* Force white background */
+                -webkit-appearance: none;
+                /* Remove native iOS styles */
                 appearance: none;
             }
+
             /* Ensure date input looks like text input on mobile focus */
             .q-input:focus {
                 border-color: var(--primary-blue) !important;
                 background-color: white !important;
             }
+
             .q-container {
                 overflow-x: hidden;
             }
+
             .results-box h2 {
                 font-size: 1.6rem !important;
                 line-height: 1.2;
             }
+
             .section-subtitle {
                 font-size: 1.1rem !important;
                 line-height: 1.3;
@@ -229,14 +238,46 @@
             background: white;
         }
 
-        .protocol-item:hover { border-color: var(--primary); background: #fffaf7; }
-        .protocol-item.active { border-color: var(--primary); background: #fff3eb; box-shadow: 0 4px 15px rgba(157, 70, 21, 0.1); }
+        .protocol-item:hover {
+            border-color: var(--primary);
+            background: #fffaf7;
+        }
 
-        .protocol-info h3 { font-size: 1.1rem; margin: 0 0 0.3rem 0; color: var(--text-main); }
-        .protocol-info p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
-        .protocol-price { text-align: right; }
-        .price-old { display: block; font-size: 0.85rem; text-decoration: line-through; color: var(--text-muted); }
-        .price-new { display: block; font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+        .protocol-item.active {
+            border-color: var(--primary);
+            background: #fff3eb;
+            box-shadow: 0 4px 15px rgba(157, 70, 21, 0.1);
+        }
+
+        .protocol-info h3 {
+            font-size: 1.1rem;
+            margin: 0 0 0.3rem 0;
+            color: var(--text-main);
+        }
+
+        .protocol-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .protocol-price {
+            text-align: right;
+        }
+
+        .price-old {
+            display: block;
+            font-size: 0.85rem;
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .price-new {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
 
         /* Table Section */
         .table-container {
@@ -247,9 +288,24 @@
             margin-bottom: 30px;
         }
 
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
-        th { background: #fdfaf7; padding: 12px; font-weight: 600; border-bottom: 1px solid var(--border-soft); }
-        td { padding: 12px; border-bottom: 1px solid #f9f4ef; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th {
+            background: #fdfaf7;
+            padding: 12px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f9f4ef;
+        }
 
         /* Terms Accordion */
         .terms-toggle {
@@ -265,7 +321,10 @@
             transition: var(--transition);
         }
 
-        .terms-toggle:hover { background: #fdfaf7; color: var(--primary); }
+        .terms-toggle:hover {
+            background: #fdfaf7;
+            color: var(--primary);
+        }
 
         .terms-content {
             display: none;
@@ -286,7 +345,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
             z-index: 9999;
             align-items: center;
@@ -303,7 +362,7 @@
             max-height: 80vh;
             overflow-y: auto;
             position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             text-align: left;
         }
 
@@ -325,20 +384,36 @@
             transition: var(--transition);
         }
 
-        .modal-close:hover { background: #e2e8f0; color: #1e293b; }
-        
-        .terms-check { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            font-size: 0.9rem; 
-            margin-bottom: 1.5rem; 
-            cursor: pointer; 
-            text-align: left; 
+        .modal-close:hover {
+            background: #e2e8f0;
+            color: #1e293b;
         }
 
-        .terms-check { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; margin-bottom: 1.5rem; cursor: pointer; text-align: left; }
-        .terms-check input { width: 18px; height: 18px; accent-color: var(--primary); }
+        .terms-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .terms-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .terms-check input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
 
         .section-subtitle {
             font-family: 'Lora', serif;
@@ -348,11 +423,18 @@
             text-align: center;
         }
 
-        .evolution-chart { min-height: 200px; }
+        .evolution-chart {
+            min-height: 200px;
+        }
 
         @media (max-width: 480px) {
-            .protocol-item { padding: 1rem; }
-            .price-new { font-size: 1.1rem; }
+            .protocol-item {
+                padding: 1rem;
+            }
+
+            .price-new {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
@@ -383,19 +465,23 @@
         </div>
 
         <div id="results-box" class="q-container" style="display: none; max-width: 800px; padding-top: 60px;">
-            <h2 id="results-title" style="font-size: 2.2rem; text-align: center; color: #2d241e; margin-bottom: 10px;">Seu Plano Personalizado</h2>
+            <h2 id="results-title" style="font-size: 2.2rem; text-align: center; color: #2d241e; margin-bottom: 10px;">
+                Seu Plano Personalizado</h2>
             <div id="evolution-section">
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%; margin-top: 20px;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%; margin-top: 20px;">
                     <div style="text-align: center; padding-bottom: 10px; align-self: flex-start; margin-top: 10px;">
                         <div style="font-size: 2.5rem; line-height: 1;">😟</div>
                         <div style="font-size: 0.9rem; font-weight: bold; color: #666; margin-top: 5px;">Início</div>
                     </div>
-                    <div class="evolution-chart" id="chart-container" style="flex: 1; margin: 0 15px; padding: 10px 0 0 0; background: transparent; border-bottom: 2px solid #E2E8F0; border-radius: 0; align-items: flex-end; position: relative;">
+                    <div class="evolution-chart" id="chart-container"
+                        style="flex: 1; margin: 0 15px; padding: 10px 0 0 0; background: transparent; border-bottom: 2px solid #E2E8F0; border-radius: 0; align-items: flex-end; position: relative;">
                         <!-- Bars generated by JS -->
                     </div>
                     <div style="text-align: center; padding-bottom: 10px;">
                         <div style="font-size: 2.5rem; line-height: 1;">😄</div>
-                        <div style="font-size: 0.9rem; font-weight: bold; color: var(--primary-blue); margin-top: 5px;">Reta Final</div>
+                        <div style="font-size: 0.9rem; font-weight: bold; color: var(--primary-blue); margin-top: 5px;">
+                            Reta Final</div>
                     </div>
                 </div>
             </div>
@@ -406,7 +492,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="questions.js"></script>
+    <script src="questions.js" defer></script>
     <script src="questionario.js?v=4.5" defer></script>
 </body>
 
