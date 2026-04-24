@@ -1,13 +1,13 @@
 // Supabase Configuration
 const SUPABASE_URL = 'https://pzewkvmaewnijwhxkqaj.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZXdrdm1hZXduaWp3aHhrcWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjk0ODQsImV4cCI6MjA4ODc0NTQ4NH0.a42vFvm5vUcZ3euBUoNW_QuWM9MKPW2W7ZvcCyl_P4Y';
-let supabase = null;
+if (typeof supabaseClientQ === 'undefined') var supabaseClientQ = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     // Inicialização segura do Supabase
     try {
         if (window.supabase) {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            supabaseClientQ = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         } else {
             console.warn('Biblioteca Supabase não encontrada.');
         }
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     supabasePayload.id = existingId;
                 }
 
-                const { data: supaData, error } = await supabase
+                const { data: supaData, error } = await supabaseClientQ
                     .from('leads')
                     .upsert(supabasePayload, { onConflict: 'id' })
                     .select();
