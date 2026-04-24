@@ -1,9 +1,20 @@
 // Supabase Configuration
 const SUPABASE_URL = 'https://pzewkvmaewnijwhxkqaj.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZXdrdm1hZXduaWp3aHhrcWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjk0ODQsImV4cCI6MjA4ODc0NTQ4NH0.a42vFvm5vUcZ3euBUoNW_QuWM9MKPW2W7ZvcCyl_P4Y';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let supabase = null;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Inicialização segura do Supabase
+    try {
+        if (window.supabase) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        } else {
+            console.warn('Biblioteca Supabase não encontrada.');
+        }
+    } catch (e) {
+        console.error('Erro ao conectar com Supabase:', e);
+    }
+
     if (!window.akinQuestions) {
         console.error('Erro: perguntas não carregadas.');
         return;
