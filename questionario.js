@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Por favor, insira um número de WhatsApp válido (com DDD).');
                     return;
                 }
-                saveLead({ ...userData, tipo: 'Novo Lead Rápido - ' + userData.nome });
+                // saveLead removido - salva tudo apenas no final do questionário
             }
         }
 
