@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 utm_campaign: utms.utm_campaign || ''
             };
 
-            // 1. Salvar no Supabase (UPSERT - Atualiza se já existir)
+            // 1. Salvar no Supabase (INSERT - Sempre cria nova linha)
             try {
                 const supabasePayload = {
                     nome: leadPayload.nome,
@@ -170,26 +170,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     tipo_origem: 'Questionário',
                     status: 'Novo',
                     respostas_triagem: data, // Grava como objeto JSON na coluna
-                    utm_source: leadPayload.utm_source,
-                    utm_medium: leadPayload.utm_medium,
-                    utm_campaign: leadPayload.utm_campaign
+                    utm_source: utms.utm_source || leadPayload.utm_source,
+                    utm_medium: utms.utm_medium || leadPayload.utm_medium,
+                    utm_campaign: utms.utm_campaign || leadPayload.utm_campaign,
+                    utm_term: utms.utm_term || '',
+                    utm_content: utms.utm_content || ''
                 };
-
-                // Se já temos um ID, incluímos para fazer o update na mesma linha
-                if (existingId && existingId.length > 5) {
-                    supabasePayload.id = existingId;
-                }
 
                 const { data: supaData, error } = await supabaseClientQ
                     .from('leads')
-                    .upsert(supabasePayload, { onConflict: 'id' })
+                    .insert(supabasePayload)
                     .select();
+
+                if (error) {
+                    console.error('[SUPABASE DETAILED ERROR]', error);
+                }
                 
                 if (supaData && supaData[0]) {
                     localStorage.setItem('lead_id', supaData[0].id);
                     leadPayload.lead_id = supaData[0].id;
                 }
-                console.log('[SUPABASE] Lead sincronizado com sucesso.');
+                console.log('[SUPABASE] Lead inserido como nova linha com UTMs salvos.');
             } catch (supaErr) {
                 console.error('[SUPABASE ERROR]', supaErr);
             }
