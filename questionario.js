@@ -169,7 +169,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     whatsapp: leadPayload.whatsapp,
                     tipo_origem: 'Questionário',
                     status: 'Novo',
-                    respostas_triagem: data, // Grava como objeto JSON na coluna
+                    respostas_triagem: (() => {
+                        const mapa = {
+                            objetivos: 'O que você mais deseja alcançar com a perda de peso?',
+                            tratamento_anterior: 'Você já fez algum tratamento médico para emagrecer antes?',
+                            tentativas_anteriores: 'O que você já tentou para emagrecer?',
+                            tempo_tentativa: 'Há quanto tempo você tenta emagrecer de forma consistente?',
+                            desafios: 'Quais são seus maiores desafios hoje?',
+                            nome: 'Nome Completo',
+                            whatsapp: 'WhatsApp',
+                            email: 'E-mail',
+                            data_nasc: 'Qual sua data de nascimento?',
+                            sexo: 'Qual seu sexo biológico?',
+                            peso: 'Peso (kg)',
+                            altura: 'Altura (cm)',
+                            target: 'Você tem um peso alvo que deseja alcançar?',
+                            meta_peso: 'Qual sua meta de peso (kg)?'
+                        };
+                        const resultado = {};
+                        Object.entries(data).forEach(([chave, valor]) => {
+                            const pergunta = mapa[chave] || chave;
+                            resultado[pergunta] = Array.isArray(valor) ? valor.join(', ') : valor;
+                        });
+                        return resultado;
+                    })(),
                     utm_source: utms.utm_source || leadPayload.utm_source,
                     utm_medium: utms.utm_medium || leadPayload.utm_medium,
                     utm_campaign: utms.utm_campaign || leadPayload.utm_campaign,
