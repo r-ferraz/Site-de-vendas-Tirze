@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const urls = {
-            '20': 'https://pay.hypercash.com.br/pt/checkout/c0185f95-2fc4-4fe3-adb5-cb4fb8c966ea',
-            '60': 'https://pay.hypercash.com.br/pt/checkout/23fa3778-2c07-44e6-a16e-3b898910c01e'
+            '20': 'https://pay.hypercash.com.br/pt/checkout/f129c289-3e32-4c7d-b904-7356780cdc29',
+            '60': 'https://pay.hypercash.com.br/pt/checkout/bcff2426-9f72-4bfd-9a3e-d94c18e0a235'
         };
 
         const utms = window.getUtmParams ? window.getUtmParams() : {};
