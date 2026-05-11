@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showResults() {
         // Envia os dados finais (incluindo peso, meta, etc)
-        saveLead({ ...userData, tipo: 'Questionário Respondido - ' + userData.nome });
+        saveLead({ ...userData, tipo: 'Questionário Respondido' });
 
         questionnaireBox.style.display = 'none';
         resultsBox.style.display = 'block';
