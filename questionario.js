@@ -113,6 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     async function saveLead(data) {
+        if (saveLead._chamado) return;
+        saveLead._chamado = true;
+        setTimeout(() => { saveLead._chamado = false; }, 3000);
         try {
             const utms = window.getUtmParams ? window.getUtmParams() : {};
             const existingId = localStorage.getItem('lead_id');
